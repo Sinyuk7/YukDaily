@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimaryDark">#ec407a</color>
+    <color name="colorPrimary">#fff06292</color>
+    <color name="colorPrimaryLt">#b3f06292</color>
+    <color name="colorAccent">@color/official_pro</color>
+    <!--official colors-->
+    <!--You’re encouraged to use the official Dribbble colorswhen displaying the logo and marks. -->
+    <!--When using the logo type on light backgrounds, use our charcoal color when possible. -->
+    <!--Use white if displaying on dark backgrounds (as in the dribbble.com header).-->
+    <eat-comment/>
+    <color name="official_pink">#EA4C89</color>
+    <color name="official_charcoal">#333333</color>
+    <color name="official_link_blue">#3a8bbb</color>
+    <color name="official_pro">#66cccc</color>
+    <color name="official_jobs_hiring">#7bbb5e</color>
+    <color name="official_teams">#00b6e3</color>
+    <color name="official_playbook">#66cc99</color>
+    <color name="official_slate">#9da3a5</color>
+
+
+
+    <color name="white_75pct">#b1ffffff</color>
+    <color name="window_background">#f5f5f5</color>
+
+    <color name="gif_badge_light">#b3ffffff</color>
+    <color name="gif_badge_dark">#68202020</color>
+
+    <color name="immersive_bars">#2f000000</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="divider_color">#eeeeee</color>
+
+    <color name="splash_backdrop">#ff757575</color>
+    <color name="text_shadow">#6a000000</color>
+    <!-- common colours -->
+    <color name="text_primary_dark">#DE000000</color> <!-- 87% -->
+    <color name="text_secondary_dark">#8A000000</color> <!-- 54% -->
+    <color name="text_tertiary_dark">#61000000</color> <!-- 38% -->
+    <color name="text_primary_light">#FFFFFFFF</color>
+    <color name="text_secondary_light">#B3FFFFFF</color> <!-- 70% -->
+    <color name="text_disabled_light">#4DFFFFFF</color> <!-- 30% -->
+
+    <color name="grey_900">#ff212121</color>
+    <color name="grey_850">#ff303030</color>
+    <color name="grey_800">#ff424242</color>
+
+    <color name="grey_600">#ff757575</color>
+    <color name="grey_300">#ffe0e0e0</color>
+    <color name="grey_200">#ffececec</color>
+    <color name="grey_100">#fff5f5f5</color>
+    <color name="grey_50">#fffafafa</color>
+</resources>

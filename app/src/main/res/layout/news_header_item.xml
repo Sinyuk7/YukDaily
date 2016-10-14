@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="story"
+            type="com.sinyuk.yukdaily.model.Story" />
+    </data>
+
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        app:cardCornerRadius="@dimen/cardView_default_corner_radius"
+        app:cardElevation="@dimen/cardView_default_elevation"
+        app:cardUseCompatPadding="true">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            app:imageUrl="@{story.image}"
+            tools:src="@mipmap/ic_launcher" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:padding="@dimen/content_space_16"
+            android:shadowColor="@color/text_shadow"
+            android:shadowDx="3"
+            android:shadowDy="3"
+            android:shadowRadius="6"
+            android:text="@{story.title}"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/material_text_subhead"
+            tools:text="过去穿过了现在绕过了未来缝在心海中带着你我旅行变成老头" />
+    </android.support.v7.widget.CardView>
+
+</layout>

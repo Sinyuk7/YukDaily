@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="java.util.List" />
+
+        <variable
+            name="story"
+            type="com.sinyuk.yukdaily.model.Story" />
+    </data>
+
+    <!--style="@style/card"-->
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/content_space_4"
+        android:layout_marginTop="@dimen/content_space_4"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="@dimen/cardView_default_elevation"
+        app:cardUseCompatPadding="true">
+
+        <com.sinyuk.yukdaily.widgets.RatioLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/content_space_16"
+            android:paddingRight="@dimen/content_space_16"
+            app:layoutHOverW="0.25">
+
+            <com.sinyuk.yukdaily.widgets.RatioImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:scaleType="centerCrop"
+                app:imageUrl="@{story.imageList}"
+                app:imageWOverH="1.25"
+                tools:src="#ccc" />
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|top"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:includeFontPadding="false"
+                android:lineSpacingExtra="4dp"
+                android:maxLines="3"
+                android:paddingBottom="@dimen/content_space_8"
+                android:paddingLeft="@dimen/content_space_16"
+                android:paddingTop="@dimen/content_space_8"
+                android:text="@{story.title}"
+                android:textSize="@dimen/material_text_subhead"
+                tools:text="You’ve gotta get up and try try try 你一定要振作 " />
+        </com.sinyuk.yukdaily.widgets.RatioLinearLayout>
+    </android.support.v7.widget.CardView>
+</layout>

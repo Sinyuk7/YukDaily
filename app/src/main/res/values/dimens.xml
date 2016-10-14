@@ -1,0 +1,99 @@
+<resources>
+    <!--System view-->
+    <!--<dimen name="status_bar_height">24dp</dimen>-->
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <eat-comment/>
+    <dimen name="content_space_2">2dp</dimen>
+    <dimen name="content_space_4">4dp</dimen>
+    <dimen name="content_space_8">8dp</dimen>
+    <dimen name="content_space_12">12dp</dimen>
+    <dimen name="content_space_16">16dp</dimen>
+
+
+    <dimen name="divider_height">1dp</dimen>
+
+    <!-- ============================================== -->
+    <!--Nested TabLayout-->
+    <!-- ============================================== -->
+    <eat-comment />
+
+    <dimen name="tab_layout_height">32dp</dimen>
+    <dimen name="tab_min_width">56dp</dimen>
+
+    <!-- ============================================== -->
+    <!--Floating Action Button-->
+    <!-- ============================================== -->
+    <eat-comment />
+    <dimen name="fab_large">56dp</dimen>
+    <dimen name="fab_small">48dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+
+    <!-- ============================================== -->
+    <!-- Card View -->
+    <!-- ============================================== -->
+    <eat-comment />
+    <dimen name="cardView_default_corner_radius">2dp</dimen>
+    <dimen name="cardView_distinct_corner_radius">4dp</dimen>
+    <dimen name="cardView_default_elevation">1dp</dimen>
+    <dimen name="cardView_raised_elevation">4dp</dimen>
+    <dimen name="cardView_default_margin">0dp</dimen>
+
+    <!-- ============================================== -->
+    <!-- Text Size -->
+    <!-- ============================================== -->
+    <eat-comment />
+    <dimen name="material_text_button">14sp</dimen>
+    <dimen name="material_text_menu">14sp</dimen>
+    <dimen name="material_text_caption1">10sp</dimen>
+    <dimen name="material_text_caption2">12sp</dimen>
+    <dimen name="material_text_body1">13sp</dimen>
+    <dimen name="material_text_body2">14sp</dimen>
+    <dimen name="material_text_subhead">16sp</dimen>
+    <dimen name="material_text_title">20sp</dimen>
+    <dimen name="material_text_headline">24sp</dimen>
+    <dimen name="material_text_display1">34sp</dimen>
+    <dimen name="material_text_display2">45sp</dimen>
+    <dimen name="material_text_display3">56sp</dimen>
+    <dimen name="material_text_display4">112sp</dimen>
+
+
+    <!-- ============================================== -->
+    <!--Icon Size  -->
+    <!-- ============================================== -->
+    <eat-comment />
+    <!--Launcher Icons-->
+    <!--Full asset, 48×48 dp-->
+    <!--Launcher icons for display on Google Play must be 512×512 pixels.-->
+    <eat-comment />
+    <dimen name="icon_size_48">48dp</dimen>
+    <!--Action Bar Icon-->
+    <!--Full asset, 32×32 dpOptical square, 24×24 dp-->
+    <eat-comment />
+    <dimen name="icon_size_36">36dp</dimen>
+    <!--Notification Icons	-->
+    <!--Full asset, 24×24 dpOptical square, 22×22 dp-->
+    <eat-comment />
+    <dimen name="icon_size_24">24dp</dimen>
+    <!--Small / Contextual Icons-->
+    <!--Full asset, 16×16 dpOptical square, 12×12 dp-->
+    <eat-comment />
+    <dimen name="icon_size_18">18dp</dimen>
+
+
+    <!-- ============================================== -->
+    <!--Image Size(for displaying include avatar) -->
+    <!-- ============================================== -->
+    <eat-comment />
+
+    <dimen name="image_size_6">72dp</dimen>
+    <dimen name="image_size_5">64dp</dimen>
+    <dimen name="image_size_4">48dp</dimen>
+    <dimen name="image_size_3">36dp</dimen>
+    <dimen name="image_size_2">24dp</dimen>
+    <dimen name="image_size_1">18dp</dimen>
+
+
+
+</resources>

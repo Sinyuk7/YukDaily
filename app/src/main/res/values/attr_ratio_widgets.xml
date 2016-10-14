@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="PlaceHolder">
+        <attr name="holderWOverH" format="float"/>
+        <attr name="holderHOverW" format="float"/>
+    </declare-styleable>
+
+    <declare-styleable name="RatioImageView">
+        <attr name="imageWOverH" format="float"/>
+        <attr name="imageHOverW" format="float"/>
+    </declare-styleable>
+
+    <declare-styleable name="RatioLinearLayout">
+        <attr name="layoutWOverH" format="float"/>
+        <attr name="layoutHOverW" format="float"/>
+    </declare-styleable>
+</resources>

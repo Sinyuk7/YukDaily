@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="java.util.List" />
+
+        <import type="com.sinyuk.yukdaily.model.Story" />
+
+        <variable
+            name="topStories"
+            type="List&lt;Story&gt;" />
+    </data>
+
+    <com.sinyuk.yukdaily.widgets.RatioLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layoutHOverW="0.5">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:paddingBottom="@dimen/content_space_8"
+            android:paddingEnd="@dimen/header_card_padding"
+            android:paddingLeft="@dimen/header_card_padding"
+            android:paddingRight="@dimen/header_card_padding"
+            android:paddingStart="@dimen/header_card_padding"
+            android:paddingTop="@dimen/content_space_8"
+            app:data="@{topStories}" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:background="#ccc"></FrameLayout>
+    </com.sinyuk.yukdaily.widgets.RatioLinearLayout>
+
+
+</layout>
