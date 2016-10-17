@@ -27,9 +27,6 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
     private float mBaseElevation;
     private List<Story> topStories = new ArrayList<>();
 
-    public CardPagerAdapter() {
-        // no-op
-    }
 
     @BindingAdapter("imageUrl")
     public static void loadImage(ImageView imageView, String url) {
@@ -97,5 +94,4 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
         }
         notifyDataSetChanged();
     }
-
 }

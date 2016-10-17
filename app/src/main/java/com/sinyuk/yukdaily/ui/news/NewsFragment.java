@@ -9,12 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sinyuk.myutils.system.ScreenUtils;
 import com.sinyuk.yukdaily.App;
 import com.sinyuk.yukdaily.R;
 import com.sinyuk.yukdaily.api.NewsService;
 import com.sinyuk.yukdaily.base.BaseFragment;
 import com.sinyuk.yukdaily.databinding.NewsFragmentBinding;
 import com.sinyuk.yukdaily.model.LatestNews;
+import com.sinyuk.yukdaily.utils.cardviewpager.ShadowTransformer;
 
 import javax.inject.Inject;
 
@@ -30,7 +32,8 @@ public class NewsFragment extends BaseFragment {
     @Inject
     NewsService newsService;
     private NewsFragmentBinding binding;
-    private NewsAdapter adapter;
+    private NewsAdapter newsAdapter;
+    private CardPagerAdapter headerAdapter;
 
     @Override
     public void onAttach(Context context) {
@@ -49,11 +52,24 @@ public class NewsFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
+        initHeader();
         initListView();
         initListData();
 
         refresh();
+    }
+
+    private void initHeader() {
+        headerAdapter = new CardPagerAdapter();
+        binding.viewPager.setAdapter(headerAdapter);
+        binding.viewPager.setOffscreenPageLimit(3);
+        binding.viewPager.setPageMargin(ScreenUtils.dpToPxInt(getContext(), 16));
+
+        final ShadowTransformer transformer = new ShadowTransformer(binding.viewPager, headerAdapter);
+        binding.viewPager.setPageTransformer(false, transformer);
+        transformer.enableScaling(true);
+
+        headerAdapter.registerDataSetObserver(binding.indicator.getDataSetObserver());
     }
 
     private void refresh() {
@@ -63,7 +79,9 @@ public class NewsFragment extends BaseFragment {
                 .subscribe(new Observer<LatestNews>() {
                     @Override
                     public void onCompleted() {
-
+                        if (binding.viewPager.getChildCount() >= 3) {
+                            binding.viewPager.setCurrentItem(1);
+                        }
                     }
 
                     @Override
@@ -73,21 +91,22 @@ public class NewsFragment extends BaseFragment {
 
                     @Override
                     public void onNext(LatestNews latestNews) {
-                        adapter.addHeader(latestNews.getTopStories());
-
-                        adapter.setData(latestNews.getStories());
+                        headerAdapter.setData(latestNews.getTopStories());
+                        newsAdapter.setData(latestNews.getStories());
                     }
                 });
     }
 
     private void initListView() {
-        binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        final LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        manager.setAutoMeasureEnabled(true);
+        binding.recyclerView.setLayoutManager(manager);
         binding.recyclerView.setHasFixedSize(true);
     }
 
     private void initListData() {
-        adapter = new NewsAdapter(getContext());
-        adapter.setHasStableIds(true);
-        binding.recyclerView.setAdapter(adapter);
+        newsAdapter = new NewsAdapter();
+        newsAdapter.setHasStableIds(true);
+        binding.recyclerView.setAdapter(newsAdapter);
     }
 }

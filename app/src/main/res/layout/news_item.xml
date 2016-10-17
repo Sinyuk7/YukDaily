@@ -29,7 +29,7 @@
             android:orientation="horizontal"
             android:paddingLeft="@dimen/content_space_16"
             android:paddingRight="@dimen/content_space_16"
-            app:layoutHOverW="0.25">
+            app:layoutHOverW="0.2">
 
             <com.sinyuk.yukdaily.widgets.RatioImageView
                 android:layout_width="wrap_content"
@@ -38,7 +38,7 @@
                 android:scaleType="centerCrop"
                 app:imageUrl="@{story.imageList}"
                 app:imageWOverH="1.25"
-                tools:src="#ccc" />
+                tools:src="@drawable/sample" />
 
 
             <TextView
@@ -49,7 +49,7 @@
                 android:ellipsize="end"
                 android:includeFontPadding="false"
                 android:lineSpacingExtra="4dp"
-                android:maxLines="3"
+                android:maxLines="2"
                 android:paddingBottom="@dimen/content_space_8"
                 android:paddingLeft="@dimen/content_space_16"
                 android:paddingTop="@dimen/content_space_8"

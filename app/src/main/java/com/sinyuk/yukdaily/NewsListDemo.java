@@ -13,14 +13,12 @@ import com.sinyuk.yukdaily.ui.news.NewsFragment;
 
 public class NewsListDemo extends BaseActivity {
 
-    private NewsFragment fragment;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.demo);
 
-        fragment = new NewsFragment();
+        NewsFragment fragment = new NewsFragment();
         ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.root);
     }
 }

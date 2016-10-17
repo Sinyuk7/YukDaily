@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimaryDark">#ec407a</color>
-    <color name="colorPrimary">#fff06292</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorPrimary">#000000</color>
     <color name="colorPrimaryLt">#b3f06292</color>
     <color name="colorAccent">@color/official_pro</color>
     <!--official colors-->
