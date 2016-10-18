@@ -1,22 +1,26 @@
 package com.sinyuk.yukdaily.ui.news;
 
 import android.content.Context;
+import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.sinyuk.myutils.system.ScreenUtils;
 import com.sinyuk.yukdaily.App;
 import com.sinyuk.yukdaily.R;
 import com.sinyuk.yukdaily.api.NewsService;
 import com.sinyuk.yukdaily.base.BaseFragment;
 import com.sinyuk.yukdaily.databinding.NewsFragmentBinding;
+import com.sinyuk.yukdaily.databinding.NewsHeaderLayoutBinding;
 import com.sinyuk.yukdaily.model.LatestNews;
 import com.sinyuk.yukdaily.utils.cardviewpager.ShadowTransformer;
+import com.sinyuk.yukdaily.widgets.CircleIndicator;
 
 import javax.inject.Inject;
 
@@ -32,8 +36,20 @@ public class NewsFragment extends BaseFragment {
     @Inject
     NewsService newsService;
     private NewsFragmentBinding binding;
-    private NewsAdapter newsAdapter;
-    private CardPagerAdapter headerAdapter;
+    private NewsHeaderLayoutBinding headerBinding;
+
+    @BindingAdapter({"adapter", "indicator"})
+    public static void setAdapter(ViewPager vp, CardPagerAdapter adapter, CircleIndicator indicator) {
+        Log.d(TAG, "setAdapter: ");
+        vp.setOffscreenPageLimit(3);
+        vp.setAdapter(adapter);
+        indicator.setViewPager(vp);
+        adapter.registerDataSetObserver(indicator.getDataSetObserver());
+
+        final ShadowTransformer transformer = new ShadowTransformer(vp, adapter);
+        vp.setPageTransformer(false, transformer);
+        transformer.enableScaling(true);
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -52,24 +68,20 @@ public class NewsFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        initHeader();
         initListView();
         initListData();
 
         refresh();
     }
 
-    private void initHeader() {
-        headerAdapter = new CardPagerAdapter();
-        binding.viewPager.setAdapter(headerAdapter);
-        binding.viewPager.setOffscreenPageLimit(3);
-        binding.viewPager.setPageMargin(ScreenUtils.dpToPxInt(getContext(), 16));
+    private void bindHeaderView() {
+        headerBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(getContext()), R.layout.news_header_layout, binding.recyclerView, false);
 
-        final ShadowTransformer transformer = new ShadowTransformer(binding.viewPager, headerAdapter);
-        binding.viewPager.setPageTransformer(false, transformer);
-        transformer.enableScaling(true);
+        headerBinding.setContext(getContext());
 
-        headerAdapter.registerDataSetObserver(binding.indicator.getDataSetObserver());
+        headerBinding.setAdapter(new CardPagerAdapter());
+
     }
 
     private void refresh() {
@@ -79,8 +91,9 @@ public class NewsFragment extends BaseFragment {
                 .subscribe(new Observer<LatestNews>() {
                     @Override
                     public void onCompleted() {
-                        if (binding.viewPager.getChildCount() >= 3) {
-                            binding.viewPager.setCurrentItem(1);
+                        final int count = headerBinding.viewPager.getChildCount();
+                        if (count >= 3) {
+                            headerBinding.viewPager.setCurrentItem(count / 2 + 1);
                         }
                     }
 
@@ -91,11 +104,12 @@ public class NewsFragment extends BaseFragment {
 
                     @Override
                     public void onNext(LatestNews latestNews) {
-                        headerAdapter.setData(latestNews.getTopStories());
-                        newsAdapter.setData(latestNews.getStories());
+                        headerBinding.getAdapter().setData(latestNews.getTopStories());
+                        binding.getAdapter().setData(latestNews.getStories());
                     }
                 });
     }
+
 
     private void initListView() {
         final LinearLayoutManager manager = new LinearLayoutManager(getContext());
@@ -105,8 +119,10 @@ public class NewsFragment extends BaseFragment {
     }
 
     private void initListData() {
-        newsAdapter = new NewsAdapter();
+        final NewsAdapter newsAdapter = new NewsAdapter();
         newsAdapter.setHasStableIds(true);
-        binding.recyclerView.setAdapter(newsAdapter);
+        bindHeaderView();
+        newsAdapter.addHeaderBinding(headerBinding);
+        binding.setAdapter(newsAdapter);
     }
 }

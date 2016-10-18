@@ -11,6 +11,7 @@ import android.support.annotation.AnimatorRes;
 import android.support.annotation.DrawableRes;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Interpolator;
@@ -22,6 +23,7 @@ import static android.support.v4.view.ViewPager.OnPageChangeListener;
 
 public class CircleIndicator extends LinearLayout {
 
+    public static final String TAG = "Indicator";
     private final static int DEFAULT_INDICATOR_WIDTH = 5;
     private ViewPager mViewpager;
     private int mIndicatorMargin = -1;
@@ -35,8 +37,72 @@ public class CircleIndicator extends LinearLayout {
     private Animator mAnimatorIn;
     private Animator mImmediateAnimatorOut;
     private Animator mImmediateAnimatorIn;
-
     private int mLastPosition = -1;
+    private final OnPageChangeListener mInternalPageChangeListener = new OnPageChangeListener() {
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+
+            if (mViewpager.getAdapter() == null || mViewpager.getAdapter().getCount() <= 0) {
+                return;
+            }
+
+            if (mAnimatorIn.isRunning()) {
+                mAnimatorIn.end();
+                mAnimatorIn.cancel();
+            }
+
+            if (mAnimatorOut.isRunning()) {
+                mAnimatorOut.end();
+                mAnimatorOut.cancel();
+            }
+
+            View currentIndicator;
+            if (mLastPosition >= 0 && (currentIndicator = getChildAt(mLastPosition)) != null) {
+                currentIndicator.setBackgroundResource(mIndicatorUnselectedBackgroundResId);
+                mAnimatorIn.setTarget(currentIndicator);
+                mAnimatorIn.start();
+            }
+
+            View selectedIndicator = getChildAt(position);
+            if (selectedIndicator != null) {
+                selectedIndicator.setBackgroundResource(mIndicatorBackgroundResId);
+                mAnimatorOut.setTarget(selectedIndicator);
+                mAnimatorOut.start();
+            }
+            mLastPosition = position;
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+        }
+    };
+    private DataSetObserver mInternalDataSetObserver = new DataSetObserver() {
+        @Override
+        public void onChanged() {
+            super.onChanged();
+            if (mViewpager == null) {
+                return;
+            }
+
+            int newCount = mViewpager.getAdapter().getCount();
+            int currentCount = getChildCount();
+
+            if (newCount == currentCount) {  // No change
+                return;
+            } else if (mLastPosition < newCount) {
+                mLastPosition = mViewpager.getCurrentItem();
+            } else {
+                mLastPosition = -1;
+            }
+
+            createIndicators();
+        }
+    };
 
     public CircleIndicator(Context context) {
         super(context);
@@ -58,6 +124,11 @@ public class CircleIndicator extends LinearLayout {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context, attrs);
     }
+
+//    @BindingAdapter("viewPager")
+//    public static void attachToViewPager(CircleIndicator indicator, ViewPager viewPager) {
+//        indicator.setViewPager(viewPager);
+//    }
 
     private void init(Context context, AttributeSet attrs) {
         handleTypedArray(context, attrs);
@@ -106,9 +177,9 @@ public class CircleIndicator extends LinearLayout {
     }
 
     public void configureIndicator(int indicatorWidth, int indicatorHeight, int indicatorMargin,
-            @AnimatorRes int animatorId, @AnimatorRes int animatorReverseId,
-            @DrawableRes int indicatorBackgroundId,
-            @DrawableRes int indicatorUnselectedBackgroundId) {
+                                   @AnimatorRes int animatorId, @AnimatorRes int animatorReverseId,
+                                   @DrawableRes int indicatorBackgroundId,
+                                   @DrawableRes int indicatorUnselectedBackgroundId) {
 
         mIndicatorWidth = indicatorWidth;
         mIndicatorHeight = indicatorHeight;
@@ -163,7 +234,12 @@ public class CircleIndicator extends LinearLayout {
 
     public void setViewPager(ViewPager viewPager) {
         mViewpager = viewPager;
+        Log.d(TAG, "setViewPager: ");
+        if (mViewpager.getAdapter() == null) {
+            Log.d(TAG, "null: ");
+        }
         if (mViewpager != null && mViewpager.getAdapter() != null) {
+            Log.d(TAG, "setViewPager: ");
             mLastPosition = -1;
             createIndicators();
             mViewpager.removeOnPageChangeListener(mInternalPageChangeListener);
@@ -172,78 +248,15 @@ public class CircleIndicator extends LinearLayout {
         }
     }
 
-    private final OnPageChangeListener mInternalPageChangeListener = new OnPageChangeListener() {
-
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        }
-
-        @Override public void onPageSelected(int position) {
-
-            if (mViewpager.getAdapter() == null || mViewpager.getAdapter().getCount() <= 0) {
-                return;
-            }
-
-            if (mAnimatorIn.isRunning()) {
-                mAnimatorIn.end();
-                mAnimatorIn.cancel();
-            }
-
-            if (mAnimatorOut.isRunning()) {
-                mAnimatorOut.end();
-                mAnimatorOut.cancel();
-            }
-
-            View currentIndicator;
-            if (mLastPosition >= 0 && (currentIndicator = getChildAt(mLastPosition)) != null) {
-                currentIndicator.setBackgroundResource(mIndicatorUnselectedBackgroundResId);
-                mAnimatorIn.setTarget(currentIndicator);
-                mAnimatorIn.start();
-            }
-
-            View selectedIndicator = getChildAt(position);
-            if (selectedIndicator != null) {
-                selectedIndicator.setBackgroundResource(mIndicatorBackgroundResId);
-                mAnimatorOut.setTarget(selectedIndicator);
-                mAnimatorOut.start();
-            }
-            mLastPosition = position;
-        }
-
-        @Override public void onPageScrollStateChanged(int state) {
-        }
-    };
-
     public DataSetObserver getDataSetObserver() {
         return mInternalDataSetObserver;
     }
 
-    private DataSetObserver mInternalDataSetObserver = new DataSetObserver() {
-        @Override public void onChanged() {
-            super.onChanged();
-            if (mViewpager == null) {
-                return;
-            }
-
-            int newCount = mViewpager.getAdapter().getCount();
-            int currentCount = getChildCount();
-
-            if (newCount == currentCount) {  // No change
-                return;
-            } else if (mLastPosition < newCount) {
-                mLastPosition = mViewpager.getCurrentItem();
-            } else {
-                mLastPosition = -1;
-            }
-
-            createIndicators();
-        }
-    };
-
     /**
      * @deprecated User ViewPager addOnPageChangeListener
      */
-    @Deprecated public void setOnPageChangeListener(OnPageChangeListener onPageChangeListener) {
+    @Deprecated
+    public void setOnPageChangeListener(OnPageChangeListener onPageChangeListener) {
         if (mViewpager == null) {
             throw new NullPointerException("can not find Viewpager , setViewPager first");
         }
@@ -271,7 +284,7 @@ public class CircleIndicator extends LinearLayout {
     }
 
     private void addIndicator(int orientation, @DrawableRes int backgroundDrawableId,
-            Animator animator) {
+                              Animator animator) {
         if (animator.isRunning()) {
             animator.end();
             animator.cancel();
@@ -296,14 +309,15 @@ public class CircleIndicator extends LinearLayout {
         animator.start();
     }
 
-    private class ReverseInterpolator implements Interpolator {
-        @Override public float getInterpolation(float value) {
-            return Math.abs(1.0f - value);
-        }
-    }
-
     public int dip2px(float dpValue) {
         final float scale = getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
+    }
+
+    private class ReverseInterpolator implements Interpolator {
+        @Override
+        public float getInterpolation(float value) {
+            return Math.abs(1.0f - value);
+        }
     }
 }

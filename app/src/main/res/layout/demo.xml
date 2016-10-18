@@ -7,16 +7,23 @@
 
     </data>
 
-    <android.support.v4.widget.DrawerLayout
-        android:id="@+id/drawer_layout"
+    <com.sinyuk.yukdaily.widgets.PagerEnabledSlidingPaneLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="com.sinyuk.yukdaily.NewsListDemo">
+        <!--menu-->
+        <fragment
+            android:id="@+id/slidingMenuFragment"
+            class="com.sinyuk.yukdaily.ui.menu.SlidingMenuFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout="@layout/sliding_menu_fragment" />
 
         <!--content-->
         <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="0.382"
             android:clipToPadding="false">
 
             <FrameLayout
@@ -43,16 +50,6 @@
 
 
         </android.support.design.widget.CoordinatorLayout>
-        <!--menu-->
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="end"
-            android:layout_marginLeft="72dp"
-            android:layout_marginStart="72dp"
-            tools:background="#fff" />
-
-    </android.support.v4.widget.DrawerLayout>
+    </com.sinyuk.yukdaily.widgets.PagerEnabledSlidingPaneLayout>
 </layout>
 

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.sinyuk.yukdaily.BR;
 import com.sinyuk.yukdaily.R;
+import com.sinyuk.yukdaily.databinding.NewsHeaderLayoutBinding;
 import com.sinyuk.yukdaily.databinding.NewsItemBinding;
 import com.sinyuk.yukdaily.model.Story;
 import com.sinyuk.yukdaily.utils.binding.BindingViewHolder;
@@ -24,7 +25,10 @@ import java.util.List;
  */
 public class NewsAdapter extends RecyclerView.Adapter<BindingViewHolder> {
     public static final String TAG = "NewsAdapter";
+    private static final int HEADER_VIEW_TYPE = Integer.MAX_VALUE;
+    private static final int HEADER_VIEW_ID = Integer.MAX_VALUE;
     private List<Story> stories = new ArrayList<>();
+    private NewsHeaderLayoutBinding headerBinding = null;
 
     @BindingAdapter("imageUrl")
     public static void loadThumbnail(ImageView imageView, List<String> images) {
@@ -35,54 +39,91 @@ public class NewsAdapter extends RecyclerView.Adapter<BindingViewHolder> {
                 .into(imageView);
     }
 
+    private boolean hasHeader() {
+        return headerBinding != null && headerBinding.getRoot() != null;
+    }
+
+    private boolean isHeader(int position) {
+        return hasHeader() && position == 0;
+    }
+
+    void addHeaderBinding(NewsHeaderLayoutBinding binding) {
+        headerBinding = binding;
+        notifyItemInserted(0);
+    }
+
+
+    private int itemPositionInData(int rvPosition) {
+        return rvPosition - (hasHeader() ? 1 : 0);
+    }
+
+    private int itemPositionInRV(int dataPosition) {
+        return dataPosition + (hasHeader() ? 1 : 0);
+    }
 
     @Override
     public long getItemId(int position) {
-        if (stories.get(position) != null) {
-            return stories.get(position).getId();
+        if (isHeader(position)) {
+            return HEADER_VIEW_ID;
+        }
+        if (stories.get(itemPositionInData(position)) != null) {
+            return stories.get(itemPositionInData(position)).getId();
         }
         return RecyclerView.NO_ID;
+    }
+
+
+    @Override
+    public int getItemViewType(int position) {
+        if (isHeader(position)) {
+            return HEADER_VIEW_TYPE;
+        }
+        return super.getItemViewType(itemPositionInData(position));
     }
 
     public void setData(List<Story> data) {
         Log.d(TAG, "setData: " + data.toString());
         stories.clear();
         stories.addAll(data);
-//        notifyItemRangeInserted(0, data.size());
-        notifyDataSetChanged();
+        notifyItemRangeInserted(itemPositionInRV(0), data.size());
     }
 
     public void appendData(List<Story> data) {
         final int start = stories.size();
         stories.addAll(data);
-        notifyItemRangeInserted(start, data.size());
+        notifyItemRangeInserted(itemPositionInRV(start), data.size());
     }
 
 
     @Override
     public BindingViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        NewsItemBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
-                R.layout.news_item, parent, false);
-        return new ItemViewHolder(binding);
+        if (viewType == HEADER_VIEW_TYPE) {
+            return new BindingViewHolder<>(headerBinding);
+        } else {
+            final NewsItemBinding binding = DataBindingUtil.inflate(
+                    LayoutInflater.from(parent.getContext()), R.layout.news_item, parent, false);
+            return new BindingViewHolder<>(binding);
+        }
     }
 
 
     @Override
     public void onBindViewHolder(BindingViewHolder holder, int position) {
-        if (stories.get(position) != null)
-            holder.getBinding().setVariable(BR.story, stories.get(position));
-
+        if (!isHeader(position)) {
+            if (stories.get(itemPositionInData(position)) != null) {
+                holder.getBinding().setVariable(BR.story, stories.get(itemPositionInData(position)));
+            }
+        }
     }
 
-    @Override
-    public int getItemCount() {
+    private int getDataItemCount() {
         return stories == null ? 0 : stories.size();
     }
 
-    private class ItemViewHolder extends BindingViewHolder<NewsItemBinding> {
-        ItemViewHolder(NewsItemBinding binding) {
-            super(binding);
-        }
+
+    @Override
+    public int getItemCount() {
+        return getDataItemCount() + (hasHeader() ? 1 : 0);
     }
 }
 

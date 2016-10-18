@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="errorMessage"
+            type="String" />
+
+        <variable
+            name="errorImage"
+            type="Integer" />
+
+        <variable
+            name="emptyMessage"
+            type="String" />
+
+        <variable
+            name="emptyImage"
+            type="Integer" />
+    </data>
+
+    <com.sinyuk.yukdaily.widgets.BetterViewAnimator
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include layout="@layout/layout_list" />
+
+        <include
+            layout="@layout/layout_error"
+            bind:errorImage="@{errorImage}"
+            bind:errorMessage="@{errorMessage}" />
+
+        <include
+            layout="@layout/layout_empty"
+            bind:emptyImage="@{emptyImage}"
+            bind:emptyMessage="@{emptyMessage}" />
+    </com.sinyuk.yukdaily.widgets.BetterViewAnimator>
+</layout>

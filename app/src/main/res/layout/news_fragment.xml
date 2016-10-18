@@ -2,67 +2,37 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+
+        <!--<variable-->
+            <!--name="layoutManager"-->
+            <!--type="android.support.v7.widget.LinearLayoutManager" />-->
+
+        <!--<variable-->
+            <!--name="headerView"-->
+            <!--type="android.view.View" />-->
+
+        <variable
+            name="adapter"
+            type="com.sinyuk.yukdaily.ui.news.NewsAdapter" />
+    </data>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:overScrollMode="never">
+        android:overScrollMode="never"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <android.support.v4.widget.NestedScrollView
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:clipToPadding="false"
             android:overScrollMode="never"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:scrollbarStyle="outsideOverlay"
+            app:adapter="@{adapter}"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-                <com.sinyuk.yukdaily.widgets.RatioLinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layoutHOverW="0.4">
-
-                    <android.support.v4.view.ViewPager
-                        android:id="@+id/viewPager"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:clipToPadding="false"
-                        android:overScrollMode="never"
-                        android:paddingBottom="@dimen/content_space_8"
-                        android:paddingEnd="@dimen/header_card_padding"
-                        android:paddingLeft="@dimen/header_card_padding"
-                        android:paddingRight="@dimen/header_card_padding"
-                        android:paddingStart="@dimen/header_card_padding"
-                        android:paddingTop="@dimen/content_space_8" />
-
-                    <com.sinyuk.yukdaily.widgets.CircleIndicator
-                        android:id="@+id/indicator"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        app:ci_drawable_unselected="@drawable/indicator_unselected"
-                        app:ci_height="8dp"
-                        app:ci_width="8dp"
-                        app:viewPager="@{viewPager}" />
-                </com.sinyuk.yukdaily.widgets.RatioLinearLayout>
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clipToPadding="false"
-                    android:overScrollMode="never"
-                    android:scrollbarStyle="outsideOverlay"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-            </LinearLayout>
-
-        </android.support.v4.widget.NestedScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>
 </layout>
