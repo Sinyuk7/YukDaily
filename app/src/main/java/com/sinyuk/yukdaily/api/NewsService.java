@@ -1,8 +1,8 @@
 package com.sinyuk.yukdaily.api;
 
-import com.sinyuk.yukdaily.entity.LatestNews;
-import com.sinyuk.yukdaily.entity.OldNews;
-import com.sinyuk.yukdaily.entity.StartImage;
+import com.sinyuk.yukdaily.entity.news.LatestNews;
+import com.sinyuk.yukdaily.entity.news.OldNews;
+import com.sinyuk.yukdaily.entity.news.StartImage;
 
 import retrofit2.http.GET;
 import retrofit2.http.Path;

@@ -23,7 +23,7 @@ import com.sinyuk.yukdaily.Sinyuk;
 import com.sinyuk.yukdaily.api.NewsService;
 import com.sinyuk.yukdaily.base.BaseActivity;
 import com.sinyuk.yukdaily.databinding.ActivitySplashBinding;
-import com.sinyuk.yukdaily.entity.StartImage;
+import com.sinyuk.yukdaily.entity.news.StartImage;
 
 import java.io.File;
 import java.io.FileOutputStream;

@@ -12,7 +12,7 @@ import com.sinyuk.yukdaily.BR;
 import com.sinyuk.yukdaily.R;
 import com.sinyuk.yukdaily.databinding.NewsHeaderLayoutBinding;
 import com.sinyuk.yukdaily.databinding.NewsItemBinding;
-import com.sinyuk.yukdaily.entity.Story;
+import com.sinyuk.yukdaily.entity.news.Story;
 import com.sinyuk.yukdaily.utils.binding.BindingViewHolder;
 
 import java.util.ArrayList;

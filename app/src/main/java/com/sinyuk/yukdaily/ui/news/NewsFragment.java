@@ -17,8 +17,8 @@ import com.sinyuk.yukdaily.base.ListFragment;
 import com.sinyuk.yukdaily.data.news.NewsRepository;
 import com.sinyuk.yukdaily.data.news.NewsRepositoryModule;
 import com.sinyuk.yukdaily.databinding.NewsHeaderLayoutBinding;
-import com.sinyuk.yukdaily.entity.LatestNews;
-import com.sinyuk.yukdaily.entity.OldNews;
+import com.sinyuk.yukdaily.entity.news.LatestNews;
+import com.sinyuk.yukdaily.entity.news.OldNews;
 import com.sinyuk.yukdaily.utils.cardviewpager.ShadowTransformer;
 import com.sinyuk.yukdaily.widgets.CircleIndicator;
 

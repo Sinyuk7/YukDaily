@@ -1,4 +1,4 @@
-package com.sinyuk.yukdaily.data;
+package com.sinyuk.yukdaily.data.gank;
 
 import com.google.gson.annotations.SerializedName;
 

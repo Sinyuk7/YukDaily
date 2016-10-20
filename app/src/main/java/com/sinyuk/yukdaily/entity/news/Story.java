@@ -1,4 +1,4 @@
-package com.sinyuk.yukdaily.entity;
+package com.sinyuk.yukdaily.entity.news;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;

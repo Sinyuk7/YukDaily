@@ -1,6 +1,6 @@
 package com.sinyuk.yukdaily.api;
 
-import com.sinyuk.yukdaily.data.GankResponse;
+import com.sinyuk.yukdaily.data.gank.GankResponse;
 
 import retrofit2.http.GET;
 import retrofit2.http.Path;

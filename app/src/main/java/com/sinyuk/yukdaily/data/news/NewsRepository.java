@@ -4,8 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 import com.sinyuk.yukdaily.api.NewsService;
-import com.sinyuk.yukdaily.entity.LatestNews;
-import com.sinyuk.yukdaily.entity.OldNews;
+import com.sinyuk.yukdaily.entity.news.LatestNews;
+import com.sinyuk.yukdaily.entity.news.OldNews;
 import com.sinyuk.yukdaily.utils.rx.SchedulerTransformer;
 
 import java.text.SimpleDateFormat;
