@@ -6,4 +6,6 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="no_news">你似乎来到了没有知识的荒野</string>
+    <string name="zhihudaily_slogan">每天三次,每次七分钟</string>
+    <string name="gank_slogan">干货集中营</string>
 </resources>

@@ -33,6 +33,30 @@ public class NewsFragment extends ListFragment {
     @Inject
     NewsService newsService;
     private NewsHeaderLayoutBinding headerBinding;
+    private final Observer<LatestNews> refreshObserver = new Observer<LatestNews>() {
+        @Override
+        public void onCompleted() {
+            if (binding.listLayout.recyclerView.getAdapter().getItemCount() <= 0) {
+                assertEmpty(getString(R.string.no_news));
+            } else {
+                final int count = headerBinding.viewPager.getChildCount();
+                if (count >= 3) {
+                    headerBinding.viewPager.setCurrentItem((int) Math.floor(count / 2f) + 1);
+                }
+            }
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            assertEmpty(e.getLocalizedMessage());
+        }
+
+        @Override
+        public void onNext(LatestNews latestNews) {
+            headerBinding.getAdapter().setData(latestNews.getTopStories());
+            ((NewsAdapter) binding.listLayout.recyclerView.getAdapter()).setData(latestNews.getStories());
+        }
+    };
 
     @BindingAdapter({"adapter", "indicator"})
     public static void setAdapter(ViewPager vp, CardPagerAdapter adapter, CircleIndicator indicator) {
@@ -53,35 +77,12 @@ public class NewsFragment extends ListFragment {
         App.get(context).getAppComponent().inject(this);
     }
 
-
     @Override
     protected void refreshData() {
-        newsService.getLatestNews()
+        addSubscription(newsService.getLatestNews()
                 .compose(new SchedulerTransformer<>())
-                .subscribe(new Observer<LatestNews>() {
-                    @Override
-                    public void onCompleted() {
-                        if (binding.listLayout.recyclerView.getAdapter().getItemCount() <= 0) {
-                            assertEmpty(getString(R.string.no_news));
-                        } else {
-                            final int count = headerBinding.viewPager.getChildCount();
-                            if (count >= 3) {
-                                headerBinding.viewPager.setCurrentItem(count / 2 + 1);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        assertEmpty(e.getLocalizedMessage());
-                    }
-
-                    @Override
-                    public void onNext(LatestNews latestNews) {
-                        headerBinding.getAdapter().setData(latestNews.getTopStories());
-                        ((NewsAdapter) binding.listLayout.recyclerView.getAdapter()).setData(latestNews.getStories());
-                    }
-                });
+                .doOnTerminate(this::stopRefresh)
+                .subscribe(refreshObserver));
     }
 
     @Override

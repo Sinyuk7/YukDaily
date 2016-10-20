@@ -82,10 +82,9 @@ public class NewsAdapter extends RecyclerView.Adapter<BindingViewHolder> {
     }
 
     public void setData(List<Story> data) {
-        Log.d(TAG, "setData: " + data.toString());
         stories.clear();
         stories.addAll(data);
-        notifyItemRangeInserted(itemPositionInRV(0), data.size());
+        notifyDataSetChanged();
     }
 
     public void appendData(List<Story> data) {

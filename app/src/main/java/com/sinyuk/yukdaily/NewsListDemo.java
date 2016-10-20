@@ -6,8 +6,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SlidingPaneLayout;
 import android.util.Log;
+import android.view.View;
 
+import com.sinyuk.myutils.MathUtils;
 import com.sinyuk.yukdaily.base.BaseActivity;
 import com.sinyuk.yukdaily.databinding.ActivityHomeBinding;
 import com.sinyuk.yukdaily.ui.gank.GankFragment;
@@ -17,7 +20,7 @@ import com.sinyuk.yukdaily.ui.news.NewsFragment;
  * Created by Sinyuk on 2016/10/13.
  */
 
-public class NewsListDemo extends BaseActivity implements ViewPager.OnPageChangeListener {
+public class NewsListDemo extends BaseActivity implements ViewPager.OnPageChangeListener, SlidingPaneLayout.PanelSlideListener {
     ActivityHomeBinding binding;
 
     @Override
@@ -25,11 +28,20 @@ public class NewsListDemo extends BaseActivity implements ViewPager.OnPageChange
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home);
 
+        binding.slidingPaneLayout.setPanelSlideListener(this);
+
+
+        initToolbar();
+
         if (savedInstanceState == null) {
             switchToolbarTitle(0);
         }
 
         setupViewPager();
+
+    }
+
+    private void initToolbar() {
 
     }
 
@@ -95,10 +107,34 @@ public class NewsListDemo extends BaseActivity implements ViewPager.OnPageChange
     private void switchToolbarTitle(int index) {
         switch (index) {
             case 0:
-                binding.textSitcher.setCurrentText("知乎日报");
+                binding.textSwitcher.setCurrentText(getString(R.string.zhihudaily_slogan));
                 return;
             case 1:
-                binding.textSitcher.setCurrentText("Gank.io");
+                binding.textSwitcher.setCurrentText(getString(R.string.gank_slogan));
         }
+    }
+
+    @Override
+    public void onPanelSlide(View panel, float slideOffset) {
+        Log.d(TAG, "onPanelSlide: " + slideOffset);
+        binding.menu.setAlpha(MathUtils.constrain(0, 1, (1 - slideOffset)));
+    }
+
+    public void onTogglePanel(View v) {
+        if (binding.slidingPaneLayout.isOpen()) {
+            binding.slidingPaneLayout.closePane();
+        } else {
+            binding.slidingPaneLayout.openPane();
+        }
+    }
+
+    @Override
+    public void onPanelOpened(View panel) {
+
+    }
+
+    @Override
+    public void onPanelClosed(View panel) {
+
     }
 }

@@ -8,6 +8,7 @@
     </data>
 
     <com.sinyuk.yukdaily.widgets.PagerEnabledSlidingPaneLayout
+        android:id="@+id/slidingPaneLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="com.sinyuk.yukdaily.NewsListDemo">
@@ -102,17 +103,19 @@
                         app:layout_collapseMode="pin">
 
                         <ImageView
+                            android:onClick="onTogglePanel"
+                            android:id="@+id/menu"
                             style="@style/toolbar_button"
                             android:src="@drawable/ic_menu"/>
 
                         <TextSwitcher
-                            android:id="@+id/textSitcher"
+                            android:id="@+id/textSwitcher"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/content_space_16"
+                            android:layout_marginRight="72dp"
                             android:inAnimation="@android:anim/slide_in_left"
-                            android:outAnimation="@android:anim/slide_out_right"
-                            android:layout_marginRight="72dp">
+                            android:outAnimation="@android:anim/slide_out_right">
 
                             <TextView
                                 style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
