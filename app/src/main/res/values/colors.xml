@@ -2,21 +2,18 @@
 <resources>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorPrimary">#000000</color>
-    <color name="colorPrimaryLt">#b3f06292</color>
-    <color name="colorAccent">@color/official_pro</color>
-    <!--official colors-->
-    <!--You’re encouraged to use the official Dribbble colorswhen displaying the logo and marks. -->
-    <!--When using the logo type on light backgrounds, use our charcoal color when possible. -->
-    <!--Use white if displaying on dark backgrounds (as in the dribbble.com header).-->
-    <eat-comment/>
-    <color name="official_pink">#EA4C89</color>
-    <color name="official_charcoal">#333333</color>
-    <color name="official_link_blue">#3a8bbb</color>
-    <color name="official_pro">#66cccc</color>
-    <color name="official_jobs_hiring">#7bbb5e</color>
-    <color name="official_teams">#00b6e3</color>
-    <color name="official_playbook">#66cc99</color>
-    <color name="official_slate">#9da3a5</color>
+    <color name="colorPrimaryLt">#424242</color>
+    <color name="colorAccent">#757575</color>
+
+    <color name="themeRed">#F65306</color>
+    <color name="themeRedDark">#e14c05</color>
+    <color name="themeRedLight">#fbfc7844</color>
+    <color name="themeYellow">#faf73b</color>
+    <color name="themeGreen">#01D8A9</color>
+    <color name="themeBlue">#27D4FF</color>
+    <color name="themeLight_blue">#5BF8FF</color>
+    <color name="themeGray_blue">#0D8BFF</color>
+    <color name="themeError">#F46B00</color>
 
 
 
