@@ -3,7 +3,6 @@ package com.sinyuk.yukdaily.ui.news;
 import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -13,7 +12,7 @@ import com.sinyuk.yukdaily.BR;
 import com.sinyuk.yukdaily.R;
 import com.sinyuk.yukdaily.databinding.NewsHeaderLayoutBinding;
 import com.sinyuk.yukdaily.databinding.NewsItemBinding;
-import com.sinyuk.yukdaily.model.Story;
+import com.sinyuk.yukdaily.entity.Story;
 import com.sinyuk.yukdaily.utils.binding.BindingViewHolder;
 
 import java.util.ArrayList;

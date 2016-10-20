@@ -9,20 +9,28 @@ import android.view.ViewGroup;
 
 import com.sinyuk.yukdaily.R;
 import com.sinyuk.yukdaily.base.LazyFragment;
+import com.sinyuk.yukdaily.base.ListFragment;
 import com.sinyuk.yukdaily.databinding.GankFragmentBinding;
 
 /**
  * Created by Sinyuk on 16.10.20.
  */
 
-public class GankFragment extends LazyFragment {
+public class GankFragment extends ListFragment {
     private GankFragmentBinding binding;
+
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.gank_fragment, container, false);
         return binding.getRoot();
+    }
+
+    @Override
+    protected void refreshData() {
+
     }
 
     @Override

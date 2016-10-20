@@ -16,7 +16,7 @@ import com.sinyuk.yukdaily.R;
 import com.sinyuk.yukdaily.api.NewsService;
 import com.sinyuk.yukdaily.base.ListFragment;
 import com.sinyuk.yukdaily.databinding.NewsHeaderLayoutBinding;
-import com.sinyuk.yukdaily.model.LatestNews;
+import com.sinyuk.yukdaily.entity.LatestNews;
 import com.sinyuk.yukdaily.utils.cardviewpager.ShadowTransformer;
 import com.sinyuk.yukdaily.utils.rx.SchedulerTransformer;
 import com.sinyuk.yukdaily.widgets.CircleIndicator;

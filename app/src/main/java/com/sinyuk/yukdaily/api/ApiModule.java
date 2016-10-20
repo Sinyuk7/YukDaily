@@ -103,7 +103,20 @@ public class ApiModule {
     @Provides
     @Singleton
     @Named("News")
-    Retrofit provideRetrofit(Gson gson, @Named("Cached") OkHttpClient okHttpClient) {
+    Retrofit provideNewsRetrofit(Gson gson, @Named("Cached") OkHttpClient okHttpClient) {
+        return new Retrofit.Builder()
+                .baseUrl(NewsApi.END_POINT)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .client(okHttpClient)
+                .build();
+    }
+
+
+    @Provides
+    @Singleton
+    @Named("Gank")
+    Retrofit provideGankRetrofit(Gson gson, @Named("Cached") OkHttpClient okHttpClient) {
         return new Retrofit.Builder()
                 .baseUrl(NewsApi.END_POINT)
                 .addConverterFactory(GsonConverterFactory.create(gson))
@@ -117,5 +130,11 @@ public class ApiModule {
     @Singleton
     NewsService provideNewsService(@Named("News") Retrofit retrofit) {
         return retrofit.create(NewsService.class);
+    }
+
+    @Provides
+    @Singleton
+    GankService provideGankService(@Named("Gank") Retrofit retrofit) {
+        return retrofit.create(GankService.class);
     }
 }

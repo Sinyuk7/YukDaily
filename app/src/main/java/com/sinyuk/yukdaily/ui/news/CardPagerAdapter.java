@@ -15,7 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sinyuk.yukdaily.BR;
 import com.sinyuk.yukdaily.R;
 import com.sinyuk.yukdaily.databinding.NewsHeaderItemBinding;
-import com.sinyuk.yukdaily.model.Story;
+import com.sinyuk.yukdaily.entity.Story;
 import com.sinyuk.yukdaily.utils.cardviewpager.CardAdapter;
 
 import java.util.ArrayList;

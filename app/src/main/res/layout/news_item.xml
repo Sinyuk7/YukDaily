@@ -9,7 +9,7 @@
 
         <variable
             name="story"
-            type="com.sinyuk.yukdaily.model.Story" />
+            type="com.sinyuk.yukdaily.entity.Story" />
     </data>
 
     <!--style="@style/card"-->
