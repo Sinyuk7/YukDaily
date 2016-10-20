@@ -1,17 +1,14 @@
 package com.sinyuk.yukdaily.base;
 
-import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.sinyuk.myutils.system.NetWorkUtils;
 import com.sinyuk.yukdaily.R;
@@ -25,7 +22,8 @@ public abstract class ListFragment extends BaseFragment {
     protected static final int PRELOAD_THRESHOLD = 3;
 
     protected ListFragmentBinding binding;
-    private boolean isLoading;
+    protected boolean isRefreshing = true;
+    protected boolean isLoading;
 
     @Nullable
     @Override
@@ -39,13 +37,13 @@ public abstract class ListFragment extends BaseFragment {
         // do not use lambda!!
         binding.listLayout.swipeRefreshLayout.setOnRefreshListener(
                 () -> {
-                    isLoading = true;
-                    startRefresh();
+                    isRefreshing = true;
+                    startRefreshing();
                     if (NetWorkUtils.isNetworkConnection(getContext())) {
                         refreshData();
                     } else {
                         assertError("");
-                        stopRefresh();
+                        stopRefreshing();
                     }
                 });
     }
@@ -54,14 +52,14 @@ public abstract class ListFragment extends BaseFragment {
         return new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (isLoading) {
+                if (isRefreshing || isLoading) {
                     return;
                 }
                 final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 boolean isBottom =
                         layoutManager.findLastCompletelyVisibleItemPosition() >= recyclerView.getAdapter().getItemCount() - PRELOAD_THRESHOLD;
                 if (isBottom) {
-                    fetchData();
+                    startLoading();
                 }
             }
         };
@@ -73,12 +71,14 @@ public abstract class ListFragment extends BaseFragment {
         binding.viewAnimator.setDisplayedChildId(R.id.errorLayout);
     }
 
-    public void onClickEmpty() {
-        startRefresh();
+    @CallSuper
+    protected void onClickEmpty() {
+        startRefreshing();
     }
 
-    public void onClickError() {
-        startRefresh();
+    @CallSuper
+    protected void onClickError() {
+        startRefreshing();
     }
 
     @CallSuper
@@ -87,23 +87,40 @@ public abstract class ListFragment extends BaseFragment {
         binding.viewAnimator.setDisplayedChildId(R.id.emptyLayout);
     }
 
-    public void startRefresh() {
-        binding.viewAnimator.setDisplayedChildId(R.id.listLayout);
+    @CallSuper
+    protected void assertNoMore(String message) {
+        binding.emptyLayout.setEmptyMessage(message);
+    }
 
+    @CallSuper
+    protected void startRefreshing() {
+        binding.viewAnimator.setDisplayedChildId(R.id.listLayout);
         if (binding.listLayout.swipeRefreshLayout != null) {
             binding.listLayout.swipeRefreshLayout.setRefreshing(true);
         }
     }
 
-    public void stopRefresh() {
+    @CallSuper
+    protected void stopRefreshing() {
         if (binding.listLayout.swipeRefreshLayout != null) {
-            isLoading = false;
+            isRefreshing = false;
             binding.listLayout.swipeRefreshLayout.postDelayed(() -> {
                 if (binding.listLayout.swipeRefreshLayout != null) {
                     binding.listLayout.swipeRefreshLayout.setRefreshing(false);
                 }
             }, 600);
         }
+    }
+
+    @CallSuper
+    protected void startLoading() {
+        isLoading = true;
+        fetchData();
+    }
+
+    @CallSuper
+    protected void stopLoading() {
+        isLoading = false;
     }
 
 

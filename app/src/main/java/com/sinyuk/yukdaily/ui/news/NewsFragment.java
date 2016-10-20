@@ -13,12 +13,13 @@ import android.view.View;
 
 import com.sinyuk.yukdaily.App;
 import com.sinyuk.yukdaily.R;
-import com.sinyuk.yukdaily.api.NewsService;
 import com.sinyuk.yukdaily.base.ListFragment;
+import com.sinyuk.yukdaily.data.news.NewsRepository;
+import com.sinyuk.yukdaily.data.news.NewsRepositoryModule;
 import com.sinyuk.yukdaily.databinding.NewsHeaderLayoutBinding;
 import com.sinyuk.yukdaily.entity.LatestNews;
+import com.sinyuk.yukdaily.entity.OldNews;
 import com.sinyuk.yukdaily.utils.cardviewpager.ShadowTransformer;
-import com.sinyuk.yukdaily.utils.rx.SchedulerTransformer;
 import com.sinyuk.yukdaily.widgets.CircleIndicator;
 
 import javax.inject.Inject;
@@ -31,7 +32,7 @@ import rx.Observer;
 
 public class NewsFragment extends ListFragment {
     @Inject
-    NewsService newsService;
+    NewsRepository newsRepository;
     private NewsHeaderLayoutBinding headerBinding;
     private final Observer<LatestNews> refreshObserver = new Observer<LatestNews>() {
         @Override
@@ -57,6 +58,25 @@ public class NewsFragment extends ListFragment {
             ((NewsAdapter) binding.listLayout.recyclerView.getAdapter()).setData(latestNews.getStories());
         }
     };
+    //
+    private int fromToday = 1;
+    private final Observer<OldNews> loadObserver = new Observer<OldNews>() {
+        @Override
+        public void onCompleted() {
+            fromToday++;
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            assertEmpty(e.getLocalizedMessage());
+        }
+
+        @Override
+        public void onNext(OldNews oldNews) {
+            ((NewsAdapter) binding.listLayout.recyclerView.getAdapter()).appendData(oldNews.getStories());
+        }
+    };
+
 
     @BindingAdapter({"adapter", "indicator"})
     public static void setAdapter(ViewPager vp, CardPagerAdapter adapter, CircleIndicator indicator) {
@@ -74,20 +94,17 @@ public class NewsFragment extends ListFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        App.get(context).getAppComponent().inject(this);
+        App.get(context).getAppComponent().plus(new NewsRepositoryModule()).inject(this);
     }
 
     @Override
     protected void refreshData() {
-        addSubscription(newsService.getLatestNews()
-                .compose(new SchedulerTransformer<>())
-                .doOnTerminate(this::stopRefresh)
-                .subscribe(refreshObserver));
+        addSubscription(newsRepository.getLatestNews().doOnTerminate(() -> fromToday = 1).doOnTerminate(this::stopRefreshing).subscribe(refreshObserver));
     }
 
     @Override
     protected void fetchData() {
-
+        addSubscription(newsRepository.getNewsAt(fromToday).doOnTerminate(this::stopLoading).subscribe(loadObserver));
     }
 
     @Override
@@ -115,6 +132,7 @@ public class NewsFragment extends ListFragment {
         manager.setAutoMeasureEnabled(true);
         binding.listLayout.recyclerView.setLayoutManager(manager);
         binding.listLayout.recyclerView.setHasFixedSize(true);
+        binding.listLayout.recyclerView.addOnScrollListener(getLoadMoreListener());
     }
 
     private void initListData() {

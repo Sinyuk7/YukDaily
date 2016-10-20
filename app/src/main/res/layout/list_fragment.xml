@@ -44,3 +44,5 @@
             bind:emptyMessage="@{emptyMessage}"/>
     </com.sinyuk.yukdaily.widgets.BetterViewAnimator>
 </layout>
+
+

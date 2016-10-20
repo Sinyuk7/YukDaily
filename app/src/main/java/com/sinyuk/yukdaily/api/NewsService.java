@@ -20,6 +20,6 @@ public interface NewsService {
     Observable<LatestNews> getLatestNews();
 
     @GET("news/before/{date}")
-    Observable<OldNews> getNewsAt(String date);
+    Observable<OldNews> getNewsAt(@Path("date") String date);
 
 }

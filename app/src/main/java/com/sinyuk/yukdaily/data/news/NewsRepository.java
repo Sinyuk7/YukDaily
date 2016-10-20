@@ -1,4 +1,4 @@
-package com.sinyuk.yukdaily.data;
+package com.sinyuk.yukdaily.data.news;
 
 import android.content.Context;
 import android.util.Log;
