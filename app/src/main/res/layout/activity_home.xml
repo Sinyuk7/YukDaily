@@ -51,14 +51,30 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <ImageView
+                        <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_alignBottom="@+id/navigationTabStrip"
-                            android:layout_alignParentTop="true"
-                            android:foreground="@color/sliding_menu_scrim"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/sample"/>
+                            android:layout_alignParentTop="true">
+
+                            <ImageView
+                                android:id="@+id/backdrop2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:foreground="@color/sliding_menu_scrim"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/backdrop2"
+                                android:visibility="gone"/>
+
+                            <ImageView
+                                android:id="@+id/backdrop1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:foreground="@color/sliding_menu_scrim"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/backdrop1"
+                                android:visibility="gone"/>
+                        </FrameLayout>
 
                         <com.gigamole.navigationtabstrip.NavigationTabStrip
                             android:id="@+id/navigationTabStrip"
@@ -90,9 +106,12 @@
                             android:src="@drawable/ic_menu"/>
 
                         <TextSwitcher
+                            android:id="@+id/textSitcher"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/content_space_16"
+                            android:inAnimation="@android:anim/slide_in_left"
+                            android:outAnimation="@android:anim/slide_out_right"
                             android:layout_marginRight="72dp">
 
                             <TextView
@@ -101,7 +120,14 @@
                                 android:layout_height="wrap_content"
                                 android:ellipsize="marquee"
                                 android:maxLines="1"
-                                android:text="Titlsfdsssae"
+                                android:textColor="@android:color/white"/>
+
+                            <TextView
+                                style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="marquee"
+                                android:maxLines="1"
                                 android:textColor="@android:color/white"/>
                         </TextSwitcher>
                     </android.support.v7.widget.Toolbar>

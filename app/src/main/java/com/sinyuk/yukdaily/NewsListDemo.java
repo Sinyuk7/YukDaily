@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 
 import com.sinyuk.yukdaily.base.BaseActivity;
 import com.sinyuk.yukdaily.databinding.ActivityHomeBinding;
@@ -23,6 +24,10 @@ public class NewsListDemo extends BaseActivity implements ViewPager.OnPageChange
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home);
+
+        if (savedInstanceState == null) {
+            switchToolbarTitle(0);
+        }
 
         setupViewPager();
 
@@ -59,16 +64,41 @@ public class NewsListDemo extends BaseActivity implements ViewPager.OnPageChange
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        Log.d(TAG, "onPageScrolled: position " + position);
+        Log.d(TAG, "onPageScrolled: positionOffset " + positionOffset);
+        Log.d(TAG, "onPageScrolled: positionOffsetPixels " + positionOffsetPixels);
+
 
     }
 
     @Override
     public void onPageSelected(int position) {
-
+        Log.d(TAG, "onPageSelected: " + position);
+//        switch (position) {
+//            case 0:
+//                binding.backdrop1.setVisibility(View.VISIBLE);
+//                binding.backdrop2.setVisibility(View.GONE);
+//                return;
+//            case 1:
+//                binding.backdrop2.setVisibility(View.VISIBLE);
+//                binding.backdrop1.setVisibility(View.GONE);
+//        }
     }
 
     @Override
     public void onPageScrollStateChanged(int state) {
+        if (state == ViewPager.SCROLL_STATE_IDLE) {
+            switchToolbarTitle(binding.viewPager.getCurrentItem());
+        }
+    }
 
+    private void switchToolbarTitle(int index) {
+        switch (index) {
+            case 0:
+                binding.textSitcher.setCurrentText("知乎日报");
+                return;
+            case 1:
+                binding.textSitcher.setCurrentText("Gank.io");
+        }
     }
 }
