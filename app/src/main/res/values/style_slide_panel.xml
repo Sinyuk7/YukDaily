@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="menu_item_layout">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="menu_item_icon" parent="Base.Widget.AppCompat.Button.Borderless">
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:layout_marginRight">@dimen/content_space_16</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+    </style>
+
+
+    <style name="menu_item_text" parent="TextAppearance.AppCompat.Menu">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:drawablePadding">@dimen/content_space_16</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">?actionBarSize</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+</resources>

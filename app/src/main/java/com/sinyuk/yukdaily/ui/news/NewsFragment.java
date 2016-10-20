@@ -41,7 +41,7 @@ public class NewsFragment extends ListFragment {
             } else {
                 final int count = headerBinding.viewPager.getChildCount();
                 if (count >= 3) {
-                    headerBinding.viewPager.setCurrentItem((int) Math.floor(count / 2f) + 1);
+                    headerBinding.viewPager.setCurrentItem((int) Math.floor(count / 2f));
                 }
             }
         }

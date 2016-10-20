@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -11,5 +12,52 @@
             android:layout_height="match_parent"
             android:background="@android:color/black"
             android:scaleType="centerCrop"/>
-    </LinearLayout>
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:overScrollMode="never">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/content_space_16"
+                android:orientation="vertical">
+
+                <com.sinyuk.yukdaily.widgets.MyCircleImageView
+                    android:layout_width="?actionBarSize"
+                    android:layout_height="?actionBarSize"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="20dp"
+                    android:src="@drawable/avatar"
+                    app:border_color="@android:color/white"
+                    app:border_width="@dimen/divider_height"/>
+
+
+                <TextView
+                    style="@style/menu_item_text"
+                    android:drawableLeft="@drawable/ic_home"
+                    android:text="主页"/>
+
+                <TextView
+                    style="@style/menu_item_text"
+                    android:drawableLeft="@drawable/ic_favor"
+                    android:text="收藏"/>
+
+                <TextView
+                    style="@style/menu_item_text"
+                    android:drawableLeft="@drawable/ic_notice"
+                    android:text="消息"/>
+
+                <TextView
+                    style="@style/menu_item_text"
+                    android:drawableLeft="@drawable/ic_settings"
+                    android:text="设置"/>
+
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+    </FrameLayout>
 </layout>
