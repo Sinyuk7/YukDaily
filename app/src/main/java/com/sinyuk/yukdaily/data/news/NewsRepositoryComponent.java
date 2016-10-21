@@ -1,6 +1,5 @@
 package com.sinyuk.yukdaily.data.news;
 
-import com.sinyuk.yukdaily.ui.WebViewActivity;
 import com.sinyuk.yukdaily.ui.news.BrowserActivity;
 import com.sinyuk.yukdaily.ui.news.NewsFragment;
 
@@ -21,6 +20,4 @@ public interface NewsRepositoryComponent {
     void inject(NewsFragment target);
 
     void inject(BrowserActivity target);
-
-    void inject(WebViewActivity target);
 }

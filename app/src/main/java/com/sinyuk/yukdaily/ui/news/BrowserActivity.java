@@ -25,8 +25,8 @@ import com.sinyuk.yukdaily.data.news.NewsRepository;
 import com.sinyuk.yukdaily.data.news.NewsRepositoryModule;
 import com.sinyuk.yukdaily.databinding.ActivityBrowserBinding;
 import com.sinyuk.yukdaily.entity.news.News;
-import com.sinyuk.yukdaily.ui.BaseWebActivity;
-import com.sinyuk.yukdaily.ui.WebViewActivity;
+import com.sinyuk.yukdaily.ui.browser.BaseWebActivity;
+import com.sinyuk.yukdaily.ui.browser.WebViewActivity;
 import com.sinyuk.yukdaily.utils.AssetsUtils;
 
 import org.jsoup.Jsoup;

@@ -1,4 +1,4 @@
-package com.sinyuk.yukdaily.ui;
+package com.sinyuk.yukdaily.ui.browser;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +13,6 @@ import android.webkit.WebViewClient;
 
 import com.sinyuk.yukdaily.App;
 import com.sinyuk.yukdaily.R;
-import com.sinyuk.yukdaily.data.news.NewsRepositoryModule;
 import com.sinyuk.yukdaily.databinding.ActivityWebViewBinding;
 
 import java.io.File;
@@ -38,7 +37,7 @@ public class WebViewActivity extends BaseWebActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        App.get(this).getAppComponent().plus(new NewsRepositoryModule()).inject(this);
+        App.get(this).getAppComponent().inject(this);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_web_view);
 

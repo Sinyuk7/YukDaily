@@ -1,4 +1,4 @@
-package com.sinyuk.yukdaily.ui;
+package com.sinyuk.yukdaily.ui.browser;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -107,7 +107,7 @@ public class BaseWebActivity extends BaseActivity {
     }
 
     protected void setWebViewTitle(String title) {
-
+        // use the title
     }
 
     protected void hideProgressBar() {
@@ -119,7 +119,7 @@ public class BaseWebActivity extends BaseActivity {
     }
 
     protected void setWebViewIcon(Bitmap icon) {
-
+        // use the favicon
     }
 
     public void onClose(View v) {
@@ -135,17 +135,6 @@ public class BaseWebActivity extends BaseActivity {
         }
     }
 
-    protected void openBrowser(String url) {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_VIEW);
-        Uri uri = Uri.parse(url);
-        intent.setData(uri);
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
-        } else {
-            Toast.makeText(this, "没有能打开此类链接的应用", Toast.LENGTH_LONG).show();
-        }
-    }
 
     @Override
     protected void onPause() {
