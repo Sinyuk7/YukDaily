@@ -5,14 +5,16 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /**
- * Created by Sinyuk on 16.10.20.
+ * Created by Sinyuk on 2016/10/13.
  */
+public class Stories {
 
-public class OldNews {
     @SerializedName("date")
     private String date;
     @SerializedName("stories")
     private List<Story> stories;
+    @SerializedName("top_stories")
+    private List<Story> topStories;
 
     public String getDate() {
         return date;
@@ -29,4 +31,13 @@ public class OldNews {
     public void setStories(List<Story> stories) {
         this.stories = stories;
     }
+
+    public List<Story> getTopStories() {
+        return topStories;
+    }
+
+    public void setTopStories(List<Story> topStories) {
+        this.topStories = topStories;
+    }
+
 }

@@ -1,7 +1,7 @@
 package com.sinyuk.yukdaily.api;
 
-import com.sinyuk.yukdaily.entity.news.LatestNews;
-import com.sinyuk.yukdaily.entity.news.OldNews;
+import com.sinyuk.yukdaily.entity.news.News;
+import com.sinyuk.yukdaily.entity.news.Stories;
 import com.sinyuk.yukdaily.entity.news.StartImage;
 
 import retrofit2.http.GET;
@@ -17,9 +17,11 @@ public interface NewsService {
     Observable<StartImage> getStartImage(@Path("resolution") String resolution);
 
     @GET("news/latest")
-    Observable<LatestNews> getLatestNews();
+    Observable<Stories> getLatestNews();
 
     @GET("news/before/{date}")
-    Observable<OldNews> getNewsAt(@Path("date") String date);
+    Observable<Stories> getNewsAt(@Path("date") String date);
 
+    @GET("news/{id}")
+    Observable<News> getNews(@Path("id") int id);
 }

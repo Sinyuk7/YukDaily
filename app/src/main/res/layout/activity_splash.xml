@@ -6,7 +6,7 @@
 
         <variable
             name="startImage"
-            type="com.sinyuk.yukdaily.entity.StartImage" />
+            type="com.sinyuk.yukdaily.entity.news.StartImage" />
     </data>
 
     <FrameLayout

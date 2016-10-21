@@ -17,8 +17,7 @@ import com.sinyuk.yukdaily.base.ListFragment;
 import com.sinyuk.yukdaily.data.news.NewsRepository;
 import com.sinyuk.yukdaily.data.news.NewsRepositoryModule;
 import com.sinyuk.yukdaily.databinding.NewsHeaderLayoutBinding;
-import com.sinyuk.yukdaily.entity.news.LatestNews;
-import com.sinyuk.yukdaily.entity.news.OldNews;
+import com.sinyuk.yukdaily.entity.news.Stories;
 import com.sinyuk.yukdaily.utils.cardviewpager.ShadowTransformer;
 import com.sinyuk.yukdaily.widgets.CircleIndicator;
 
@@ -34,7 +33,7 @@ public class NewsFragment extends ListFragment {
     @Inject
     NewsRepository newsRepository;
     private NewsHeaderLayoutBinding headerBinding;
-    private final Observer<LatestNews> refreshObserver = new Observer<LatestNews>() {
+    private final Observer<Stories> refreshObserver = new Observer<Stories>() {
         @Override
         public void onCompleted() {
             if (binding.listLayout.recyclerView.getAdapter().getItemCount() <= 0) {
@@ -53,14 +52,14 @@ public class NewsFragment extends ListFragment {
         }
 
         @Override
-        public void onNext(LatestNews latestNews) {
-            headerBinding.getAdapter().setData(latestNews.getTopStories());
-            ((NewsAdapter) binding.listLayout.recyclerView.getAdapter()).setData(latestNews.getStories());
+        public void onNext(Stories stories) {
+            headerBinding.getAdapter().setData(stories.getTopStories());
+            ((NewsAdapter) binding.listLayout.recyclerView.getAdapter()).setData(stories.getStories());
         }
     };
     //
     private int fromToday = 1;
-    private final Observer<OldNews> loadObserver = new Observer<OldNews>() {
+    private final Observer<Stories> loadObserver = new Observer<Stories>() {
         @Override
         public void onCompleted() {
             fromToday++;
@@ -72,7 +71,7 @@ public class NewsFragment extends ListFragment {
         }
 
         @Override
-        public void onNext(OldNews oldNews) {
+        public void onNext(Stories oldNews) {
             ((NewsAdapter) binding.listLayout.recyclerView.getAdapter()).appendData(oldNews.getStories());
         }
     };

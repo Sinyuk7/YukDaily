@@ -4,8 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 import com.sinyuk.yukdaily.api.NewsService;
-import com.sinyuk.yukdaily.entity.news.LatestNews;
-import com.sinyuk.yukdaily.entity.news.OldNews;
+import com.sinyuk.yukdaily.entity.news.News;
+import com.sinyuk.yukdaily.entity.news.Stories;
 import com.sinyuk.yukdaily.utils.rx.SchedulerTransformer;
 
 import java.text.SimpleDateFormat;
@@ -35,13 +35,13 @@ public class NewsRepository {
         formatter = new SimpleDateFormat("yyyyMMdd", Locale.CHINA);
     }
 
-    public Observable<LatestNews> getLatestNews() {
+    public Observable<Stories> getLatestNews() {
         currentDate.setTime(System.currentTimeMillis()); // 只有在刷新的时候才重置时间
         return newsService.getLatestNews()
                 .compose(new SchedulerTransformer<>());
     }
 
-    public Observable<OldNews> getNewsAt(int whichDay2Today) {
+    public Observable<Stories> getNewsAt(int whichDay2Today) {
         calendar.setTime(currentDate);
         calendar.add(Calendar.DATE, -whichDay2Today);
         Log.d(TAG, "getNewsAt: " + formatter.format(calendar.getTime()));
@@ -49,5 +49,9 @@ public class NewsRepository {
                 .compose(new SchedulerTransformer<>());
     }
 
+    public Observable<News> getNews(int id) {
+        return newsService.getNews(id)
+                .compose(new SchedulerTransformer<>());
+    }
 
 }

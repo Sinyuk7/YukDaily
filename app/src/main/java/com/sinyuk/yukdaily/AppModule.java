@@ -42,7 +42,7 @@ final class AppModule {
     @Provides
     @Singleton
     SharedPreferences provideSharedPreferences() {
-        return application.getSharedPreferences("bihu_daily", MODE_PRIVATE);
+        return application.getSharedPreferences("yuk_daily", MODE_PRIVATE);
     }
 
     @Provides
@@ -59,7 +59,7 @@ final class AppModule {
 
     @Provides
     @Singleton
-    public ToastUtils provideToastUtils() {
+    ToastUtils provideToastUtils() {
         return new ToastUtils(application);
     }
 }

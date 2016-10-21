@@ -4,6 +4,7 @@ import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
@@ -31,7 +32,7 @@ public class NewsAdapter extends RecyclerView.Adapter<BindingViewHolder> {
 
     @BindingAdapter("imageUrl")
     public static void loadThumbnail(ImageView imageView, List<String> images) {
-        if (images == null || images.get(0) == null) return;
+        if (images == null || images.get(0) == null) { return; }
         Glide.with(imageView.getContext())
                 .load(images.get(0))
                 .crossFade(500)
@@ -109,9 +110,14 @@ public class NewsAdapter extends RecyclerView.Adapter<BindingViewHolder> {
     public void onBindViewHolder(BindingViewHolder holder, int position) {
         if (!isHeader(position)) {
             if (stories.get(itemPositionInData(position)) != null) {
+                holder.getBinding().setVariable(BR.adapter, this);
                 holder.getBinding().setVariable(BR.story, stories.get(itemPositionInData(position)));
             }
         }
+    }
+
+    public void onItemClick(View view, int id) {
+        BrowserActivity.start(view.getContext(), id);
     }
 
     private int getDataItemCount() {

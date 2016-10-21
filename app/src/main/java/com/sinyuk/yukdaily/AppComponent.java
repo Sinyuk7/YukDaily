@@ -3,6 +3,7 @@ package com.sinyuk.yukdaily;
 import com.sinyuk.yukdaily.api.ApiModule;
 import com.sinyuk.yukdaily.data.news.NewsRepositoryComponent;
 import com.sinyuk.yukdaily.data.news.NewsRepositoryModule;
+import com.sinyuk.yukdaily.ui.news.BrowserActivity;
 import com.sinyuk.yukdaily.ui.news.NewsFragment;
 import com.sinyuk.yukdaily.ui.splash.SplashComponent;
 import com.sinyuk.yukdaily.ui.splash.SplashModule;
@@ -20,5 +21,4 @@ public interface AppComponent {
     SplashComponent plus(SplashModule module);
 
     NewsRepositoryComponent plus(NewsRepositoryModule module);
-
 }
