@@ -13,6 +13,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.webkit.JsResult;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
@@ -29,6 +30,7 @@ import com.sinyuk.myutils.system.NetWorkUtils;
 import com.sinyuk.myutils.system.ToastUtils;
 import com.sinyuk.yukdaily.App;
 import com.sinyuk.yukdaily.R;
+import com.sinyuk.yukdaily.api.NewsApi;
 import com.sinyuk.yukdaily.base.BaseActivity;
 import com.sinyuk.yukdaily.data.news.NewsRepository;
 import com.sinyuk.yukdaily.data.news.NewsRepositoryModule;
@@ -68,6 +70,11 @@ public class BrowserActivity extends BaseActivity {
         @Override
         public void onNext(News news) {
             binding.setNews(news);
+
+            String css = "<link rel=\"stylesheet\" href=\"file:///android_asset/css/news.css\" type=\"text/css\">";
+            String html = "<html><head>" + css + "</head><body>" + news.getBody() + "</body></html>";
+            html = html.replace("<div class=\"img-place-holder\">", "");
+            binding.webView.loadDataWithBaseURL(NewsApi.BASE_URL, html, "text/html", "UTF-8", null);
         }
     };
 
@@ -116,6 +123,13 @@ public class BrowserActivity extends BaseActivity {
         binding.webView.setWebViewClient(new MyWebViewClient());
         binding.webView.setWebChromeClient(new MyWebChromeClient());
 
+        // Use WideViewport and Zoom out if there is no viewport defined
+        binding.webView.getSettings().setUseWideViewPort(true);
+        binding.webView.getSettings().setLoadWithOverviewMode(true);
+
+        binding.webView.setVerticalScrollBarEnabled(false);
+        binding.webView.setHorizontalScrollBarEnabled(false);
+
         // 注入一个Cache path 跟Okhttp一起
         WebSettings webSetting = binding.webView.getSettings();
         webSetting.setAllowFileAccess(false);
@@ -133,18 +147,27 @@ public class BrowserActivity extends BaseActivity {
         webSetting.setBuiltInZoomControls(false);
         webSetting.setDisplayZoomControls(false);
 
+
+        // 支持通过js打开新的窗口
+        webSetting.setJavaScriptCanOpenWindowsAutomatically(true);
+
+        // 开启DOM storage API 功能
+        webSetting.setDomStorageEnabled(true);
+        // 开启database storage API功能
+        webSetting.setDatabaseEnabled(true);
+
         // 设置缓存
         webSetting.setAppCacheEnabled(true);
         webSetting.setAppCachePath(mCacheFile.getPath());
         if (!NetWorkUtils.isNetworkConnection(this)) {
             webSetting.setCacheMode(WebSettings.LOAD_CACHE_ONLY);
+        } else {
+            webSetting.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         }
 
-        // 设置数据库
-        webSetting.setDatabaseEnabled(false);
-        webSetting.setDomStorageEnabled(true);
         webSetting.setJavaScriptEnabled(true);
-
+        // 支持通过js打开新的窗口
+        webSetting.setJavaScriptCanOpenWindowsAutomatically(true);
         webSetting.setGeolocationEnabled(false);
 
     }
@@ -281,6 +304,19 @@ public class BrowserActivity extends BaseActivity {
         @Override
         public void onReceivedTitle(WebView view, String title) {
 
+        }
+
+        @Override
+        public boolean onJsAlert(WebView view, String url, String message,
+                                 final JsResult result) {
+            result.cancel();
+            return true;
+        }
+
+        @Override
+        public boolean onJsConfirm(WebView view, String url,
+                                   String message, final JsResult result) {
+            return true;
         }
     }
 }
