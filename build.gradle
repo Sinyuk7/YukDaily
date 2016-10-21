@@ -76,8 +76,8 @@ ext {
             "glide-okhttp3-integration": "com.github.bumptech.glide:okhttp3-integration:1.4.0@jar",
             "stetho"                   : "com.facebook.stetho:stetho:1.3.1",
             "stetho-okhttp3"           : "com.facebook.stetho:stetho-okhttp3:1.3.1",
-            "leakcanary"               : "com.squareup.leakcanary:leakcanary-android:1.4-beta2",
-            "leakcanary-no-op"         : "com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2",
+            "leakcanary"               : "com.squareup.leakcanary:leakcanary-android:1.5",
+            "leakcanary-no-op"         : "com.squareup.leakcanary:leakcanary-android-no-op:1.5",
 //            widgets
             "smooth-progress-bar"      : "com.github.castorflex.smoothprogressbar:library:1.0.0",
             "rebound"                  : "com.facebook.rebound:rebound:0.3.8",

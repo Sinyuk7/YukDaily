@@ -62,6 +62,8 @@ dependencies {
     compile rootProject.ext.dependencies["rx-preferences"]
     compile rootProject.ext.dependencies["dagger"]
     apt rootProject.ext.dependencies["dagger-compiler"]
+    debugCompile rootProject.ext.dependencies["leakcanary"]
+    testCompile rootProject.ext.dependencies["leakcanary-no-op"]
     compile 'com.github.80998062:MyUtils:1.0.2'
     compile 'com.github.devlight.navigationtabstrip:navigationtabstrip:1.0.4'
     compile 'org.jsoup:jsoup:1.9.2'
