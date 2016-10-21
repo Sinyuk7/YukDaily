@@ -31,6 +31,7 @@
         </activity>
 
         <activity android:name=".ui.news.BrowserActivity"/>
+        <activity android:name=".ui.WebViewActivity"/>
     </application>
 
 </manifest>

@@ -5,15 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -26,6 +25,7 @@ import com.sinyuk.yukdaily.data.news.NewsRepository;
 import com.sinyuk.yukdaily.data.news.NewsRepositoryModule;
 import com.sinyuk.yukdaily.databinding.ActivityBrowserBinding;
 import com.sinyuk.yukdaily.entity.news.News;
+import com.sinyuk.yukdaily.ui.BaseWebActivity;
 import com.sinyuk.yukdaily.ui.WebViewActivity;
 import com.sinyuk.yukdaily.utils.AssetsUtils;
 
@@ -36,8 +36,6 @@ import org.jsoup.select.Elements;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -47,7 +45,7 @@ import rx.Observer;
  * Created by Sinyuk on 16.10.21.
  */
 
-public class BrowserActivity extends WebViewActivity {
+public class BrowserActivity extends BaseWebActivity {
     public static final String KEY_NEWS_ID = "NEWS_ID";
     @Inject
     File mCacheFile;
@@ -106,7 +104,7 @@ public class BrowserActivity extends WebViewActivity {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_browser);
 
-        initWebViewSettings(binding.webView, mCacheFile, false);
+        initWebViewSettings(binding.webView, mCacheFile);
 
         final int id = getIntent().getIntExtra(KEY_NEWS_ID, -1);
         if (id != -1) {
@@ -115,12 +113,26 @@ public class BrowserActivity extends WebViewActivity {
     }
 
     @Override
-    protected void initWebViewSettings(WebView webView, File cache, boolean handleUrl) {
-        super.initWebViewSettings(webView, cache, handleUrl);
-
-
+    protected void initWebViewSettings(WebView webView, File cache) {
+        super.initWebViewSettings(webView, cache);
 
         webView.addJavascriptInterface(new JavaScriptObject(this), "injectedObject");
+
+        webView.setWebViewClient(new WebViewClient() {
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                WebViewActivity.open(BrowserActivity.this, url);
+                return true;
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) { return false; }
+                WebViewActivity.open(BrowserActivity.this, request.getUrl().toString());
+                return true;
+            }
+        });
 
         WebSettings webSetting = webView.getSettings();
 
@@ -152,7 +164,6 @@ public class BrowserActivity extends WebViewActivity {
 
         return doc.html();
     }
-
 
 
     private static class JavaScriptObject {

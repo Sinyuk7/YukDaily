@@ -14,14 +14,33 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.sinyuk.yukdaily.widgets.NestedWebView
-            android:id="@+id/webView"
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbarStyle="outsideOverlay"
             android:clipToPadding="false"
             android:overScrollMode="never"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <WebView
+                    android:id="@+id/webView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:scrollbarStyle="outsideOverlay"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:gravity="bottom"
+                    android:text="placeholder"/>
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
@@ -43,7 +62,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:scaleType="centerCrop"
-                        app:imageHOverW="0.5"
+                        app:imageHOverW="0.618"
                         app:imageUrl="@{news.image}"
                         tools:src="@drawable/backdrop1"/>
 

@@ -1,230 +1,83 @@
 package com.sinyuk.yukdaily.ui;
 
-import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
+import android.content.Context;
+import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.webkit.JsResult;
-import android.webkit.WebChromeClient;
+import android.text.TextUtils;
 import android.webkit.WebResourceRequest;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.sinyuk.yukdaily.base.BaseActivity;
+import com.sinyuk.yukdaily.App;
+import com.sinyuk.yukdaily.R;
+import com.sinyuk.yukdaily.data.news.NewsRepositoryModule;
+import com.sinyuk.yukdaily.databinding.ActivityWebViewBinding;
 
 import java.io.File;
+
+import javax.inject.Inject;
 
 /**
  * Created by Sinyuk on 16.10.21.
  */
 
-public class WebViewActivity extends BaseActivity {
-    private WebView mWebView;
+public class WebViewActivity extends BaseWebActivity {
+    @Inject
+    File mCacheFile;
+    private ActivityWebViewBinding binding;
+
+    public static void open(Context context, String url) {
+        Intent starter = new Intent(context, WebViewActivity.class);
+        starter.putExtra(KEY_URL, url);
+        context.startActivity(starter);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try {
-            getWindow().setFlags(
-                    WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
-                    WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+        App.get(this).getAppComponent().plus(new NewsRepositoryModule()).inject(this);
 
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_web_view);
 
-    @CallSuper
-    @SuppressLint({"SetJavaScriptEnabled", "NewApi"})
-    protected void initWebViewSettings(final WebView webView, final File cache, boolean handleUrl) {
+        initWebViewSettings(binding.webView, mCacheFile);
 
-        mWebView = webView;
-
-        webView.setWebViewClient(new MyWebViewClient(handleUrl));
-        webView.setWebChromeClient(new MyWebChromeClient());
-
-        webView.setVerticalScrollBarEnabled(false);
-        webView.setHorizontalScrollBarEnabled(false);
-
-
-        WebSettings webSetting = webView.getSettings();
-        webSetting.setAllowFileAccess(true);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            webSetting.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING);
-        } else {
-            webSetting.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
-        }
-
-        webSetting.setAllowContentAccess(true);
-        webSetting.setUseWideViewPort(true);
-        webSetting.setSupportMultipleWindows(false);
-        webSetting.setLoadWithOverviewMode(true);
-
-
-        webSetting.setSupportZoom(true);
-        webSetting.setBuiltInZoomControls(true);
-        webSetting.setDisplayZoomControls(false);
-
-
-        // 支持通过js打开新的窗口
-        webSetting.setJavaScriptCanOpenWindowsAutomatically(true);
-
-        // 开启DOM storage API 功能
-        webSetting.setDomStorageEnabled(true);
-        // 开启database storage API功能
-        webSetting.setDatabaseEnabled(true);
-
-        // 设置缓存
-        webSetting.setAppCacheEnabled(true);
-        webSetting.setAppCachePath(cache.getPath());
-
-
-        webSetting.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-
-        webSetting.setJavaScriptEnabled(true);
-
-        webSetting.setGeolocationEnabled(false);
-
-    }
-
-    protected void setWebViewTitle(String title) {
-
-    }
-
-    protected void hideProgressBar() {
-
-    }
-
-    protected void showProgressBar(int progress) {
-
-    }
-
-    protected void setWebViewIcon(Bitmap icon) {
-
-    }
-
-    public void onClose(View v) {
-        onBackPressed();
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (mWebView != null) {
-            mWebView.onResume();
-        }
+        loadUrlFromIntent();
     }
 
     @Override
-    protected void onPause() {
-        if (mWebView != null) {
-            mWebView.onPause();
-        }
-        super.onPause();
-    }
+    protected void initWebViewSettings(WebView webView, File cache) {
+        super.initWebViewSettings(webView, cache);
+        webView.setWebViewClient(new WebViewClient() {
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (mWebView != null && mWebView.canGoBack()) {
-                mWebView.goBack();
-                return true;
-            } else {
-                return super.onKeyDown(keyCode, event);
-            }
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    protected void onDestroy() {
-        clearWebView();
-        super.onDestroy();
-    }
-
-    private void clearWebView() {
-        if (mWebView != null) {
-            mWebView.loadDataWithBaseURL(null, "", "text/html", "utf-8", null);
-            mWebView.clearHistory();
-            mWebView.removeAllViews();
-            ((ViewGroup) mWebView.getParent()).removeView(mWebView);
-            mWebView.destroy();
-        }
-    }
-
-    public class MyWebViewClient extends WebViewClient {
-
-        private boolean handleUrl = true;
-
-        public MyWebViewClient(boolean handleUrl) {
-            this.handleUrl = handleUrl;
-        }
-
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if (handleUrl) {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
                 return true;
-            } else {
-                return false;
             }
-        }
 
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) { return false; }
-            if (handleUrl) {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                    return false;
+                }
                 view.loadUrl(request.getUrl().toString());
                 return true;
-            } else {
 
-                return false;
+            }
+        });
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        String url = intent.getDataString();
+        if (!TextUtils.isDigitsOnly(url)) {
+            if (binding.webView != null) {
+                binding.webView.loadUrl(url);
             }
         }
     }
-
-    public class MyWebChromeClient extends WebChromeClient {
-        @Override
-        public void onProgressChanged(WebView view, int newProgress) {
-            super.onProgressChanged(view, newProgress);
-            if (newProgress > 0) {
-                showProgressBar(newProgress);
-            } else if (100 == newProgress) {
-                hideProgressBar();
-            }
-        }
-
-        @Override
-        public void onReceivedIcon(WebView view, Bitmap icon) {
-            super.onReceivedIcon(view, icon);
-            setWebViewIcon(icon);
-        }
-
-        @Override
-        public void onReceivedTitle(WebView view, String title) {
-            setWebViewTitle(title);
-        }
-
-        @Override
-        public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
-            result.cancel();
-            return true;
-        }
-
-        @Override
-        public boolean onJsConfirm(WebView view, String url, String message, final JsResult result) {
-            return true;
-        }
-    }
-
 }
