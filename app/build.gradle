@@ -66,4 +66,5 @@ dependencies {
     compile 'com.github.devlight.navigationtabstrip:navigationtabstrip:1.0.4'
     compile 'org.jsoup:jsoup:1.9.2'
     testCompile 'junit:junit:4.12'
+    compile project(':shared')
 }

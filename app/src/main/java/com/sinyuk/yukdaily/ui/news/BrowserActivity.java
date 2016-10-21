@@ -3,11 +3,17 @@ package com.sinyuk.yukdaily.ui.news;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.customtabs.CustomTabsIntent;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -21,12 +27,13 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sinyuk.myutils.system.ToastUtils;
 import com.sinyuk.yukdaily.App;
 import com.sinyuk.yukdaily.R;
+import com.sinyuk.yukdaily.customtab.CustomTabActivityHelper;
+import com.sinyuk.yukdaily.customtab.WebviewActivityFallback;
 import com.sinyuk.yukdaily.data.news.NewsRepository;
 import com.sinyuk.yukdaily.data.news.NewsRepositoryModule;
 import com.sinyuk.yukdaily.databinding.ActivityBrowserBinding;
 import com.sinyuk.yukdaily.entity.news.News;
 import com.sinyuk.yukdaily.ui.browser.BaseWebActivity;
-import com.sinyuk.yukdaily.ui.browser.WebViewActivity;
 import com.sinyuk.yukdaily.utils.AssetsUtils;
 
 import org.jsoup.Jsoup;
@@ -36,6 +43,7 @@ import org.jsoup.select.Elements;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -47,6 +55,7 @@ import rx.Observer;
 
 public class BrowserActivity extends BaseWebActivity {
     public static final String KEY_NEWS_ID = "NEWS_ID";
+    public static final String TAG = "BrowserActivity";
     @Inject
     File mCacheFile;
     @Inject
@@ -80,6 +89,8 @@ public class BrowserActivity extends BaseWebActivity {
             }
         }
     };
+    private CustomTabActivityHelper customTabActivityHelper;
+    private CustomTabsIntent.Builder customTabsBuilder;
 
     public static void start(Context context, int id) {
         Intent starter = new Intent(context, BrowserActivity.class);
@@ -107,9 +118,19 @@ public class BrowserActivity extends BaseWebActivity {
         initWebViewSettings(binding.webView, mCacheFile);
 
         final int id = getIntent().getIntExtra(KEY_NEWS_ID, -1);
+
         if (id != -1) {
             addSubscription(newsRepository.getNews(id).subscribe(observer));
         }
+
+        customTabActivityHelper = new CustomTabActivityHelper();
+
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleUrl(intent.getDataString());
     }
 
     @Override
@@ -122,14 +143,14 @@ public class BrowserActivity extends BaseWebActivity {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                WebViewActivity.open(BrowserActivity.this, url);
+                handleUrl(url);
                 return true;
             }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) { return false; }
-                WebViewActivity.open(BrowserActivity.this, request.getUrl().toString());
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) { return true; }
+                handleUrl(request.getUrl().toString());
                 return true;
             }
         });
@@ -140,6 +161,39 @@ public class BrowserActivity extends BaseWebActivity {
         webSetting.setBuiltInZoomControls(false);
         webSetting.setDisplayZoomControls(false);
 
+    }
+
+    private void handleUrl(String url) {
+        Log.d(TAG, "handleUrl: getAuthority " + Uri.parse(url).getAuthority());
+        if (Uri.parse(url).getAuthority().contains("zhihu.com")) {
+            // 如果打开的是知乎的链接 www.zhihu.com/zhuanlan.zhihu.com
+            // 判断有没有装知乎
+            Intent activityIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            final PackageManager pm = getPackageManager();
+            final List<ResolveInfo> resolvedActivityList = pm.queryIntentActivities(
+                    activityIntent, PackageManager.MATCH_DEFAULT_ONLY);
+            for (int i = 0; i < resolvedActivityList.size(); i++) {
+                if (resolvedActivityList.get(i).activityInfo.packageName.equals("com.zhihu.android")) {
+                    // 装了知乎
+                    startActivity(activityIntent);
+                    return;
+                }
+            }
+        }
+
+        if (customTabsBuilder == null) {
+            initCustomtabs();
+        }
+
+        CustomTabsIntent customTabsIntent = customTabsBuilder.build();
+        CustomTabActivityHelper.openCustomTab(this, customTabsIntent, Uri.parse(url), new WebviewActivityFallback());
+    }
+
+    private void initCustomtabs() {
+        customTabsBuilder = new CustomTabsIntent.Builder(customTabActivityHelper.getSession());
+        customTabsBuilder.setToolbarColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        customTabsBuilder.setSecondaryToolbarColor(ContextCompat.getColor(this, R.color.colorAccent));
+        customTabsBuilder.addDefaultShareMenuItem();
     }
 
     /**
@@ -165,6 +219,23 @@ public class BrowserActivity extends BaseWebActivity {
         return doc.html();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        customTabActivityHelper.setConnectionCallback(null);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        customTabActivityHelper.bindCustomTabsService(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        customTabActivityHelper.unbindCustomTabsService(this);
+    }
 
     private static class JavaScriptObject {
 
