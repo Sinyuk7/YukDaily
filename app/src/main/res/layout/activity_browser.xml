@@ -14,6 +14,7 @@
         android:id="@+id/elasticDragDismissFrameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@android:color/white"
         app:dragDismissDistance="@dimen/drag_dismiss_distance"
         app:dragDismissScale="0.95">
 
@@ -21,11 +22,9 @@
             android:id="@+id/parallaxScrimageView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
             android:minHeight="?actionBarSize"
             android:scaleType="centerCrop"
             app:imageHOverW="0.618"
-            app:imageUrl="@{news.image}"
             app:maxScrimAlpha="1"
             app:parallaxFactor="-0.5"
             app:scrimAlpha="0"
@@ -45,6 +44,7 @@
                 android:orientation="vertical">
 
                 <FrameLayout
+                    android:id="@+id/headLine"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -54,67 +54,80 @@
                         android:layout_height="wrap_content"
                         app:holderHOverW="0.618"/>
 
-                    <LinearLayout
-                        android:id="@+id/headLine"
+
+                    <TextView
+                        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:orientation="vertical"
-                        android:paddingBottom="@dimen/content_space_8"
+                        android:layout_gravity="end|bottom"
+                        android:layout_marginBottom="@dimen/content_space_8"
+                        android:gravity="center_horizontal"
+                        android:maxLines="3"
+                        android:paddingBottom="@dimen/material_text_caption2"
                         android:paddingLeft="@dimen/content_space_16"
                         android:paddingRight="@dimen/content_space_16"
-                        android:paddingTop="@dimen/content_space_8">
+                        android:shadowColor="@color/text_shadow"
+                        android:shadowDx="1"
+                        android:shadowDy="0.5"
+                        android:text="@{news.title}"
+                        android:textColor="@android:color/white"
+                        tools:text="titleafkjdashfkjhaksjdfhkasdfdsfsdfdsf"/>
 
-                        <TextView
-                            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:maxLines="3"
-                            android:shadowColor="@color/text_shadow"
-                            android:shadowDx="1"
-                            android:shadowDy="0.5"
-                            android:text="@{news.title}"
-                            android:textColor="@android:color/white"
-                            tools:text="title"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="end"
-                            android:layout_marginTop="@dimen/content_space_4"
-                            android:shadowColor="@color/text_shadow"
-                            android:shadowDx="0.5"
-                            android:shadowDy="0.5"
-                            android:text="@{news.imageSource}"
-                            android:textColor="@android:color/white"
-                            android:textSize="@dimen/material_text_caption2"
-                            tools:text="bilibili"/>
-                    </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end|bottom"
+                        android:layout_margin="@dimen/content_space_8"
+                        android:shadowColor="@color/text_shadow"
+                        android:shadowDx="0.5"
+                        android:shadowDy="0.5"
+                        android:text="@{news.imageSource}"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/material_text_caption2"
+                        tools:text="bilibili"/>
 
                 </FrameLayout>
 
                 <WebView
                     android:id="@+id/webView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/window_background"/>
-
+                    android:layout_height="match_parent"/>
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
 
-        <android.support.v7.widget.Toolbar
+        <LinearLayout
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:layout_gravity="top"
-            android:background="@null"
-            app:contentInsetStart="0dp">
+            android:background="@null">
 
             <ImageView
                 style="@style/toolbar_button"
                 android:onClick="onClose"
                 android:src="@drawable/ic_back"/>
-        </android.support.v7.widget.Toolbar>
+
+            <TextView
+                android:id="@+id/toolbarTitle"
+                style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:maxLines="1"
+                android:paddingLeft="@dimen/content_space_16"
+                android:paddingRight="@dimen/content_space_16"
+                android:text="@{news.title}"
+                android:textColor="@android:color/white"
+                android:visibility="invisible"
+                tools:text="dsakdhkjhfksahd"/>
+
+            <ImageView
+                style="@style/toolbar_button"
+                android:onClick="onContextMenu"
+                android:src="@drawable/ic_menu"/>
+        </LinearLayout>
 
     </com.sinyuk.yukdaily.widgets.ElasticDragDismissFrameLayout>
 </layout>

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Build;
@@ -16,16 +15,19 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.util.Log;
+import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.sinyuk.myutils.system.ToastUtils;
 import com.sinyuk.yukdaily.App;
 import com.sinyuk.yukdaily.R;
@@ -104,8 +106,10 @@ public class BrowserActivity extends BaseWebActivity {
             float scrimAlpha = binding.parallaxScrimageView.getScrimAlpha();
             if (scrimAlpha == 1f) {
                 binding.toolbar.setBackgroundColor(ContextCompat.getColor(BrowserActivity.this, R.color.colorPrimary));
+                binding.toolbarTitle.setVisibility(View.VISIBLE);
             } else {
                 binding.toolbar.setBackground(null);
+                binding.toolbarTitle.setVisibility(View.INVISIBLE);
             }
 
             binding.headLine.setAlpha((1 - scrimAlpha) * (1 - scrimAlpha) * (1 - scrimAlpha));
@@ -118,15 +122,6 @@ public class BrowserActivity extends BaseWebActivity {
         context.startActivity(starter);
     }
 
-    @BindingAdapter("imageUrl")
-    public static void setImageUrl(ImageView imageView, String url) {
-        Glide.with(imageView.getContext())
-                .load(url)
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                .crossFade(1000)
-                .into(imageView);
-    }
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,7 +130,7 @@ public class BrowserActivity extends BaseWebActivity {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_browser);
 
-        setupGuesture();
+        setupGesture();
 
         initWebViewSettings(binding.webView, mCacheFile);
 
@@ -149,7 +144,7 @@ public class BrowserActivity extends BaseWebActivity {
 
     }
 
-    private void setupGuesture() {
+    private void setupGesture() {
         binding.elasticDragDismissFrameLayout.addListener(new ElasticDragDismissFrameLayout.SystemChromeFader(this) {
             @Override
             public void onDragDismissed() {
@@ -176,7 +171,6 @@ public class BrowserActivity extends BaseWebActivity {
         super.initWebViewSettings(webView, cache);
 
         webView.addJavascriptInterface(new JavaScriptObject(this), "injectedObject");
-
         webView.setWebViewClient(new WebViewClient() {
 
             @Override
@@ -191,6 +185,12 @@ public class BrowserActivity extends BaseWebActivity {
                 handleUrl(request.getUrl().toString());
                 return true;
             }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                loadImage();
+            }
         });
 
         WebSettings webSetting = webView.getSettings();
@@ -199,6 +199,25 @@ public class BrowserActivity extends BaseWebActivity {
         webSetting.setBuiltInZoomControls(false);
         webSetting.setDisplayZoomControls(false);
 
+    }
+
+    private void loadImage() {
+        Glide.with(this)
+                .load(binding.getNews().getImage())
+                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                .crossFade(2048)
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        return false;
+                    }
+                })
+                .into(binding.parallaxScrimageView);
     }
 
     private void handleUrl(String url) {
