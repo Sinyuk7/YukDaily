@@ -30,7 +30,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.news.BrowserActivity"/>
+        <activity
+            android:name=".ui.news.BrowserActivity"
+            android:theme="@style/AppTheme.Translucent"/>
         <activity android:name=".ui.browser.WebViewActivity"/>
     </application>
 

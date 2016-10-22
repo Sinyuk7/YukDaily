@@ -15,7 +15,7 @@
     <color name="themeGray_blue">#0D8BFF</color>
     <color name="themeError">#F46B00</color>
 
-
+    <color name="window_scrim">#99323232</color>
 
     <color name="white_75pct">#b1ffffff</color>
     <color name="window_background">#f5f5f5</color>

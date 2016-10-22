@@ -12,8 +12,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.customtabs.CustomTabsIntent;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GestureDetectorCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -35,6 +40,7 @@ import com.sinyuk.yukdaily.databinding.ActivityBrowserBinding;
 import com.sinyuk.yukdaily.entity.news.News;
 import com.sinyuk.yukdaily.ui.browser.BaseWebActivity;
 import com.sinyuk.yukdaily.utils.AssetsUtils;
+import com.sinyuk.yukdaily.widgets.ElasticDragDismissFrameLayout;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -53,7 +59,7 @@ import rx.Observer;
  * Created by Sinyuk on 16.10.21.
  */
 
-public class BrowserActivity extends BaseWebActivity {
+public class BrowserActivity extends BaseWebActivity implements GestureDetector.OnGestureListener {
     public static final String KEY_NEWS_ID = "NEWS_ID";
     public static final String TAG = "BrowserActivity";
     @Inject
@@ -63,6 +69,14 @@ public class BrowserActivity extends BaseWebActivity {
     @Inject
     NewsRepository newsRepository;
     private ActivityBrowserBinding binding;
+    NestedScrollView.OnScrollChangeListener onScrollChangeListener = new NestedScrollView.OnScrollChangeListener() {
+        @Override
+        public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+            binding.parallaxScrimageView.setOffset(scrollY);
+        }
+    };
+
+    private GestureDetectorCompat mDetector;
     private Observer<News> observer = new Observer<News>() {
         @Override
         public void onCompleted() {
@@ -115,6 +129,8 @@ public class BrowserActivity extends BaseWebActivity {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_browser);
 
+        setupGuesture();
+
         initWebViewSettings(binding.webView, mCacheFile);
 
         final int id = getIntent().getIntExtra(KEY_NEWS_ID, -1);
@@ -126,6 +142,36 @@ public class BrowserActivity extends BaseWebActivity {
         customTabActivityHelper = new CustomTabActivityHelper();
 
     }
+
+    private void setupGuesture() {
+        // Instantiate the gesture detector with the
+        // application context and an implementation of
+        // GestureDetector.OnGestureListener
+        mDetector = new GestureDetectorCompat(this, this);
+
+
+        binding.elasticDragDismissFrameLayout.addListener(new ElasticDragDismissFrameLayout.SystemChromeFader(this) {
+            @Override
+            public void onDragDismissed() {
+                // if we drag dismiss downward then the default reversal of the enter
+                // transition would slide content upward which looks weird. So reverse it.
+                if (binding.elasticDragDismissFrameLayout.getTranslationY() > 0) {
+                }
+                ActivityCompat.finishAfterTransition(BrowserActivity.this);
+            }
+        });
+
+        binding.nestedScrollView.setOnScrollChangeListener(onScrollChangeListener);
+
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event){
+        this.mDetector.onTouchEvent(event);
+        // Be sure to call the superclass implementation
+        return super.onTouchEvent(event);
+    }
+
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -235,6 +281,38 @@ public class BrowserActivity extends BaseWebActivity {
     protected void onStop() {
         super.onStop();
         customTabActivityHelper.unbindCustomTabsService(this);
+    }
+
+    @Override
+    public boolean onDown(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        Log.d(TAG, "onFling: " + e1.toString() + e2.toString());
+        binding.parallaxScrimageView.setImmediatePin(true);
+        return true;
     }
 
     private static class JavaScriptObject {

@@ -94,6 +94,6 @@
     <dimen name="image_size_2">24dp</dimen>
     <dimen name="image_size_1">18dp</dimen>
 
-
+    <dimen name="drag_dismiss_distance">112dp</dimen>
 
 </resources>
