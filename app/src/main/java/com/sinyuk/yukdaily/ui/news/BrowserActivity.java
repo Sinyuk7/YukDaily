@@ -40,6 +40,10 @@ import com.sinyuk.yukdaily.entity.news.News;
 import com.sinyuk.yukdaily.ui.browser.BaseWebActivity;
 import com.sinyuk.yukdaily.utils.AssetsUtils;
 import com.sinyuk.yukdaily.widgets.ElasticDragDismissFrameLayout;
+import com.yalantis.contextmenu.lib.ContextMenuDialogFragment;
+import com.yalantis.contextmenu.lib.MenuObject;
+import com.yalantis.contextmenu.lib.MenuParams;
+import com.yalantis.contextmenu.lib.interfaces.OnMenuItemClickListener;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -48,6 +52,7 @@ import org.jsoup.select.Elements;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -58,7 +63,7 @@ import rx.Observer;
  * Created by Sinyuk on 16.10.21.
  */
 
-public class BrowserActivity extends BaseWebActivity {
+public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickListener {
     public static final String KEY_NEWS_ID = "NEWS_ID";
     public static final String TAG = "BrowserActivity";
     @Inject
@@ -70,6 +75,7 @@ public class BrowserActivity extends BaseWebActivity {
     private ActivityBrowserBinding binding;
 
 
+    private String mShareUrl;
     private Observer<News> observer = new Observer<News>() {
         @Override
         public void onCompleted() {
@@ -94,6 +100,8 @@ public class BrowserActivity extends BaseWebActivity {
             } else {
                 // assert error
             }
+
+            mShareUrl = news.getShareUrl();
         }
     };
     private CustomTabActivityHelper customTabActivityHelper;
@@ -115,12 +123,14 @@ public class BrowserActivity extends BaseWebActivity {
             binding.headLine.setAlpha((1 - scrimAlpha) * (1 - scrimAlpha) * (1 - scrimAlpha));
         }
     };
+    private ContextMenuDialogFragment mMenuDialogFragment;
 
     public static void start(Context context, int id) {
         Intent starter = new Intent(context, BrowserActivity.class);
         starter.putExtra(KEY_NEWS_ID, id);
         context.startActivity(starter);
     }
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -158,6 +168,52 @@ public class BrowserActivity extends BaseWebActivity {
 
         binding.scrollView.setOnScrollChangeListener(listener);
 
+    }
+
+    private void initMenuFragment() {
+        MenuParams menuParams = new MenuParams();
+        menuParams.setActionBarSize((int) getResources().getDimension(R.dimen.toolbar_height));
+        menuParams.setMenuObjects(getMenuObjects());
+        menuParams.setClosableOutside(false);
+        mMenuDialogFragment = ContextMenuDialogFragment.newInstance(menuParams);
+        mMenuDialogFragment.setItemClickListener(this);
+    }
+
+    private List<MenuObject> getMenuObjects() {
+
+        final List<MenuObject> menuObjects = new ArrayList<>();
+
+        MenuObject close = new MenuObject();
+        close.setResource(R.drawable.ic_close);
+
+        MenuObject comment = new MenuObject(getString(R.string.action_comment));
+        comment.setResource(R.drawable.ic_reply);
+
+        MenuObject like = new MenuObject(getString(R.string.action_like));
+        like.setResource(R.drawable.ic_favor_black);
+
+        MenuObject thumbup = new MenuObject(getString(R.string.action_thumbup));
+        thumbup.setResource(R.drawable.ic_appreciate);
+
+        MenuObject share = new MenuObject(getString(R.string.action_share));
+        share.setResource(R.drawable.ic_share);
+
+        menuObjects.add(close);
+        menuObjects.add(comment);
+        menuObjects.add(like);
+        menuObjects.add(thumbup);
+        menuObjects.add(share);
+        return menuObjects;
+    }
+
+    public void onContextMenu(View view) {
+        if (mMenuDialogFragment == null) {
+            initMenuFragment();
+        }
+
+        if (getSupportFragmentManager().findFragmentByTag(ContextMenuDialogFragment.TAG) == null) {
+            mMenuDialogFragment.show(getSupportFragmentManager(), ContextMenuDialogFragment.TAG);
+        }
     }
 
     @Override
@@ -292,6 +348,36 @@ public class BrowserActivity extends BaseWebActivity {
     protected void onStop() {
         super.onStop();
         customTabActivityHelper.unbindCustomTabsService(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mMenuDialogFragment != null && mMenuDialogFragment.isAdded()) {
+            mMenuDialogFragment.dismiss();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onMenuItemClick(View clickedView, int position) {
+        switch (position) {
+            case 0:
+                // close
+                break;
+            case 1:
+                // comment
+                break;
+            case 2:
+                // like
+                break;
+            case 3:
+                // thumbup
+                break;
+            case 4:
+                // share
+                break;
+        }
     }
 
 

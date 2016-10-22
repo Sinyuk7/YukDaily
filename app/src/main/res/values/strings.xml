@@ -8,4 +8,8 @@
     <string name="no_news">你似乎来到了没有知识的荒野</string>
     <string name="zhihudaily_slogan">每天三次,每次七分钟</string>
     <string name="gank_slogan">干货集中营</string>
+    <string name="action_comment">评论</string>
+    <string name="action_like">收藏</string>
+    <string name="action_thumbup">感谢</string>
+    <string name="action_share">分享</string>
 </resources>

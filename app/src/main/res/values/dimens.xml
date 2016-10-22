@@ -95,5 +95,6 @@
     <dimen name="image_size_1">18dp</dimen>
 
     <dimen name="drag_dismiss_distance">112dp</dimen>
+    <dimen name="toolbar_height">56dp</dimen>
 
 </resources>

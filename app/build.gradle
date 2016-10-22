@@ -66,6 +66,7 @@ dependencies {
     testCompile rootProject.ext.dependencies["leakcanary-no-op"]
     compile 'com.github.80998062:MyUtils:1.0.2'
     compile 'com.github.devlight.navigationtabstrip:navigationtabstrip:1.0.4'
+    compile 'com.yalantis:contextmenu:1.0.7'
     compile 'org.jsoup:jsoup:1.9.2'
     testCompile 'junit:junit:4.12'
     compile project(':shared')

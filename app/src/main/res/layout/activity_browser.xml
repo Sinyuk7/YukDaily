@@ -105,7 +105,7 @@
             <ImageView
                 style="@style/toolbar_button"
                 android:onClick="onClose"
-                android:src="@drawable/ic_back"/>
+                android:src="@drawable/ic_close_white"/>
 
             <TextView
                 android:id="@+id/toolbarTitle"
@@ -126,7 +126,7 @@
             <ImageView
                 style="@style/toolbar_button"
                 android:onClick="onContextMenu"
-                android:src="@drawable/ic_menu"/>
+                android:src="@drawable/ic_more_android"/>
         </LinearLayout>
 
     </com.sinyuk.yukdaily.widgets.ElasticDragDismissFrameLayout>
