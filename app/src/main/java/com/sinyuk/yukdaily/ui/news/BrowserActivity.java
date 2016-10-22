@@ -36,6 +36,7 @@ import com.sinyuk.yukdaily.customtab.WebviewActivityFallback;
 import com.sinyuk.yukdaily.data.news.NewsRepository;
 import com.sinyuk.yukdaily.data.news.NewsRepositoryModule;
 import com.sinyuk.yukdaily.databinding.ActivityBrowserBinding;
+import com.sinyuk.yukdaily.databinding.StubNewsSectionBinding;
 import com.sinyuk.yukdaily.entity.news.News;
 import com.sinyuk.yukdaily.ui.browser.BaseWebActivity;
 import com.sinyuk.yukdaily.utils.AssetsUtils;
@@ -89,7 +90,21 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
 
         @Override
         public void onNext(News news) {
+
+            binding.viewStub.setOnInflateListener((stub, inflated) -> {
+                StubNewsSectionBinding stubBinding = DataBindingUtil.bind(inflated);
+                stubBinding.setSection(news.getSection());
+            });
+
+            if (news.getSection() != null) {
+                if (!binding.viewStub.isInflated()) {
+                    binding.viewStub.getViewStub().inflate();
+                }
+            }
+
+
             binding.setNews(news);
+
             String html = AssetsUtils.loadText(BrowserActivity.this, "html/template.html");
             if (html != null) {
                 html = html.replace("{content}", news.getBody());
@@ -274,6 +289,8 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
                     }
                 })
                 .into(binding.parallaxScrimageView);
+
+
     }
 
     private void handleUrl(String url) {

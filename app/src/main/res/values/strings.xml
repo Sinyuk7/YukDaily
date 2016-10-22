@@ -12,4 +12,6 @@
     <string name="action_like">收藏</string>
     <string name="action_thumbup">感谢</string>
     <string name="action_share">分享</string>
+    <string name="news_section">专栏</string>
+    <string name="zhuanlanFormat">专栏:%s</string>
 </resources>

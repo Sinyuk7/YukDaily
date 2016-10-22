@@ -14,7 +14,7 @@
         android:id="@+id/elasticDragDismissFrameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white"
+        android:background="@color/window_background"
         app:dragDismissDistance="@dimen/drag_dismiss_distance"
         app:dragDismissScale="0.95">
 
@@ -87,6 +87,12 @@
                         tools:text="bilibili"/>
 
                 </FrameLayout>
+
+                <ViewStub
+                    android:id="@+id/viewStub"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout="@layout/stub_news_section"/>
 
                 <WebView
                     android:id="@+id/webView"

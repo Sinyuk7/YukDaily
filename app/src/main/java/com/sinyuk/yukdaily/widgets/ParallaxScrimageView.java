@@ -146,24 +146,18 @@ public class ParallaxScrimageView extends RatioImageView {
     public void setScrim(int offset) {
         offset = Math.max(minOffset, offset);
         float fraction = Math.abs(1.f * offset / minOffset);
+        fraction *= fraction;
+
         setScrimAlpha(Math.min(fraction * maxScrimAlpha, maxScrimAlpha));
 
         int transY = (int) (fraction * minOffset);
+
         setTranslationY(transY);
-
-        imageOffset = (int) (transY * parallaxFactor);
-
-        clipBounds.set(0, -transY, getWidth(), getHeight());
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            setClipBounds(clipBounds);
-        }
 
         postInvalidateOnAnimation();
 
         setPinned(transY == minOffset);
     }
-
 
 
     public void setScrimColor(@ColorInt int scrimColor) {
