@@ -17,8 +17,23 @@
         app:dragDismissDistance="@dimen/drag_dismiss_distance"
         app:dragDismissScale="0.95">
 
+        <com.sinyuk.yukdaily.widgets.ParallaxScrimageView
+            android:id="@+id/parallaxScrimageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:minHeight="?actionBarSize"
+            android:scaleType="centerCrop"
+            app:imageHOverW="0.618"
+            app:imageUrl="@{news.image}"
+            app:maxScrimAlpha="1"
+            app:parallaxFactor="-0.5"
+            app:scrimAlpha="0"
+            app:scrimColor="@color/colorPrimary"
+            tools:src="@drawable/backdrop1"/>
+
         <android.support.v4.widget.NestedScrollView
-            android:id="@+id/nestedScrollView"
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:overScrollMode="never"
@@ -31,24 +46,16 @@
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/colorPrimary">
+                    android:layout_height="wrap_content">
 
-                    <com.sinyuk.yukdaily.widgets.ParallaxScrimageView
-                        android:id="@+id/parallaxScrimageView"
+                    <com.sinyuk.yukdaily.widgets.PlaceHolder
+                        android:id="@+id/placeHolder"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:minHeight="?actionBarSize"
-                        android:scaleType="centerCrop"
-                        app:imageHOverW="0.618"
-                        app:imageUrl="@{news.image}"
-                        app:maxScrimAlpha="1"
-                        app:parallaxFactor="-0.5"
-                        app:scrimAlpha="0"
-                        app:scrimColor="@color/colorPrimary"
-                        tools:src="@drawable/backdrop1"/>
+                        app:holderHOverW="0.618"/>
 
                     <LinearLayout
+                        android:id="@+id/headLine"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
@@ -84,28 +91,30 @@
                             tools:text="bilibili"/>
                     </LinearLayout>
 
-
-                    <android.support.v7.widget.Toolbar
-                        android:layout_width="match_parent"
-                        android:layout_height="?attr/actionBarSize"
-                        android:layout_gravity="top"
-                        android:background="@null"
-                        app:contentInsetStart="0dp">
-
-                        <ImageView
-                            style="@style/toolbar_button"
-                            android:onClick="onClose"
-                            android:src="@drawable/ic_back"/>
-                    </android.support.v7.widget.Toolbar>
                 </FrameLayout>
-
 
                 <WebView
                     android:id="@+id/webView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    android:background="@color/window_background"/>
 
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="top"
+            android:background="@null"
+            app:contentInsetStart="0dp">
+
+            <ImageView
+                style="@style/toolbar_button"
+                android:onClick="onClose"
+                android:src="@drawable/ic_back"/>
+        </android.support.v7.widget.Toolbar>
+
     </com.sinyuk.yukdaily.widgets.ElasticDragDismissFrameLayout>
 </layout>
