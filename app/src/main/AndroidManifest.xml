@@ -34,6 +34,9 @@
             android:name=".ui.news.BrowserActivity"
             android:theme="@style/AppTheme.Translucent"/>
         <activity android:name=".ui.browser.WebViewActivity"/>
+
+        <activity android:name=".ui.browser.ImageActivity"
+                  android:theme="@style/AppTheme.Image"/>
     </application>
 
 </manifest>

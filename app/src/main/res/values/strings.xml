@@ -14,4 +14,5 @@
     <string name="action_share">分享</string>
     <string name="news_section">专栏</string>
     <string name="zhuanlanFormat">专栏:%s</string>
+    <string name="transition_new_img">transition_new_img</string>
 </resources>

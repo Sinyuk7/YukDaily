@@ -1,6 +1,5 @@
 package com.sinyuk.yukdaily.ui.news;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -15,17 +14,13 @@ import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
-import android.util.JsonReader;
-import android.util.JsonToken;
 import android.util.Log;
 import android.view.View;
 import android.webkit.JavascriptInterface;
-import android.webkit.ValueCallback;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -43,6 +38,7 @@ import com.sinyuk.yukdaily.databinding.ActivityBrowserBinding;
 import com.sinyuk.yukdaily.databinding.StubNewsSectionBinding;
 import com.sinyuk.yukdaily.entity.news.News;
 import com.sinyuk.yukdaily.ui.browser.BaseWebActivity;
+import com.sinyuk.yukdaily.ui.browser.ImageActivity;
 import com.sinyuk.yukdaily.utils.AssetsUtils;
 import com.sinyuk.yukdaily.widgets.ElasticDragDismissFrameLayout;
 import com.yalantis.contextmenu.lib.ContextMenuDialogFragment;
@@ -56,10 +52,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -69,7 +64,6 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -109,7 +103,7 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
         }
     };
     private ContextMenuDialogFragment mMenuDialogFragment;
-    private List<String> mDetailImageList = new ArrayList<>();
+    private List<String> imageLinks = new ArrayList<>();
     private Observer<News> observer = new Observer<News>() {
         @Override
         public void onCompleted() {
@@ -152,6 +146,8 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
             mShareUrl = news.getShareUrl();
         }
     };
+
+    private String[] pathArray;
 
     public static void start(Context context, int id) {
         Intent starter = new Intent(context, BrowserActivity.class);
@@ -346,7 +342,7 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
 
             final String imgUrl = e.attr("src");
 
-            mDetailImageList.add(imgUrl);
+            imageLinks.add(imgUrl);
 
             e.attr("cache", "");
             e.attr("link", imgUrl);
@@ -409,7 +405,7 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
         }
     }
 
-    private static class JavaScriptObject {
+    private class JavaScriptObject {
 
         private final WeakReference<Activity> ref;
 
@@ -418,13 +414,23 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
         }
 
         @JavascriptInterface
-        public void openImage(String url) {
+        public void openImage(String path) {
             if (ref.get() != null && !ref.get().isFinishing()) {
-//                NewsImageActivity.start(ref.get(), url);
-                Toast.makeText(ref.get(), url, Toast.LENGTH_LONG).show();
+                if (pathArray != null) {
+                    final ArrayList<String> order = new ArrayList<String>(Arrays.asList(pathArray));
+                    if (order.contains(path)) {
+                        final int index = order.indexOf(path);
+                        ImageActivity.start(ref.get(), index, order);
+                    } else {
+                        ImageActivity.start(ref.get(), path);
+                    }
+                } else {
+                    ImageActivity.start(ref.get(), path);
+                }
             }
         }
     }
+
 
     private class NewsPageClient extends WebViewClient {
 
@@ -446,52 +452,49 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
             super.onPageFinished(view, url);
             loadHeaderImage();
 
-            for (String src : mDetailImageList) {
+            if (imageLinks.isEmpty()) { return; }
 
+            pathArray = new String[imageLinks.size()];
+
+            for (int i = 0; i < imageLinks.size(); i++) {
+                final String src = imageLinks.get(i);
+                final int finalI = i;
                 addSubscription(Observable.just(src).map(BrowserActivity.this::loadIntoLocalCache)
                         .map(path -> "file://" + path)
-                        .doOnNext(new Action1<String>() {
-                            @Override
-                            public void call(String s) {
-                                Log.d(TAG, "call: " + s);
-                            }
-                        })
-                        .timeout(2000, TimeUnit.MILLISECONDS)
+                        .timeout(500, TimeUnit.MILLISECONDS)
                         .subscribeOn(Schedulers.io())
                         .onErrorResumeNext(Observable.just(src))
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(path -> {
-
+                            pathArray[finalI] = path;
                             String javascript = "img_replace_by_url('" + src + "','" + path + "');";
 
                             Log.d(TAG, "insert js: " + javascript);
 
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                                 binding.webView.evaluateJavascript(javascript, s -> {
-
-                                    JsonReader reader = new JsonReader(new StringReader(s));
-                                    // Must set lenient to parse single values
-                                    reader.setLenient(true);
                                     Log.d(TAG, "evaluateJavascript: " + s);
-
-                                    try {
-                                        if (reader.peek() != JsonToken.NULL) {
-                                            if (reader.peek() == JsonToken.STRING) {
-                                                String msg = reader.nextString();
-                                                if (msg != null) {
-
-                                                }
-                                            }
-                                        }
-                                    } catch (IOException e) {
-                                        Log.e(TAG, e.getLocalizedMessage());
-                                    } finally {
-                                        try {
-                                            reader.close();
-                                        } catch (IOException e) {
-                                            // NOOP
-                                        }
-                                    }
+//                                    JsonReader reader = new JsonReader(new StringReader(s));
+//                                    // Must set lenient to parse single values
+//                                    reader.setLenient(true);
+//                                    try {
+//                                        if (reader.peek() != JsonToken.NULL) {
+//                                            if (reader.peek() == JsonToken.STRING) {
+//                                                String msg = reader.nextString();
+//                                                if (msg != null) {
+//
+//                                                }
+//                                            }
+//                                        }
+//                                    } catch (IOException e) {
+//                                        Log.e(TAG, e.getLocalizedMessage());
+//                                    } finally {
+//                                        try {
+//                                            reader.close();
+//                                        } catch (IOException e) {
+//                                            // NOOP
+//                                        }
+//                                    }
                                 });
                             } else {
                                 binding.webView.loadUrl("javascript:" + javascript);
