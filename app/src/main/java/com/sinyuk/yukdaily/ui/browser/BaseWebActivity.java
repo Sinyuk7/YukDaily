@@ -99,7 +99,6 @@ public class BaseWebActivity extends BaseActivity {
         webSetting.setAppCacheEnabled(true);
         webSetting.setAppCachePath(cache.getPath());
 
-
         webSetting.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 
         webSetting.setJavaScriptEnabled(true);

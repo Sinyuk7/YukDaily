@@ -18,6 +18,7 @@
         app:dragDismissDistance="@dimen/drag_dismiss_distance"
         app:dragDismissScale="0.95">
 
+
         <com.sinyuk.yukdaily.widgets.ParallaxScrimageView
             android:id="@+id/parallaxScrimageView"
             android:layout_width="match_parent"

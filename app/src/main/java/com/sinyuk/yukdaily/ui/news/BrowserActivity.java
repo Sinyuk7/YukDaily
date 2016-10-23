@@ -1,5 +1,6 @@
 package com.sinyuk.yukdaily.ui.news;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -14,9 +15,12 @@ import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
+import android.util.JsonReader;
+import android.util.JsonToken;
 import android.util.Log;
 import android.view.View;
 import android.webkit.JavascriptInterface;
+import android.webkit.ValueCallback;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -52,13 +56,20 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import rx.Observable;
 import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by Sinyuk on 16.10.21.
@@ -77,6 +88,27 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
 
 
     private String mShareUrl;
+    private CustomTabActivityHelper customTabActivityHelper;
+    private CustomTabsIntent.Builder customTabsBuilder;
+    private NestedScrollView.OnScrollChangeListener listener = new NestedScrollView.OnScrollChangeListener() {
+        @Override
+        public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+            binding.parallaxScrimageView.setScrim(scrollY);
+
+            float scrimAlpha = binding.parallaxScrimageView.getScrimAlpha();
+            if (scrimAlpha == 1f) {
+                binding.toolbar.setBackgroundColor(ContextCompat.getColor(BrowserActivity.this, R.color.colorPrimary));
+                binding.toolbarTitle.setVisibility(View.VISIBLE);
+            } else {
+                binding.toolbar.setBackground(null);
+                binding.toolbarTitle.setVisibility(View.INVISIBLE);
+            }
+
+            binding.headLine.setAlpha((1 - scrimAlpha) * (1 - scrimAlpha) * (1 - scrimAlpha));
+        }
+    };
+    private ContextMenuDialogFragment mMenuDialogFragment;
+    private List<String> mDetailImageList = new ArrayList<>();
     private Observer<News> observer = new Observer<News>() {
         @Override
         public void onCompleted() {
@@ -119,33 +151,12 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
             mShareUrl = news.getShareUrl();
         }
     };
-    private CustomTabActivityHelper customTabActivityHelper;
-    private CustomTabsIntent.Builder customTabsBuilder;
-    private NestedScrollView.OnScrollChangeListener listener = new NestedScrollView.OnScrollChangeListener() {
-        @Override
-        public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-            binding.parallaxScrimageView.setScrim(scrollY);
-
-            float scrimAlpha = binding.parallaxScrimageView.getScrimAlpha();
-            if (scrimAlpha == 1f) {
-                binding.toolbar.setBackgroundColor(ContextCompat.getColor(BrowserActivity.this, R.color.colorPrimary));
-                binding.toolbarTitle.setVisibility(View.VISIBLE);
-            } else {
-                binding.toolbar.setBackground(null);
-                binding.toolbarTitle.setVisibility(View.INVISIBLE);
-            }
-
-            binding.headLine.setAlpha((1 - scrimAlpha) * (1 - scrimAlpha) * (1 - scrimAlpha));
-        }
-    };
-    private ContextMenuDialogFragment mMenuDialogFragment;
 
     public static void start(Context context, int id) {
         Intent starter = new Intent(context, BrowserActivity.class);
         starter.putExtra(KEY_NEWS_ID, id);
         context.startActivity(starter);
     }
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -242,27 +253,8 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
         super.initWebViewSettings(webView, cache);
 
         webView.addJavascriptInterface(new JavaScriptObject(this), "injectedObject");
-        webView.setWebViewClient(new WebViewClient() {
 
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                handleUrl(url);
-                return true;
-            }
-
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) { return true; }
-                handleUrl(request.getUrl().toString());
-                return true;
-            }
-
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-                loadImage();
-            }
-        });
+        webView.setWebViewClient(new NewsPageClient());
 
         WebSettings webSetting = webView.getSettings();
 
@@ -272,7 +264,18 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
 
     }
 
-    private void loadImage() {
+    private String loadIntoLocalCache(String url) {
+        try {
+            return Glide.with(BrowserActivity.this).load(url)
+                    .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                    .get().getPath();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return url;
+        }
+    }
+
+    private void loadHeaderImage() {
         Glide.with(this)
                 .load(binding.getNews().getImage())
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
@@ -294,7 +297,7 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
     }
 
     private void handleUrl(String url) {
-        Log.d(TAG, "handleUrl: getAuthority " + Uri.parse(url).getAuthority());
+//        Log.d(TAG, "handleUrl: getAuthority " + Uri.parse(url).getAuthority());
         if (Uri.parse(url).getAuthority().contains("zhihu.com")) {
             // 如果打开的是知乎的链接 www.zhihu.com/zhuanlan.zhihu.com
             // 判断有没有装知乎
@@ -336,10 +339,18 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
 
         Document doc = Jsoup.parse(html);
 
-        Elements es = doc.getElementsByTag("img");
+        Elements elements = doc.getElementsByTag("img");
 
-        for (Element e : es) {
+        for (Element e : elements) {
+
             final String imgUrl = e.attr("src");
+
+            mDetailImageList.add(imgUrl);
+
+            e.attr("cache", "");
+            e.attr("link", imgUrl);
+
+            e.attr("src", "");
 
             if (!e.attr("class").equals("avatar")) {
                 e.attr("onclick", "openImage('" + imgUrl + "')");
@@ -397,7 +408,6 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
         }
     }
 
-
     private static class JavaScriptObject {
 
         private final WeakReference<Activity> ref;
@@ -415,5 +425,95 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
         }
     }
 
+    private class NewsPageClient extends WebViewClient {
 
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            handleUrl(url);
+            return true;
+        }
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) { return true; }
+            handleUrl(request.getUrl().toString());
+            return true;
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            loadHeaderImage();
+
+            for (String src : mDetailImageList) {
+
+                addSubscription(Observable.just(src).map(BrowserActivity.this::loadIntoLocalCache)
+                        .timeout(2000, TimeUnit.MILLISECONDS)
+                        .subscribeOn(Schedulers.io())
+                        .onErrorResumeNext(Observable.just(src))
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(path -> {
+
+                            String javascript = "img_replace_by_url('" + src + "','" + path + "');";
+
+//                            String javascript = "getGreetings()";
+
+                            Log.d(TAG, "insert js: " + javascript);
+                            binding.webView.loadUrl("javascript:" + javascript);
+
+                            binding.webView.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    binding.webView.evaluateJavascript(
+                                            "(function() { return ('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>'); })();",
+                                            new ValueCallback<String>() {
+                                                @Override
+                                                public void onReceiveValue(String html) {
+                                                    Log.d("HTML", html);
+                                                    // code here
+                                                }
+                                            });
+                                }
+                            },1000);
+
+//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//                                binding.webView.evaluateJavascript(javascript, new ValueCallback<String>() {
+//                                    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+//                                    @Override
+//                                    public void onReceiveValue(String s) {
+//
+//                                        JsonReader reader = new JsonReader(new StringReader(s));
+//                                        // Must set lenient to parse single values
+//                                        reader.setLenient(true);
+//                                        Log.d(TAG, "evaluateJavascript: " + s);
+//
+//                                        try {
+//                                            if (reader.peek() != JsonToken.NULL) {
+//                                                if (reader.peek() == JsonToken.STRING) {
+//                                                    String msg = reader.nextString();
+//                                                    if (msg != null) {
+//
+//                                                    }
+//                                                }
+//                                            }
+//                                        } catch (IOException e) {
+//                                            Log.e(TAG, e.getLocalizedMessage());
+//                                        } finally {
+//                                            try {
+//                                                reader.close();
+//                                            } catch (IOException e) {
+//                                                // NOOP
+//                                            }
+//                                        }
+//                                    }
+//
+//                                });
+//                            } else {
+//                                binding.webView.loadUrl("javascript:" + javascript);
+//                            }
+
+                        }));
+            }
+        }
+    }
 }

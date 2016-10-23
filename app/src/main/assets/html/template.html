@@ -5,6 +5,22 @@
     <meta name="viewport" content="width=device-width,user-scalable=no">
     <link href="file:///android_asset/css/style.css" rel="stylesheet">
     <script src="file:///android_asset/js/img_replace.js"></script>
+    <script type="text/javascript">
+       function img_replace_by_url(url,cache) {
+
+        var objs = document.getElementsByTagName("img");
+
+        for(var i=0;i<objs.length;i++) {
+            var link = objs[i].getAttribute("link");
+            if(link == url) {
+                objs[i].setAttribute("src",cache);
+                objs[i].setAttribute("cache",cache);
+                objs[i].setAttribute("onclick","openImage('" + cache + "')");
+                }
+            }
+        }
+    </script>
 </head>
 <body>{content}</body>
 </html>
+
