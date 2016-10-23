@@ -69,6 +69,7 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -448,6 +449,13 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
             for (String src : mDetailImageList) {
 
                 addSubscription(Observable.just(src).map(BrowserActivity.this::loadIntoLocalCache)
+                        .map(path -> "file://" + path)
+                        .doOnNext(new Action1<String>() {
+                            @Override
+                            public void call(String s) {
+                                Log.d(TAG, "call: " + s);
+                            }
+                        })
                         .timeout(2000, TimeUnit.MILLISECONDS)
                         .subscribeOn(Schedulers.io())
                         .onErrorResumeNext(Observable.just(src))
@@ -456,61 +464,38 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
 
                             String javascript = "img_replace_by_url('" + src + "','" + path + "');";
 
-//                            String javascript = "getGreetings()";
-
                             Log.d(TAG, "insert js: " + javascript);
-                            binding.webView.loadUrl("javascript:" + javascript);
 
-                            binding.webView.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    binding.webView.evaluateJavascript(
-                                            "(function() { return ('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>'); })();",
-                                            new ValueCallback<String>() {
-                                                @Override
-                                                public void onReceiveValue(String html) {
-                                                    Log.d("HTML", html);
-                                                    // code here
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                                binding.webView.evaluateJavascript(javascript, s -> {
+
+                                    JsonReader reader = new JsonReader(new StringReader(s));
+                                    // Must set lenient to parse single values
+                                    reader.setLenient(true);
+                                    Log.d(TAG, "evaluateJavascript: " + s);
+
+                                    try {
+                                        if (reader.peek() != JsonToken.NULL) {
+                                            if (reader.peek() == JsonToken.STRING) {
+                                                String msg = reader.nextString();
+                                                if (msg != null) {
+
                                                 }
-                                            });
-                                }
-                            },1000);
-
-//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//                                binding.webView.evaluateJavascript(javascript, new ValueCallback<String>() {
-//                                    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-//                                    @Override
-//                                    public void onReceiveValue(String s) {
-//
-//                                        JsonReader reader = new JsonReader(new StringReader(s));
-//                                        // Must set lenient to parse single values
-//                                        reader.setLenient(true);
-//                                        Log.d(TAG, "evaluateJavascript: " + s);
-//
-//                                        try {
-//                                            if (reader.peek() != JsonToken.NULL) {
-//                                                if (reader.peek() == JsonToken.STRING) {
-//                                                    String msg = reader.nextString();
-//                                                    if (msg != null) {
-//
-//                                                    }
-//                                                }
-//                                            }
-//                                        } catch (IOException e) {
-//                                            Log.e(TAG, e.getLocalizedMessage());
-//                                        } finally {
-//                                            try {
-//                                                reader.close();
-//                                            } catch (IOException e) {
-//                                                // NOOP
-//                                            }
-//                                        }
-//                                    }
-//
-//                                });
-//                            } else {
-//                                binding.webView.loadUrl("javascript:" + javascript);
-//                            }
+                                            }
+                                        }
+                                    } catch (IOException e) {
+                                        Log.e(TAG, e.getLocalizedMessage());
+                                    } finally {
+                                        try {
+                                            reader.close();
+                                        } catch (IOException e) {
+                                            // NOOP
+                                        }
+                                    }
+                                });
+                            } else {
+                                binding.webView.loadUrl("javascript:" + javascript);
+                            }
 
                         }));
             }

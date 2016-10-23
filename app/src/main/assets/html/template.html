@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,user-scalable=no">
     <link href="file:///android_asset/css/style.css" rel="stylesheet">
-    <script src="file:///android_asset/js/img_replace.js"></script>
     <script type="text/javascript">
        function img_replace_by_url(url,cache) {
 
@@ -19,6 +18,36 @@
                 }
             }
         }
+
+    function openImage(url) {
+        if(window.injectedObject){
+            injectedObject.openImage(url);
+        }
+    }
+
+    function img_replace_all() {
+
+        var result = '';
+
+        var objs = document.getElementsByTagName("img");
+        for(var i=0;i<objs.length;i++) {
+            var cache = objs[i].getAttribute("cache");
+            objs[i].setAttribute("src", cache);
+            objs[i].setAttribute("onclick","openImage('" + cache + "')");
+
+            result = result + cache;
+            result = result + ",";
+        }
+
+        return result;
+    }
+
+    function img_replace(source, replaceSource) {
+        $('img[zhimg-src*="'+source+'"]').each(function () {
+            $(this).attr('src', replaceSource);
+        });
+    }
+
     </script>
 </head>
 <body>{content}</body>
