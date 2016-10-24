@@ -53,6 +53,9 @@ public class NewsCommentFragment extends LoadingListFragment {
         super.onViewCreated(view, savedInstanceState);
         initRecyclerView();
         initData();
+
+
+        startLoading();
     }
 
 

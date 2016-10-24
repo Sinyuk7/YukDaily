@@ -2,6 +2,7 @@ package com.sinyuk.yukdaily.api;
 
 import com.sinyuk.yukdaily.entity.news.News;
 import com.sinyuk.yukdaily.entity.news.NewsComment;
+import com.sinyuk.yukdaily.entity.news.NewsCommentResponse;
 import com.sinyuk.yukdaily.entity.news.NewsExtras;
 import com.sinyuk.yukdaily.entity.news.StartImage;
 import com.sinyuk.yukdaily.entity.news.Stories;
@@ -29,14 +30,14 @@ public interface NewsService {
     @GET("news/{id}")
     Observable<News> getNews(@Path("id") int id);
 
-    @GET("story/{id}")
+    @GET("story-extra/{id}")
     Observable<NewsExtras> getNewsExtras(@Path("id") int id);
 
     @GET("story/{id}/long-comments")
-    Observable<List<NewsComment>> getNewsLongComments(@Path("id") int id);
+    Observable<NewsCommentResponse> getNewsLongComments(@Path("id") int id);
 
     @GET("story/{id}/short-comments")
-    Observable<List<NewsComment>> getNewsShortComments(@Path("id") int id);
+    Observable<NewsCommentResponse> getNewsShortComments(@Path("id") int id);
 
 
 }

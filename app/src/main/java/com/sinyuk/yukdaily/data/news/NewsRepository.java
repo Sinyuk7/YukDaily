@@ -6,6 +6,7 @@ import android.util.Log;
 import com.sinyuk.yukdaily.api.NewsService;
 import com.sinyuk.yukdaily.entity.news.News;
 import com.sinyuk.yukdaily.entity.news.NewsComment;
+import com.sinyuk.yukdaily.entity.news.NewsCommentResponse;
 import com.sinyuk.yukdaily.entity.news.NewsExtras;
 import com.sinyuk.yukdaily.entity.news.Stories;
 import com.sinyuk.yukdaily.utils.rx.SchedulerTransformer;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.Locale;
 
 import rx.Observable;
-import rx.functions.Func2;
+import rx.functions.Func1;
 
 /**
  * Created by Sinyuk on 16.10.20.
@@ -65,17 +66,53 @@ public class NewsRepository {
 
     public Observable<List<NewsComment>> getNewsLongComments(int id) {
         return newsService.getNewsLongComments(id)
+
+                .flatMap(new Func1<NewsCommentResponse, Observable<List<NewsComment>>>() {
+                    @Override
+                    public Observable<List<NewsComment>> call(NewsCommentResponse response) {
+                        return Observable.just(response.getComments());
+                    }
+                })
+                .doOnError(throwable -> {
+                    Log.d(TAG, "getNewsLongComments: ");
+                    throwable.printStackTrace();
+                })
                 .compose(new SchedulerTransformer<>());
     }
 
     public Observable<List<NewsComment>> getNewsShortComments(int id) {
         return newsService.getNewsShortComments(id)
+                .flatMap(new Func1<NewsCommentResponse, Observable<List<NewsComment>>>() {
+                    @Override
+                    public Observable<List<NewsComment>> call(NewsCommentResponse response) {
+                        return Observable.just(response.getComments());
+                    }
+                })
+                .doOnError(throwable -> {
+                    Log.d(TAG, "getNewsShortComments: ");
+                    throwable.printStackTrace();
+                })
                 .compose(new SchedulerTransformer<>());
     }
 
 
     public Observable<List<NewsComment>> getNewsAllComments(int id) {
-        return Observable.merge(getNewsLongComments(id),getNewsShortComments(id))
+        return Observable
+                .zip(getNewsLongComments(id), getNewsShortComments(id), (comment1, comment2) -> {
+                    comment1.addAll(comment2);
+                    return comment1;
+                })
+                .flatMap(new Func1<List<NewsComment>, Observable<NewsComment>>() {
+                    @Override
+                    public Observable<NewsComment> call(List<NewsComment> newsComments) {
+                        return Observable.from(newsComments);
+                    }
+                })
+                .toSortedList(NewsComment::compareTo)
+                .doOnError(throwable -> {
+                    Log.d(TAG, "getNewsAllComments: ");
+                    throwable.printStackTrace();
+                })
                 .compose(new SchedulerTransformer<>());
     }
 }

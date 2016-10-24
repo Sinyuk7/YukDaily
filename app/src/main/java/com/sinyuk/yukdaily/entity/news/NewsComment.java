@@ -1,12 +1,16 @@
 package com.sinyuk.yukdaily.entity.news;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
+
+import java.sql.Timestamp;
 
 /**
  * Created by Sinyuk on 16.10.24.
  */
 
-public class NewsComment {
+public class NewsComment implements Comparable {
 
     /**
      * author : EleganceWorld
@@ -26,7 +30,7 @@ public class NewsComment {
     @SerializedName("likes")
     private int likes;
     @SerializedName("time")
-    private long time;
+    private long time = 0;
     @SerializedName("avatar")
     private String avatar;
 
@@ -64,5 +68,21 @@ public class NewsComment {
                 ", time=" + time +
                 ", avatar='" + avatar + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(@NonNull Object o) {
+        if (time == 0) {
+            return -1;
+        }
+        if (o instanceof NewsComment) {
+            Timestamp timestamp1 = new Timestamp(time);
+            long time2 = ((NewsComment) o).getTime();
+            if (time2 == 0) { return -1; }
+
+            Timestamp timestamp2 = new Timestamp(time2);
+            return timestamp1.compareTo(timestamp2);
+        }
+        return -1;
     }
 }

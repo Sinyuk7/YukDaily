@@ -153,10 +153,8 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
 
     private NewsExtras mExtras = null;
     private Action1<NewsExtras> extrasObserver = newsExtras -> {
-        if (!newsExtras.equals(mExtras)) {
-            mExtras = newsExtras;
-            initMenuFragment();
-        }
+        mExtras = newsExtras;
+        initMenuFragment();
     };
 
     public static void start(Context context, int id) {
@@ -239,7 +237,6 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
 
     public void onContextMenu(View view) {
         final int id = getIntent().getIntExtra(KEY_NEWS_ID, -1);
-
         if (mExtras == null) {
             addSubscription(newsRepository.getNewsExtras(id)
                     .doOnTerminate(this::showMenuFragment)
@@ -252,7 +249,6 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
     }
 
     private void showMenuFragment() {
-
         if (mMenuDialogFragment == null) {
             initMenuFragment();
         }
@@ -421,7 +417,7 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
                         NewsCommentFragment fragment = NewsCommentFragment.newInstance(id);
                         fragment.show(getSupportFragmentManager(), NewsCommentFragment.TAG);
                     }
-                }, 500);
+                }, 350);
                 break;
             case 2:
                 // thumbup

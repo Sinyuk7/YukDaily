@@ -97,7 +97,7 @@ public abstract class LoadingListFragment extends BaseSlideFragment {
     @CallSuper
     protected void startLoading() {
         isLoading = true;
-        fetchData();
+        refreshData();
     }
 
     @CallSuper
