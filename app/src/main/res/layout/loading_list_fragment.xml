@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/tools"
+        xmlns:bind="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="errorMessage"
+            type="String"/>
+
+        <variable
+            name="errorImage"
+            type="Integer"/>
+
+        <variable
+            name="emptyMessage"
+            type="String"/>
+
+        <variable
+            name="emptyImage"
+            type="Integer"/>
+
+        <variable
+            name="loadingMessage"
+            type="String"/>
+    </data>
+
+    <com.sinyuk.yukdaily.widgets.BetterViewAnimator
+        android:id="@+id/viewAnimator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/loadingLayout"
+            layout="@layout/layout_loading"
+            bind:loadingMessage="@{loadingMessage}"/>
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:scrollbarStyle="outsideOverlay"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+
+        <include
+            android:id="@+id/errorLayout"
+            layout="@layout/layout_error"
+            bind:errorImage="@{errorImage}"
+            bind:errorMessage="@{errorMessage}"/>
+
+        <include
+            android:id="@+id/emptyLayout"
+            layout="@layout/layout_empty"
+            bind:emptyImage="@{emptyImage}"
+            bind:emptyMessage="@{emptyMessage}"/>
+    </com.sinyuk.yukdaily.widgets.BetterViewAnimator>
+</layout>

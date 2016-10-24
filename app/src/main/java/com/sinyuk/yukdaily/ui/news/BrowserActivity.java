@@ -421,11 +421,17 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
                     if (order.contains(path)) {
                         final int index = order.indexOf(path);
                         ImageActivity.start(ref.get(), index, order);
+                        Log.d(TAG, "openImage: "+order.toString());
+
                     } else {
                         ImageActivity.start(ref.get(), path);
+                        Log.d(TAG, "openImage: "+path);
+
                     }
                 } else {
                     ImageActivity.start(ref.get(), path);
+                    Log.d(TAG, "openImage: "+path);
+
                 }
             }
         }

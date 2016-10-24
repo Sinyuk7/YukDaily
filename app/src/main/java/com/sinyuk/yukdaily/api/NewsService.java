@@ -1,8 +1,12 @@
 package com.sinyuk.yukdaily.api;
 
 import com.sinyuk.yukdaily.entity.news.News;
-import com.sinyuk.yukdaily.entity.news.Stories;
+import com.sinyuk.yukdaily.entity.news.NewsComment;
+import com.sinyuk.yukdaily.entity.news.NewsExtras;
 import com.sinyuk.yukdaily.entity.news.StartImage;
+import com.sinyuk.yukdaily.entity.news.Stories;
+
+import java.util.List;
 
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -24,4 +28,15 @@ public interface NewsService {
 
     @GET("news/{id}")
     Observable<News> getNews(@Path("id") int id);
+
+    @GET("story/{id}")
+    Observable<NewsExtras> getNewsExtras(@Path("id") int id);
+
+    @GET("story/{id}/long-comments")
+    Observable<List<NewsComment>> getNewsLongComments(@Path("id") int id);
+
+    @GET("story/{id}/short-comments")
+    Observable<List<NewsComment>> getNewsShortComments(@Path("id") int id);
+
+
 }

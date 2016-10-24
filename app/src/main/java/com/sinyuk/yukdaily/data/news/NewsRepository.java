@@ -5,12 +5,15 @@ import android.util.Log;
 
 import com.sinyuk.yukdaily.api.NewsService;
 import com.sinyuk.yukdaily.entity.news.News;
+import com.sinyuk.yukdaily.entity.news.NewsComment;
+import com.sinyuk.yukdaily.entity.news.NewsExtras;
 import com.sinyuk.yukdaily.entity.news.Stories;
 import com.sinyuk.yukdaily.utils.rx.SchedulerTransformer;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import rx.Observable;
@@ -51,6 +54,21 @@ public class NewsRepository {
 
     public Observable<News> getNews(int id) {
         return newsService.getNews(id)
+                .compose(new SchedulerTransformer<>());
+    }
+
+    public Observable<NewsExtras> getNewsExtras(int id) {
+        return newsService.getNewsExtras(id)
+                .compose(new SchedulerTransformer<>());
+    }
+
+    public Observable<List<NewsComment>> getNewsLongComments(int id) {
+        return newsService.getNewsLongComments(id)
+                .compose(new SchedulerTransformer<>());
+    }
+
+    public Observable<List<NewsComment>> getNewsShortComments(int id) {
+        return newsService.getNewsShortComments(id)
                 .compose(new SchedulerTransformer<>());
     }
 
