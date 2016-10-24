@@ -1,6 +1,7 @@
 package com.sinyuk.yukdaily.ui.news;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
