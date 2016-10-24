@@ -1,28 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-        <variable
-            name="startImage"
-            type="com.sinyuk.yukdaily.entity.news.StartImage" />
-    </data>
 
     <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:background="@color/splash_backdrop">
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/footer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:gravity="center"
-            android:text="@{startImage.author}"
-            android:textColor="#fff"
-            android:textSize="24sp"
-            tools:text="Sinyuk" />
+            android:orientation="horizontal"
+            android:padding="@dimen/content_space_16"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/content_space_16"
+                android:src="@drawable/ic_favor"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="不说"
+                android:textColor="#fff"
+                android:textSize="24sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
     </FrameLayout>
 
-</layout>

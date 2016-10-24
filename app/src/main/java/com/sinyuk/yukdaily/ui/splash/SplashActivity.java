@@ -1,14 +1,18 @@
 package com.sinyuk.yukdaily.ui.splash;
 
 import android.app.Application;
-import android.databinding.DataBindingUtil;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -18,23 +22,24 @@ import com.f2prateek.rx.preferences.Preference;
 import com.f2prateek.rx.preferences.RxSharedPreferences;
 import com.sinyuk.myutils.system.ScreenUtils;
 import com.sinyuk.yukdaily.App;
+import com.sinyuk.yukdaily.NewsListDemo;
 import com.sinyuk.yukdaily.R;
 import com.sinyuk.yukdaily.Sinyuk;
+import com.sinyuk.yukdaily.api.NewsApi;
 import com.sinyuk.yukdaily.api.NewsService;
 import com.sinyuk.yukdaily.base.BaseActivity;
-import com.sinyuk.yukdaily.databinding.ActivitySplashBinding;
-import com.sinyuk.yukdaily.entity.news.StartImage;
+import com.sinyuk.yukdaily.data.news.NewsRepository;
+import com.sinyuk.yukdaily.data.news.NewsRepositoryModule;
+import com.sinyuk.yukdaily.utils.rx.SchedulerTransformer;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 import javax.inject.Inject;
 
+import dagger.Lazy;
 import rx.Observable;
 import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by Sinyuk on 16/8/16.
@@ -43,163 +48,144 @@ import rx.schedulers.Schedulers;
  * 或者做一些复杂的处理。
  */
 public class SplashActivity extends BaseActivity {
-    protected Handler myHandler = new Handler();
-    ActivitySplashBinding binding;
-    @Inject
-    NewsService newsService;
-
-    @Inject
-    Application application;
-
     @Inject
     RxSharedPreferences preferences;
 
-    private Runnable mLazyLoadRunnable;
-    private StartImage startImage = new StartImage();
+    @Inject
+    Lazy<NewsRepository> repositoryLazy;
+
     private Preference<String> path;
-    private Preference<String> url;
+    private View footer;
 
-
-    private final Observer<String> pathObserver = new Observer<String>() {
-        @Override
-        public void onCompleted() {
-            updateBackdropUrl(startImage.getImageUrl());
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            e.printStackTrace();
-            clear();
-        }
-
-        @Override
-        public void onNext(String path) {
-            updateBackdropPath(path);
-        }
-    };
-
+    private void startMainActivity() {
+        Intent starter = new Intent(SplashActivity.this, NewsListDemo.class);
+        starter.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(starter);
+        ActivityCompat.finishAfterTransition(this);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        App.get(this).getAppComponent().plus(new SplashModule(this)).inject(this);
 
         ScreenUtils.hideSystemyBar(this);
+        setContentView(R.layout.activity_splash);
+        footer = findViewById(R.id.footer);
 
-        final int height = ScreenUtils.getScreenHeight(this);
-        final int width = ScreenUtils.getScreenWidth(this);
-        final String resolution = width + "*" + height;
+        App.get(this).getAppComponent().plus(new NewsRepositoryModule()).inject(this);
 
-        url = preferences.getString(Sinyuk.KEY_SPLASH_BACKDROP_URL);
         path = preferences.getString(Sinyuk.KEY_SPLASH_BACKDROP_PATH);
 
-        addSubscription(newsService.getStartImage(resolution)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(data -> {
-                    loadBackDropFromCache(data.getImageUrl(), width, height);
-                    //
-                    startImage.setAuthor(data.getAuthor());
-                    startImage.setImageUrl(data.getImageUrl());
-                }));
+        if (!TextUtils.isEmpty(path.get())) {
+            Log.d(TAG, "onCreate: loadFromCache");
+            loadFromCache();
+        } else {
+            downloadAndCache();
+            Log.d(TAG, "onCreate: downloadAndCache");
+        }
 
+        prepare();
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_splash);
-        binding.setStartImage(startImage);
-//        App.get(this).getAppComponent().plus(new SplashModule(this)).inject(this);
-//        mLazyLoadRunnable = this::startMainActivity;
-//        if (savedInstanceState == null) {
-//            getWindow().getDecorView().post(() -> myHandler.postDelayed(mLazyLoadRunnable, 0));
-//        }
     }
 
-    private void loadBackDropFromCache(final String imageUrl, final int width, final int height) {
-        Log.d(TAG, "loadBackDropFromCache: url" + imageUrl);
-        if (url.isSet() && path.isSet() && imageUrl.equals(url.get())) {
-            Log.d(TAG, "loadBackDropFromCache: url" + url.get());
-            Log.d(TAG, "loadBackDropFromCache: path" + path.get());
-            Glide.with(this)
-                    .load(Uri.parse(path.get()))
-                    .listener(new RequestListener<Uri, GlideDrawable>() {
-                        @Override
-                        public boolean onException(Exception e, Uri model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            e.printStackTrace();
-                            clear();
-                            loadBackDropFromWeb(imageUrl, width, height);
-                            return false;
-                        }
+    private void prepare() {
+        repositoryLazy.get();
+    }
 
-                        @Override
-                        public boolean onResourceReady(GlideDrawable resource, Uri model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                            getWindow().setBackgroundDrawable(resource);
-                            return false;
-                        }
-                    }).preload(width, height);
+    private void animateIn() {
+        if (footer == null) { return; }
+        footer.setTranslationY(getResources().getDimensionPixelOffset(R.dimen.toolbar_height));
+        footer.setAlpha(0);
+        footer.setVisibility(View.VISIBLE);
+        footer.animate().translationY(0)
+                .alpha(1)
+                .setInterpolator(new FastOutSlowInInterpolator())
+                .setDuration(800)
+                .setStartDelay(600)  // avoid flash
+                .withLayer()
+                .withEndAction(() -> footer.postDelayed(this::startMainActivity, 1000))
+                .start();
+    }
+
+    private void loadFromCache() {
+        Log.d(TAG, "loadFromCache: " + path.get());
+        Bitmap backdrop = BitmapFactory.decodeFile(path.get());
+
+        if (backdrop != null) {
+            getWindow().setBackgroundDrawable(new BitmapDrawable(getResources(), backdrop));
+            loadSucceed();
         } else {
-            loadBackDropFromWeb(imageUrl, width, height);
+            Log.d(TAG, "loadFromCache: Failed");
+            clearCache();
+            downloadAndCache();
         }
     }
 
-    private void loadBackDropFromWeb(final String imageUrl, final int width, final int height) {
-        Glide.with(getApplicationContext())
-                .load(imageUrl)
-                .asBitmap()
-                .listener(new RequestListener<String, Bitmap>() {
+    private void loadSucceed() {
+        animateIn();
+    }
+
+    private File downloadOnly() throws ExecutionException, InterruptedException {
+        return Glide.with(this)
+                .load(NewsApi.SPLASH_BACKDROP_URL)
+                .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
+    }
+
+
+    private void downloadAndCache() {
+        addSubscription(Observable.fromCallable(this::downloadOnly)
+                .map(File::getPath)
+                .compose(new SchedulerTransformer<>())
+                .subscribe(new Observer<String>() {
                     @Override
-                    public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
+                    public void onCompleted() {
+                        loadFromCache();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        clearCache();
+                        downloadAndDraw();
+                    }
+
+                    @Override
+                    public void onNext(String localPath) {
+                        Log.d(TAG, "onNext: " + localPath);
+                        updateCache(localPath);
+                    }
+                }));
+    }
+
+    private void downloadAndDraw() {
+        Glide.with(this)
+                .load(NewsApi.SPLASH_BACKDROP_URL)
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
                         e.printStackTrace();
                         return false;
                     }
 
                     @Override
-                    public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                        getWindow().setBackgroundDrawable(new BitmapDrawable(getResources(), resource));
-                        addSubscription(Observable.just(resource)
-                                .map(bitmap -> saveBitmapInCache(bitmap))
-                                .map(Uri::toString)
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(Schedulers.io())
-                                .subscribe(pathObserver));
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        getWindow().setBackgroundDrawable(resource);
+                        loadSucceed();
                         return false;
                     }
-                }).preload(width, height);
+                })
+                .preload();
     }
 
-    private void updateBackdropPath(String path) {
+
+    private void updateCache(String path) {
         this.path.set(path);
     }
 
-    private void updateBackdropUrl(String url) {
-        this.url.set(url);
-    }
 
-    private void clear() {
+    private void clearCache() {
         this.path.delete();
-        this.url.delete();
     }
 
-    private Uri saveBitmapInCache(Bitmap bitmap) {
-        try {
-            File e = new File(getExternalCacheDir(), Sinyuk.SPLASH_BACKDROP_FILE_NAME);
-            FileOutputStream fOut = new FileOutputStream(e);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 40, fOut);
-            fOut.flush();
-            fOut.close();
-            e.setReadable(true, true);
-            return Uri.fromFile(e);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private void startMainActivity() {
-//        Timber.d("Splash Finish");
-//        Intent starter = new Intent(SplashActivity.this, ShotsListDemo.class);
-//        starter.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-////        starter.setData(Uri.parse("http://weibo.com/163music?refer_flag=0000015010_&from=feed&loc=nickname"));
-//        startActivity(starter);
-//        finish();
-    }
 
 }

@@ -12,5 +12,5 @@ import dagger.Subcomponent;
         modules = SplashModule.class
 )
 public interface SplashComponent {
-    void inject(SplashActivity splashActivity);
+
 }
