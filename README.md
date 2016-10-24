@@ -25,7 +25,7 @@
 > 但是又觉得光这样有点单调…打算把gank.io上的东西加进去
 
 
-- 还在开发中(Under heavy development no
+- 还在开发中(Under heavy development now
 
 
 
