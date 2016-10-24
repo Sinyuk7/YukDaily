@@ -20,12 +20,16 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:layout_marginBottom="@dimen/content_space_16"/>
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="56dp"
             android:layout_marginRight="56dp"
-            android:layout_marginTop="56dp"
             android:adjustViewBounds="true"
             android:onClick="onClickError"
             android:src="@drawable/sample"/>

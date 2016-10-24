@@ -37,6 +37,7 @@ import com.sinyuk.yukdaily.data.news.NewsRepositoryModule;
 import com.sinyuk.yukdaily.databinding.ActivityBrowserBinding;
 import com.sinyuk.yukdaily.databinding.StubNewsSectionBinding;
 import com.sinyuk.yukdaily.entity.news.News;
+import com.sinyuk.yukdaily.entity.news.NewsExtras;
 import com.sinyuk.yukdaily.ui.browser.BaseWebActivity;
 import com.sinyuk.yukdaily.ui.browser.ImageActivity;
 import com.sinyuk.yukdaily.utils.AssetsUtils;
@@ -64,6 +65,7 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -149,6 +151,14 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
 
     private String[] pathArray;
 
+    private NewsExtras mExtras = null;
+    private Action1<NewsExtras> extrasObserver = newsExtras -> {
+        if (!newsExtras.equals(mExtras)) {
+            mExtras = newsExtras;
+            initMenuFragment();
+        }
+    };
+
     public static void start(Context context, int id) {
         Intent starter = new Intent(context, BrowserActivity.class);
         starter.putExtra(KEY_NEWS_ID, id);
@@ -209,13 +219,12 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
         MenuObject close = new MenuObject();
         close.setResource(R.drawable.ic_close);
 
-        MenuObject comment = new MenuObject(getString(R.string.action_comment));
+        final int comments = mExtras == null ? 0 : mExtras.getComments();
+        MenuObject comment = new MenuObject(String.format(getString(R.string.format_comment), comments));
         comment.setResource(R.drawable.ic_reply);
 
-        MenuObject like = new MenuObject(getString(R.string.action_like));
-        like.setResource(R.drawable.ic_favor_black);
-
-        MenuObject thumbup = new MenuObject(getString(R.string.action_thumbup));
+        final int popularity = mExtras == null ? 0 : mExtras.getPopularity();
+        MenuObject thumbup = new MenuObject(String.format(getString(R.string.format_thumbup), popularity));
         thumbup.setResource(R.drawable.ic_appreciate);
 
         MenuObject share = new MenuObject(getString(R.string.action_share));
@@ -223,17 +232,30 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
 
         menuObjects.add(close);
         menuObjects.add(comment);
-        menuObjects.add(like);
         menuObjects.add(thumbup);
         menuObjects.add(share);
         return menuObjects;
     }
 
     public void onContextMenu(View view) {
+        final int id = getIntent().getIntExtra(KEY_NEWS_ID, -1);
+
+        if (mExtras == null) {
+            addSubscription(newsRepository.getNewsExtras(id)
+                    .doOnTerminate(this::showMenuFragment)
+                    .doOnError(throwable -> toastUtils.toastShort(throwable.getLocalizedMessage()))
+                    .timeout(2000, TimeUnit.MILLISECONDS)
+                    .subscribe(extrasObserver));
+        } else {
+            showMenuFragment();
+        }
+    }
+
+    private void showMenuFragment() {
+
         if (mMenuDialogFragment == null) {
             initMenuFragment();
         }
-
         if (getSupportFragmentManager().findFragmentByTag(ContextMenuDialogFragment.TAG) == null) {
             mMenuDialogFragment.show(getSupportFragmentManager(), ContextMenuDialogFragment.TAG);
         }
@@ -392,14 +414,19 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
                 break;
             case 1:
                 // comment
+                clickedView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        final int id = getIntent().getIntExtra(KEY_NEWS_ID, -1);
+                        NewsCommentFragment fragment = NewsCommentFragment.newInstance(id);
+                        fragment.show(getSupportFragmentManager(), NewsCommentFragment.TAG);
+                    }
+                }, 500);
                 break;
             case 2:
-                // like
-                break;
-            case 3:
                 // thumbup
                 break;
-            case 4:
+            case 3:
                 // share
                 break;
         }
@@ -421,16 +448,16 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
                     if (order.contains(path)) {
                         final int index = order.indexOf(path);
                         ImageActivity.start(ref.get(), index, order);
-                        Log.d(TAG, "openImage: "+order.toString());
+                        Log.d(TAG, "openImage: " + order.toString());
 
                     } else {
                         ImageActivity.start(ref.get(), path);
-                        Log.d(TAG, "openImage: "+path);
+                        Log.d(TAG, "openImage: " + path);
 
                     }
                 } else {
                     ImageActivity.start(ref.get(), path);
-                    Log.d(TAG, "openImage: "+path);
+                    Log.d(TAG, "openImage: " + path);
 
                 }
             }

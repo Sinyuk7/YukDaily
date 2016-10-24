@@ -1,6 +1,7 @@
 package com.sinyuk.yukdaily.data.news;
 
 import com.sinyuk.yukdaily.ui.news.BrowserActivity;
+import com.sinyuk.yukdaily.ui.news.NewsCommentFragment;
 import com.sinyuk.yukdaily.ui.news.NewsFragment;
 
 import javax.inject.Singleton;
@@ -20,4 +21,6 @@ public interface NewsRepositoryComponent {
     void inject(NewsFragment target);
 
     void inject(BrowserActivity target);
+
+    void inject(NewsCommentFragment target);
 }

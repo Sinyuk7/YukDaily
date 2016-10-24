@@ -29,7 +29,9 @@
     <com.sinyuk.yukdaily.widgets.BetterViewAnimator
         android:id="@+id/viewAnimator"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:inAnimation="@anim/slide_in_up"
+        android:outAnimation="@anim/slide_out_down">
 
         <include
             android:id="@+id/loadingLayout"

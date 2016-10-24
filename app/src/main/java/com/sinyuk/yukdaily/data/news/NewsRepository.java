@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Locale;
 
 import rx.Observable;
+import rx.functions.Func2;
 
 /**
  * Created by Sinyuk on 16.10.20.
@@ -72,4 +73,9 @@ public class NewsRepository {
                 .compose(new SchedulerTransformer<>());
     }
 
+
+    public Observable<List<NewsComment>> getNewsAllComments(int id) {
+        return Observable.merge(getNewsLongComments(id),getNewsShortComments(id))
+                .compose(new SchedulerTransformer<>());
+    }
 }

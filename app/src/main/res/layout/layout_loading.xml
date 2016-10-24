@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
     >
 
@@ -16,14 +17,20 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <ImageView
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:layout_marginBottom="@dimen/content_space_16"/>
+
+        <com.sinyuk.yukdaily.widgets.avloading.AVLoadingIndicatorView
+            android:id="@+id/loadingIndicatorView"
+            style="@style/AVLoadingIndicatorView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="56dp"
-            android:layout_marginRight="56dp"
-            android:layout_marginTop="56dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/sample"/>
+            android:layout_gravity="center_horizontal"
+            android:visibility="visible"
+            app:indicatorColor="@android:color/black"
+            app:indicatorName="BallPulseIndicator"/>
 
         <TextView
             android:layout_width="wrap_content"

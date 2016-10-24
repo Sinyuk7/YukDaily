@@ -4,12 +4,14 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.sinyuk.yukdaily.R;
 import com.sinyuk.yukdaily.databinding.LoadingListFragmentBinding;
@@ -18,7 +20,7 @@ import com.sinyuk.yukdaily.databinding.LoadingListFragmentBinding;
  * Created by Sinyuk on 16.10.24.
  */
 
-public abstract class LoadingListFragment extends BaseFragment {
+public abstract class LoadingListFragment extends BaseSlideFragment {
     protected static final int PRELOAD_THRESHOLD = 3;
 
     protected LoadingListFragmentBinding binding;
@@ -35,6 +37,7 @@ public abstract class LoadingListFragment extends BaseFragment {
     @CallSuper
     protected void starRefreshing(String message) {
         binding.viewAnimator.setDisplayedChildId(R.id.loadingLayout);
+        binding.loadingLayout.loadingIndicatorView.smoothToShow();
         binding.loadingLayout.setLoadingMessage(message);
         refreshData();
     }
@@ -73,7 +76,6 @@ public abstract class LoadingListFragment extends BaseFragment {
     }
 
 
-
     @CallSuper
     protected void assertEmpty(String message) {
         binding.emptyLayout.setEmptyMessage(message);
@@ -82,7 +84,7 @@ public abstract class LoadingListFragment extends BaseFragment {
 
     @CallSuper
     protected void assertNoMore(String message) {
-        binding.emptyLayout.setEmptyMessage(message);
+        Toast.makeText(getContext().getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
 

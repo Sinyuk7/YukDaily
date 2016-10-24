@@ -53,4 +53,16 @@ public class NewsComment {
     public String getAvatar() { return avatar;}
 
     public void setAvatar(String avatar) { this.avatar = avatar;}
+
+    @Override
+    public String toString() {
+        return "NewsComment{" +
+                "author='" + author + '\'' +
+                ", id=" + id +
+                ", content='" + content + '\'' +
+                ", likes=" + likes +
+                ", time=" + time +
+                ", avatar='" + avatar + '\'' +
+                '}';
+    }
 }
