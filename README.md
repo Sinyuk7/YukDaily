@@ -1,24 +1,7 @@
 ##YukDaily
 
-# Sprints
-
-- 用一下DataBinding
- - 夜间模式
- 
-- 用一下Rxjava2.0
-
-- 用一下Glide4.0
-
-- 深入一下WebView
-
-> 因为里面基本都是H5页面
-> 要不是国内手机都不用Chrome本来用custom tab就好了
-> WebView又是个坑...本来想用腾讯的X5内核,好像也是个坑....
-
----
 
 #Intro
-
 
 打算写点什么…
 
@@ -26,8 +9,36 @@
 
 大概会是这个样子:
 
-![image](https://github.com/80998062/yukdaily/raw/master/pic/redesign.png)
+上点截图(Screenshot
 
-但是又觉得光这样有点单调…打算把gank.io上的东西加进去
+- 首页(Homepage
+- 
+![image](https://github.com/80998062/yukdaily/raw/master/pic/screenshot-1.jpg)
 
-才刚刚开始写...
+- 新闻页面(News
+
+![image](https://github.com/80998062/yukdaily/raw/master/pic/screenshot-2.jpg)
+
+- 更多(To be continue
+
+
+> 但是又觉得光这样有点单调…打算把gank.io上的东西加进去
+
+
+- 还在开发中(Under heavy development no
+
+
+
+# Targets
+
+- 熟悉DataBinding
+ 
+- 熟悉Rxjava2.0
+
+- 熟悉Glide4.0
+
+- 深入一下WebView
+
+- 学一点前端的东西(css js什么的
+
+
