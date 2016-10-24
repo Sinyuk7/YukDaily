@@ -3,15 +3,19 @@ package com.sinyuk.yukdaily.ui.news;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
 
 import com.sinyuk.yukdaily.App;
+import com.sinyuk.yukdaily.R;
 import com.sinyuk.yukdaily.base.LoadingListFragment;
 import com.sinyuk.yukdaily.data.news.NewsRepository;
 import com.sinyuk.yukdaily.data.news.NewsRepositoryModule;
 import com.sinyuk.yukdaily.entity.news.NewsComment;
+import com.sinyuk.yukdaily.utils.binding.BindingViewHolder;
+import com.sinyuk.yukdaily.utils.recyclerview.InsetDividerDecoration;
 
 import java.util.List;
 
@@ -52,8 +56,6 @@ public class NewsCommentFragment extends LoadingListFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initRecyclerView();
-        initData();
-
 
         startLoading();
     }
@@ -64,21 +66,14 @@ public class NewsCommentFragment extends LoadingListFragment {
         manager.setAutoMeasureEnabled(true);
         binding.recyclerView.setLayoutManager(manager);
         binding.recyclerView.setHasFixedSize(true);
-//        binding.recyclerView.addItemDecoration(new InsetDividerDecoration(
-//                CommentViewHolder.class,
-//                getResources().getDimensionPixelSize(R.dimen.divider_height),
-//                getResources().getDimensionPixelSize(R.dimen.comment_keyline_1),
-//                ContextCompat.getColor(getContext(), R.color.divider_color)));
+        binding.recyclerView.addItemDecoration(new InsetDividerDecoration(
+                BindingViewHolder.class,
+                getResources().getDimensionPixelSize(R.dimen.divider_height),
+                getResources().getDimensionPixelSize(R.dimen.news_comment_item_keyline_1),
+                ContextCompat.getColor(getContext(), R.color.divider_color)));
 //        binding.recyclerView.addOnScrollListener(getLoadMoreListener());
     }
 
-    private void initData() {
-//        final NewsAdapter newsAdapter = new NewsAdapter();
-//        newsAdapter.setHasStableIds(true);
-//        bindHeaderView();
-//        newsAdapter.addHeaderBinding(headerBinding);
-//        binding.recyclerView.setAdapter(newsAdapter);
-    }
 
     @Override
     protected void refreshData() {
@@ -87,17 +82,22 @@ public class NewsCommentFragment extends LoadingListFragment {
         addSubscription(newsRepository.getNewsAllComments(id).subscribe(new Observer<List<NewsComment>>() {
             @Override
             public void onCompleted() {
-
+                if (binding.recyclerView.getAdapter().getItemCount() == 0) {
+                    assertEmpty(getString(R.string.no_comment));
+                } else {
+                    showList();
+                }
             }
 
             @Override
             public void onError(Throwable e) {
-
+                assertError(e.getLocalizedMessage());
             }
 
             @Override
             public void onNext(List<NewsComment> newsComments) {
                 Log.d(TAG, "onNext: " + newsComments.toString());
+                binding.recyclerView.setAdapter(new NewsCommentAdapter(getContext(), newsComments));
             }
         }));
 

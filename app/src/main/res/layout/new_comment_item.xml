@@ -1,7 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
-</LinearLayout>
+    <data>
+
+        <import type="com.sinyuk.myutils.text.DateUtils"/>
+
+        <import type="com.sinyuk.myutils.text.FormatUtils"/>
+
+        <variable
+            name="context"
+            type="android.content.Context"/>
+
+        <variable
+            name="comment"
+            type="com.sinyuk.yukdaily.entity.news.NewsComment"/>
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/content_space_12"
+        android:paddingLeft="@dimen/content_space_16"
+        android:paddingRight="@dimen/content_space_16"
+        android:paddingTop="@dimen/content_space_12">
+
+        <com.sinyuk.yukdaily.widgets.MyCircleImageView
+            android:id="@+id/avatar"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            app:border_color="@android:color/transparent"
+            app:border_width="0dp"
+            app:imageUrl="@{comment.avatar}"
+            tools:src="@drawable/sample"/>
+
+
+        <TextView
+            android:id="@+id/author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/content_space_8"
+            android:layout_marginRight="@dimen/content_space_8"
+            android:layout_marginTop="@dimen/content_space_4"
+            android:layout_toLeftOf="@+id/thumbup"
+            android:layout_toRightOf="@+id/avatar"
+            android:text="@{comment.author}"
+            android:textSize="@dimen/material_text_menu"
+            android:textStyle="bold"
+            tools:text="Sinyuk"/>
+
+
+        <com.sinyuk.yukdaily.widgets.ReadMoreTextView
+            android:id="@+id/content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/author"
+            android:layout_marginLeft="@dimen/content_space_8"
+            android:layout_marginTop="@dimen/content_space_4"
+            android:layout_toRightOf="@+id/avatar"
+            android:text="@{comment.content}"
+            android:textSize="@dimen/material_text_body2"
+            app:colorClickableText="@color/colorAccent"
+            app:trimCollapsedText="@string/trimCollapsedText"
+            app:trimExpandedText="@string/trimExpandedText"
+            app:trimLength="100"
+            tools:text="fdasfsdfsadfssdfdafdsafsadfsdafsdfdfasdfsdafdsffasdfasdfnadfdsafdfdsfdsdsfddsafsddsadsadsadsafadsfdfdsfd"/>
+
+        <TextView
+            android:id="@+id/thumbup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/author"
+            android:layout_alignParentRight="true"
+            android:drawableLeft="@drawable/ic_comment_thumb"
+            android:drawablePadding="@dimen/content_space_4"
+            android:drawableStart="@drawable/ic_comment_thumb"
+            android:gravity="center"
+            android:text="@{FormatUtils.shortenNumber(String.valueOf(comment.likes))}"
+            android:textColor="@color/text_secondary_dark"
+            android:textSize="@dimen/material_text_menu"
+            tools:text="12343"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/content"
+            android:layout_marginLeft="@dimen/content_space_8"
+            android:layout_marginTop="@dimen/content_space_4"
+            android:layout_toRightOf="@+id/avatar"
+            android:textColor="@color/text_secondary_dark"
+            android:textSize="@dimen/material_text_caption2"
+            app:date="@{comment.time}"
+            tools:text="2012-10-04"/>
+    </RelativeLayout>
+</layout>

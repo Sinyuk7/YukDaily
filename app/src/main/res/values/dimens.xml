@@ -96,5 +96,6 @@
 
     <dimen name="drag_dismiss_distance">112dp</dimen>
     <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="news_comment_item_keyline_1">60dp</dimen>
 
 </resources>

@@ -90,7 +90,7 @@ public abstract class LoadingListFragment extends BaseSlideFragment {
 
     @CallSuper
     protected void showList() {
-        binding.viewAnimator.setDisplayedChildId(R.id.recyclerView);
+        binding.viewAnimator.setDisplayedChildId(R.id.listLayout);
     }
 
 

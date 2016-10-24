@@ -12,15 +12,6 @@ import java.sql.Timestamp;
 
 public class NewsComment implements Comparable {
 
-    /**
-     * author : EleganceWorld
-     * id : 545442
-     * content : 上海到济南，无尽的猪排盖饭… （后略）
-     * likes : 0
-     * time : 1413589303
-     * avatar : http://pic2.zhimg.com/1f76e6a25_im.jpg
-     */
-
     @SerializedName("author")
     private String author;
     @SerializedName("id")
@@ -81,7 +72,7 @@ public class NewsComment implements Comparable {
             if (time2 == 0) { return -1; }
 
             Timestamp timestamp2 = new Timestamp(time2);
-            return timestamp1.compareTo(timestamp2);
+            return timestamp2.compareTo(timestamp1);
         }
         return -1;
     }
