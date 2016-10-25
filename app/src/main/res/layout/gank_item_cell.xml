@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -13,74 +12,79 @@
             type="com.sinyuk.yukdaily.entity.Gank.GankData"/>
     </data>
 
-    <android.support.v7.widget.CardView
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="64dp"
-        app:cardCornerRadius="@dimen/cardView_default_corner_radius"
-        app:cardElevation="@dimen/cardView_default_elevation">
+        android:minHeight="56dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/content_space_8"
+            android:layout_marginTop="@dimen/content_space_8"
+            android:ellipsize="end"
+            android:lineSpacingExtra="2sp"
+            android:maxLines="3"
+
+            android:text="@{data.title}"
+            android:textSize="@dimen/material_text_subhead"
+            android:textStyle="bold"
+            tools:text="dsadkhsdfkahskdfhksadhfkjdashfkjhsdakfhksdhfkjsda"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/content_space_8"
-                android:layout_marginTop="@dimen/content_space_8"
-                android:ellipsize="end"
-                android:lineSpacingExtra="2sp"
-                android:maxLines="3"
-                android:paddingLeft="@dimen/content_space_8"
-                android:paddingRight="@dimen/content_space_8"
-                android:text="@{data.title}"
-                android:textSize="@dimen/material_text_subhead"
-                android:textStyle="bold"
-                tools:text="dsadkhsdfkahskdfhksadhfkjdashfkjhsdakfhksdhfkjsda"/>
-
+            <android.support.v4.widget.Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="0.5"/>
 
             <pl.droidsonroids.gif.GifImageView
                 android:id="@+id/image"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="@dimen/content_space_8"
-                android:layout_marginLeft="@dimen/content_space_8"
-                android:layout_marginRight="@dimen/content_space_8"
+                android:layout_weight="0.618"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
                 android:visibility="gone"
                 tools:src="@drawable/sample"
                 tools:visibility="gone"/>
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/content_space_8"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/authorAndDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:textSize="@dimen/material_text_caption2"
-                    tools:text="sinyuk/2012-11-23"/>
-
-                <ImageView
-                    android:id="@+id/link"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="end"
-                    android:padding="@dimen/content_space_8"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/ic_appreciate"/>
-            </FrameLayout>
-
+            <android.support.v4.widget.Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="0.5"/>
         </LinearLayout>
-    </android.support.v7.widget.CardView>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/authorAndDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textSize="@dimen/material_text_caption2"
+                tools:text="sinyuk/2012-11-23"/>
+
+            <ImageView
+                android:id="@+id/link"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:scaleType="centerInside"
+                android:src="@drawable/link"/>
+        </FrameLayout>
+
+    </LinearLayout>
 </layout>

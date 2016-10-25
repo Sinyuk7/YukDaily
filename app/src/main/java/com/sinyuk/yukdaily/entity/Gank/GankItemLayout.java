@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.GenericRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.model.StreamEncoder;
@@ -19,6 +20,8 @@ import com.bumptech.glide.load.model.stream.StreamStringLoader;
 import com.bumptech.glide.load.resource.file.FileToStreamDecoder;
 import com.sinyuk.yukdaily.R;
 import com.sinyuk.yukdaily.databinding.GankItemCellBinding;
+import com.sinyuk.yukdaily.utils.glide.GifDrawableByteTranscoder;
+import com.sinyuk.yukdaily.utils.glide.StreamByteArrayResourceDecoder;
 
 import java.io.InputStream;
 import java.util.List;
@@ -31,6 +34,7 @@ import pl.droidsonroids.gif.GifDrawable;
 
 public class GankItemLayout extends LinearLayout {
     public static final String TAG = "GankItemLayout";
+    private final GenericRequestBuilder<String, InputStream, byte[], GifDrawable> gifManager;
 
     public GankItemLayout(Context context) {
         this(context, null);
@@ -43,8 +47,8 @@ public class GankItemLayout extends LinearLayout {
     public GankItemLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         gifManager = Glide
-                .with(this)
-                .using(new StreamStringLoader(getContext()), InputStream.class)
+                .with(context)
+                .using(new StreamStringLoader(context), InputStream.class)
                 .from(String.class) // change this if you have a different model like a File and use StreamFileLoader above
                 .as(byte[].class)
                 .transcode(new GifDrawableByteTranscoder(), GifDrawable.class) // pass it on
@@ -74,14 +78,14 @@ public class GankItemLayout extends LinearLayout {
             if (data.getImages() != null && !data.getImages().isEmpty()) {
                 binding.image.setVisibility(VISIBLE);
                 binding.image.setOnClickListener(listener);
-                Glide.with(getContext()).load(data.getImages().get(0)).into(binding.image);
+                gifManager.load(data.getImages().get(0)).into(binding.image);
             }
 
             LinearLayout.LayoutParams lps = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-            if (i < dataList.size() - 1) {
-                lps.bottomMargin = getResources().getDimensionPixelOffset(R.dimen.content_space_8);
-            }
+//            if (i < dataList.size() - 1) {
+//                lps.bottomMargin = getResources().getDimensionPixelOffset(R.dimen.content_space_8);
+//            }
             if (i == 0) {
                 lps.topMargin = getResources().getDimensionPixelOffset(R.dimen.content_space_8);
             }

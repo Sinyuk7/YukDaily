@@ -25,7 +25,8 @@
         android:layout_marginRight="@dimen/content_space_8"
         android:onClick="@{(view) -> adapter.onItemClick(view, story.id)}"
         app:cardCornerRadius="@dimen/cardView_default_corner_radius"
-        app:cardElevation="@dimen/cardView_default_elevation">
+        app:cardElevation="@dimen/cardView_default_elevation"
+        app:cardUseCompatPadding="true">
 
         <com.sinyuk.yukdaily.widgets.RatioLinearLayout
             android:layout_width="match_parent"
