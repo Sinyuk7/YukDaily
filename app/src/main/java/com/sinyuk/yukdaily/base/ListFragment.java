@@ -6,6 +6,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,7 @@ import com.sinyuk.yukdaily.databinding.ListFragmentBinding;
  */
 
 public abstract class ListFragment extends BaseFragment {
-    protected static final int PRELOAD_THRESHOLD = 3;
+    protected int PRELOAD_THRESHOLD = 3;
 
     protected ListFragmentBinding binding;
     protected boolean isRefreshing = true;

@@ -20,6 +20,7 @@ import com.sinyuk.yukdaily.data.news.NewsRepositoryModule;
 import com.sinyuk.yukdaily.databinding.NewsHeaderLayoutBinding;
 import com.sinyuk.yukdaily.entity.news.Stories;
 import com.sinyuk.yukdaily.utils.cardviewpager.ShadowTransformer;
+import com.sinyuk.yukdaily.utils.recyclerview.ListItemMarginDecoration;
 import com.sinyuk.yukdaily.widgets.CircleIndicator;
 
 import javax.inject.Inject;
@@ -68,7 +69,7 @@ public class NewsFragment extends ListFragment {
 
         @Override
         public void onError(Throwable e) {
-            assertEmpty(e.getLocalizedMessage());
+            assertError(e.getLocalizedMessage());
         }
 
         @Override
@@ -134,6 +135,7 @@ public class NewsFragment extends ListFragment {
         manager.setAutoMeasureEnabled(true);
         binding.listLayout.recyclerView.setLayoutManager(manager);
         binding.listLayout.recyclerView.setHasFixedSize(true);
+        binding.listLayout.recyclerView.addItemDecoration(new ListItemMarginDecoration(1,R.dimen.content_space_8,false,getContext()));
         binding.listLayout.recyclerView.addOnScrollListener(getLoadMoreListener());
     }
 

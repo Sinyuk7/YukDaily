@@ -12,18 +12,21 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="@dimen/content_space_8">
 
         <ViewStub
             android:id="@+id/androidStub"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/content_space_8"
             android:layout="@layout/gank_item_layout"/>
 
         <ViewStub
             android:id="@+id/iosStub"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/content_space_8"
             android:layout="@layout/gank_item_layout"/>
 
 
@@ -31,12 +34,14 @@
             android:id="@+id/frontEndStub"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/content_space_8"
             android:layout="@layout/gank_item_layout"/>
 
         <ViewStub
             android:id="@+id/plusStub"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/content_space_8"
             android:layout="@layout/gank_item_layout"/>
     </LinearLayout>
 

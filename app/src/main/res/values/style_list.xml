@@ -9,4 +9,16 @@
 
     <dimen name="header_card_padding">56dp</dimen>
 
+
+    <style name="gank_author">
+        <item name="android:textSize">@dimen/material_text_caption2</item>
+        <item name="android:textColor">@color/text_primary_dark</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="gank_date">
+        <item name="android:textSize">@dimen/material_text_caption1</item>
+        <item name="android:textColor">@color/text_secondary_dark</item>
+        <item name="android:textStyle">italic</item>
+    </style>
 </resources>

@@ -42,25 +42,25 @@ public class GankAllAdapter extends RecyclerView.Adapter<GankAllAdapter.GankItem
             holder.getBinding().androidStub.setOnInflateListener((stub, inflated) -> {
                 GankItemLayoutBinding binding = DataBindingUtil.bind(inflated);
                 binding.content.bindData(result.getAnzhuo());
-                binding.type.setImageResource(R.drawable.avatar);
+                binding.type.setImageResource(R.drawable.ic_android);
             });
 
             holder.getBinding().iosStub.setOnInflateListener((stub, inflated) -> {
                 GankItemLayoutBinding binding = DataBindingUtil.bind(inflated);
                 binding.content.bindData(result.getIos());
-                binding.type.setImageResource(R.drawable.avatar);
+                binding.type.setImageResource(R.drawable.ic_ios);
             });
 
             holder.getBinding().frontEndStub.setOnInflateListener((stub, inflated) -> {
                 GankItemLayoutBinding binding = DataBindingUtil.bind(inflated);
                 binding.content.bindData(result.getFrontEnd());
-                binding.type.setImageResource(R.drawable.avatar);
+                binding.type.setImageResource(R.drawable.ic_frontend);
             });
 
             holder.getBinding().plusStub.setOnInflateListener((stub, inflated) -> {
                 GankItemLayoutBinding binding = DataBindingUtil.bind(inflated);
                 binding.content.bindData(result.getPlus());
-                binding.type.setImageResource(R.drawable.avatar);
+                binding.type.setImageResource(R.drawable.ic_plus);
             });
 
 
