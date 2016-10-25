@@ -1,7 +1,7 @@
 package com.sinyuk.yukdaily.utils.rx;
 
-import com.sinyuk.yukdaily.data.gank.GankResponse;
-import com.sinyuk.yukdaily.data.gank.GankResult;
+import com.sinyuk.yukdaily.entity.Gank.GankResponse;
+import com.sinyuk.yukdaily.entity.Gank.GankResult;
 
 import java.util.List;
 

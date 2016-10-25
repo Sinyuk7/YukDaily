@@ -274,8 +274,6 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
         WebSettings webSetting = webView.getSettings();
 
         webSetting.setSupportZoom(false);
-        webSetting.setBuiltInZoomControls(false);
-        webSetting.setDisplayZoomControls(false);
 
     }
 
@@ -410,13 +408,10 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
                 break;
             case 1:
                 // comment
-                clickedView.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        final int id = getIntent().getIntExtra(KEY_NEWS_ID, -1);
-                        NewsCommentFragment fragment = NewsCommentFragment.newInstance(id);
-                        fragment.show(getSupportFragmentManager(), NewsCommentFragment.TAG);
-                    }
+                clickedView.postDelayed(() -> {
+                    final int id = getIntent().getIntExtra(KEY_NEWS_ID, -1);
+                    NewsCommentFragment fragment = NewsCommentFragment.newInstance(id);
+                    fragment.show(getSupportFragmentManager(), NewsCommentFragment.TAG);
                 }, 350);
                 break;
             case 2:
