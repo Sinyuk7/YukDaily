@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
 
 import com.sinyuk.yukdaily.App;
 import com.sinyuk.yukdaily.R;
@@ -113,6 +114,8 @@ public class NewsFragment extends ListFragment {
         initListLayout();
         initListView();
         initListData();
+
+
     }
 
     private void bindHeaderView() {

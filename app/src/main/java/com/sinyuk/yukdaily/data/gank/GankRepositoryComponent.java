@@ -1,6 +1,7 @@
 package com.sinyuk.yukdaily.data.gank;
 
 import com.sinyuk.yukdaily.ui.gank.GankFragment;
+import com.sinyuk.yukdaily.ui.splash.SplashActivity;
 
 import javax.inject.Singleton;
 

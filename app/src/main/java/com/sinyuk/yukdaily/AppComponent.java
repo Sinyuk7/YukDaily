@@ -7,7 +7,6 @@ import com.sinyuk.yukdaily.data.news.NewsRepositoryComponent;
 import com.sinyuk.yukdaily.data.news.NewsRepositoryModule;
 import com.sinyuk.yukdaily.ui.browser.WebViewActivity;
 import com.sinyuk.yukdaily.ui.splash.SplashComponent;
-import com.sinyuk.yukdaily.ui.splash.SplashModule;
 
 import javax.inject.Singleton;
 
@@ -19,7 +18,8 @@ import dagger.Component;
 @Singleton
 @Component(modules = {AppModule.class, ApiModule.class})
 public interface AppComponent {
-    SplashComponent plus(SplashModule module);
+
+    SplashComponent plus();
 
     NewsRepositoryComponent plus(NewsRepositoryModule module);
 

@@ -118,7 +118,7 @@ public class ApiModule {
     @Named("Gank")
     Retrofit provideGankRetrofit(Gson gson, @Named("Cached") OkHttpClient okHttpClient) {
         return new Retrofit.Builder()
-                .baseUrl(NewsApi.END_POINT)
+                .baseUrl(GankApi.END_POINT)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .client(okHttpClient)

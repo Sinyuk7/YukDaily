@@ -1,16 +1,19 @@
 package com.sinyuk.yukdaily.ui.splash;
 
-import com.sinyuk.yukdaily.utils.dagger.PerActivity;
+import com.sinyuk.yukdaily.data.gank.GankRepositoryModule;
+import com.sinyuk.yukdaily.data.news.NewsRepositoryModule;
+
+import javax.inject.Singleton;
 
 import dagger.Subcomponent;
 
 /**
  * Created by Sinyuk on 16/8/19.
  */
-@PerActivity
+@Singleton
 @Subcomponent(
-        modules = SplashModule.class
+        modules = {GankRepositoryModule.class, NewsRepositoryModule.class}
 )
 public interface SplashComponent {
-
+    void inject(SplashActivity target);
 }

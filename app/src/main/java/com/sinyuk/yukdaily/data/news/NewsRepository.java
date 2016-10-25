@@ -31,6 +31,8 @@ public class NewsRepository {
     private final NewsService newsService;
     private Date currentDate;
     private Calendar calendar;
+    private boolean hasPreloaded = false;
+    private Stories preloadStories = null;
 
     public NewsRepository(Context context, NewsService newsService) {
         this.context = context;
@@ -42,7 +44,18 @@ public class NewsRepository {
 
     public Observable<Stories> getLatestNews() {
         currentDate.setTime(System.currentTimeMillis()); // 只有在刷新的时候才重置时间
+
+        if (!hasPreloaded && preloadStories != null) {
+            return Observable.just(preloadStories).doOnTerminate(() -> {
+                preloadStories = null;
+                hasPreloaded = true;
+            });
+        }
+
         return newsService.getLatestNews()
+                .doOnNext(stories -> {
+                    if (!hasPreloaded) { preloadStories = stories; }
+                })
                 .compose(new SchedulerTransformer<>());
     }
 
@@ -64,7 +77,7 @@ public class NewsRepository {
                 .compose(new SchedulerTransformer<>());
     }
 
-    public Observable<List<NewsComment>> getNewsLongComments(int id) {
+    private Observable<List<NewsComment>> getNewsLongComments(int id) {
         return newsService.getNewsLongComments(id)
 
                 .flatMap(new Func1<NewsCommentResponse, Observable<List<NewsComment>>>() {
@@ -80,7 +93,7 @@ public class NewsRepository {
                 .compose(new SchedulerTransformer<>());
     }
 
-    public Observable<List<NewsComment>> getNewsShortComments(int id) {
+    private Observable<List<NewsComment>> getNewsShortComments(int id) {
         return newsService.getNewsShortComments(id)
                 .flatMap(new Func1<NewsCommentResponse, Observable<List<NewsComment>>>() {
                     @Override

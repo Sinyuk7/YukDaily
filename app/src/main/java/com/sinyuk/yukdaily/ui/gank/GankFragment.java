@@ -47,7 +47,7 @@ public class GankFragment extends ListFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        refreshData();
+        refreshData();
     }
 
     @Override
@@ -67,7 +67,9 @@ public class GankFragment extends ListFragment {
 
                     @Override
                     public void onNext(GankResult gankResult) {
-                        Log.d(TAG, "onNext: GankResult " + gankResult.getAndriod().toString());
+                        if (gankResult != null) {
+                            Log.d(TAG, "onNext: GankResult " + gankResult.toString());
+                        }
                     }
                 });
     }

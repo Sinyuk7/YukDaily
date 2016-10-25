@@ -16,7 +16,7 @@ import rx.Observable;
 public interface GankService {
 
 
-    @GET("/day/{year}/{month}/{day}")
+    @GET("day/{year}/{month}/{day}")
     Observable<GankResponse<GankResult>> getGankToday(
             @Path("year") int year,
             @Path("month") int month,
@@ -24,7 +24,7 @@ public interface GankService {
 
 
     @GET("day/history")
-    Observable<GankResponse<List<String>>> getPsotedDates();
+    Observable<GankResponse<List<String>>> getHistory();
 
 
 }

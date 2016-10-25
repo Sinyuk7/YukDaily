@@ -25,5 +25,4 @@ public interface NewsRepositoryComponent {
 
     void inject(NewsCommentFragment target);
 
-    void inject(SplashActivity target);
 }

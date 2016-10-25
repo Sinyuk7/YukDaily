@@ -1,12 +1,10 @@
 package com.sinyuk.yukdaily.ui.splash;
 
-import android.app.Application;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
@@ -26,10 +24,9 @@ import com.sinyuk.yukdaily.NewsListDemo;
 import com.sinyuk.yukdaily.R;
 import com.sinyuk.yukdaily.Sinyuk;
 import com.sinyuk.yukdaily.api.NewsApi;
-import com.sinyuk.yukdaily.api.NewsService;
 import com.sinyuk.yukdaily.base.BaseActivity;
+import com.sinyuk.yukdaily.data.gank.GankRepository;
 import com.sinyuk.yukdaily.data.news.NewsRepository;
-import com.sinyuk.yukdaily.data.news.NewsRepositoryModule;
 import com.sinyuk.yukdaily.utils.rx.SchedulerTransformer;
 
 import java.io.File;
@@ -52,7 +49,10 @@ public class SplashActivity extends BaseActivity {
     RxSharedPreferences preferences;
 
     @Inject
-    Lazy<NewsRepository> repositoryLazy;
+    Lazy<NewsRepository> newsRepositoryLazy;
+
+    @Inject
+    Lazy<GankRepository> gankRepositoryLazy;
 
     private Preference<String> path;
     private View footer;
@@ -72,7 +72,7 @@ public class SplashActivity extends BaseActivity {
         setContentView(R.layout.activity_splash);
         footer = findViewById(R.id.footer);
 
-        App.get(this).getAppComponent().plus(new NewsRepositoryModule()).inject(this);
+        App.get(this).getAppComponent().plus().inject(this);
 
         path = preferences.getString(Sinyuk.KEY_SPLASH_BACKDROP_PATH);
 
@@ -89,7 +89,16 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void prepare() {
-        repositoryLazy.get();
+        // 预加载第一页的新闻
+        addSubscription(newsRepositoryLazy.get().getLatestNews()
+                .subscribe(stories -> {
+                    Log.d(TAG, "prepare stories");
+                }));
+        // 预加载Gank的历史
+        addSubscription(gankRepositoryLazy.get().getHistory()
+                .subscribe(history -> {
+                    Log.d(TAG, "prepare history");
+                }));
     }
 
     private void animateIn() {
