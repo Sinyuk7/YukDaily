@@ -71,4 +71,6 @@ dependencies {
     compile 'org.jsoup:jsoup:1.9.2'
     testCompile 'junit:junit:4.12'
     compile project(':shared')
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.1'
+
 }

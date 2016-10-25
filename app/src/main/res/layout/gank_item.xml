@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+    >
 
     <data>
 
@@ -18,30 +18,26 @@
             android:id="@+id/androidStub"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout="@layout/gank_item_layout"
-            app:dataset="@{result.anzhuo}"/>
+            android:layout="@layout/gank_item_layout"/>
 
         <ViewStub
             android:id="@+id/iosStub"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout="@layout/gank_item_layout"
-            app:dataset="@{result.ios}"/>
+            android:layout="@layout/gank_item_layout"/>
 
 
         <ViewStub
             android:id="@+id/frontEndStub"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout="@layout/gank_item_layout"
-            app:dataset="@{result.frontEnd}"/>
+            android:layout="@layout/gank_item_layout"/>
 
         <ViewStub
             android:id="@+id/plusStub"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout="@layout/gank_item_layout"
-            app:dataset="@{result.plus}"/>
+            android:layout="@layout/gank_item_layout"/>
     </LinearLayout>
 
 </layout>

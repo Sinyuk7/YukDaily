@@ -1,50 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-    >
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
+    <!--<data>-->
 
-        <import type="com.sinyuk.yukdaily.entity.Gank.GankData"/>
-        <import type="java.util.List"/>
+    <!--<import type="com.sinyuk.yukdaily.entity.Gank.GankData"/>-->
 
-        <variable
-            name="icon"
-            type="Integer"/>
+    <!--<import type="java.util.List"/>-->
 
-        <variable
-            name="dataset"
-            type="List&lt;GankData&gt;"/>
-    </data>
+    <!--&lt;!&ndash;<variable&ndash;&gt;-->
+    <!--&lt;!&ndash;name="icon"&ndash;&gt;-->
+    <!--&lt;!&ndash;type="Integer"/>&ndash;&gt;-->
 
-    <android.support.v7.widget.CardView
+    <!--<variable-->
+    <!--name="dataset"-->
+    <!--type="List&lt;GankData&gt;"/>-->
+    <!--</data>-->
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/content_space_4"
-        android:layout_marginLeft="@dimen/content_space_8"
-        android:layout_marginRight="@dimen/content_space_8"
-        android:layout_marginTop="@dimen/content_space_4"
-        app:cardBackgroundColor="#fff"
-        app:cardCornerRadius="@dimen/cardView_default_corner_radius"
-        app:cardElevation="@dimen/cardView_default_elevation"
-        app:contentPadding="@dimen/content_space_8">
+        android:orientation="vertical">
 
         <com.sinyuk.yukdaily.entity.Gank.GankItemLayout
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:dataset="@{dataset}">
-
-            <com.sinyuk.yukdaily.widgets.MyCircleImageView
-                android:id="@+id/type"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="end"
-                app:res="@{icon}"
-                app:border_color="@android:color/transparent"
-                app:border_width="0dp"/>
+            android:orientation="vertical">
         </com.sinyuk.yukdaily.entity.Gank.GankItemLayout>
 
-    </android.support.v7.widget.CardView>
+        <com.sinyuk.yukdaily.widgets.MyCircleImageView
+            android:id="@+id/type"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="end"
+            android:layout_marginRight="@dimen/content_space_16"
+            android:layout_marginTop="@dimen/content_space_8"
+            app:border_color="@android:color/transparent"
+            app:border_width="0dp"/>
+    </LinearLayout>
 </layout>

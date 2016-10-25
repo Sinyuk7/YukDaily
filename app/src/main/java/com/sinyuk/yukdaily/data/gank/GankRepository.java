@@ -86,7 +86,7 @@ public class GankRepository {
                             }
                         }
                     })
-                    .map(new GankResponseFunc<>())
+                    .map(new GankResponseFunc<GankResult>())
                     .compose(new SchedulerTransformer<>());
         } else {
             String dateStr = history.get(index);
@@ -100,7 +100,7 @@ public class GankRepository {
                         calendar.get(Calendar.YEAR),
                         calendar.get(Calendar.MONTH) + 1,
                         calendar.get(Calendar.DAY_OF_MONTH))
-                        .map(new GankResponseFunc<>())
+                        .map(new GankResponseFunc<GankResult>())
                         .compose(new SchedulerTransformer<>());
 
             } catch (ParseException e) {

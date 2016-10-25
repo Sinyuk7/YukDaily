@@ -1,20 +1,17 @@
 package com.sinyuk.yukdaily.ui.gank;
 
 import android.content.Context;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.sinyuk.yukdaily.App;
-import com.sinyuk.yukdaily.R;
 import com.sinyuk.yukdaily.base.ListFragment;
 import com.sinyuk.yukdaily.data.gank.GankRepository;
 import com.sinyuk.yukdaily.data.gank.GankRepositoryModule;
-import com.sinyuk.yukdaily.databinding.GankFragmentBinding;
 import com.sinyuk.yukdaily.entity.Gank.GankResult;
 
 import javax.inject.Inject;
@@ -29,7 +26,7 @@ import rx.Observer;
 public class GankFragment extends ListFragment {
     @Inject
     Lazy<GankRepository> gankRepository;
-    private GankFragmentBinding binding;
+
 
     @Override
     public void onAttach(Context context) {
@@ -37,17 +34,27 @@ public class GankFragment extends ListFragment {
         App.get(context).getAppComponent().plus(new GankRepositoryModule()).inject(this);
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.gank_fragment, container, false);
-        return binding.getRoot();
-    }
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        refreshData();
+
+        initListLayout();
+        initListView();
+        initListData();
+
+    }
+
+    private void initListView() {
+        final LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        manager.setAutoMeasureEnabled(true);
+        binding.listLayout.recyclerView.setLayoutManager(manager);
+        binding.listLayout.recyclerView.setHasFixedSize(true);
+//        binding.listLayout.recyclerView.addOnScrollListener(getLoadMoreListener());
+    }
+
+    private void initListData() {
+        binding.listLayout.recyclerView.setAdapter(new GankAllAdapter());
+
     }
 
     @Override
@@ -68,8 +75,7 @@ public class GankFragment extends ListFragment {
                     @Override
                     public void onNext(GankResult gankResult) {
                         if (gankResult != null) {
-                            Log.d(TAG, "onNext: GankResult " + gankResult.toString());
-                        }
+                            ((GankAllAdapter) binding.listLayout.recyclerView.getAdapter()).setData(gankResult);                        }
                     }
                 });
     }
