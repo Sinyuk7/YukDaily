@@ -83,4 +83,20 @@ public class GankData {
     public List<String> getImages() { return images;}
 
     public void setImages(List<String> images) { this.images = images;}
+
+    @Override
+    public String toString() {
+        return "GankData{" +
+                "id='" + id + '\'' +
+                ", createdAt='" + createdAt + '\'' +
+                ", title='" + title + '\'' +
+                ", publishedAt='" + publishedAt + '\'' +
+                ", source='" + source + '\'' +
+                ", type='" + type + '\'' +
+                ", url='" + url + '\'' +
+                ", used=" + used +
+                ", author='" + author + '\'' +
+                ", images=" + images +
+                '}';
+    }
 }

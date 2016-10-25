@@ -1,6 +1,8 @@
 package com.sinyuk.yukdaily;
 
 import com.sinyuk.yukdaily.api.ApiModule;
+import com.sinyuk.yukdaily.data.gank.GankRepositoryComponent;
+import com.sinyuk.yukdaily.data.gank.GankRepositoryModule;
 import com.sinyuk.yukdaily.data.news.NewsRepositoryComponent;
 import com.sinyuk.yukdaily.data.news.NewsRepositoryModule;
 import com.sinyuk.yukdaily.ui.browser.WebViewActivity;
@@ -20,6 +22,8 @@ public interface AppComponent {
     SplashComponent plus(SplashModule module);
 
     NewsRepositoryComponent plus(NewsRepositoryModule module);
+
+    GankRepositoryComponent plus(GankRepositoryModule module);
 
     void inject(WebViewActivity target);
 }
