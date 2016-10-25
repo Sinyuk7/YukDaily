@@ -3,6 +3,7 @@ package com.sinyuk.yukdaily.data.gank;
 import android.util.Log;
 
 import com.sinyuk.yukdaily.api.GankService;
+import com.sinyuk.yukdaily.entity.Gank.GankData;
 import com.sinyuk.yukdaily.entity.Gank.GankResponse;
 import com.sinyuk.yukdaily.entity.Gank.GankResult;
 import com.sinyuk.yukdaily.utils.rx.GankResponseFunc;
@@ -18,6 +19,7 @@ import java.util.Locale;
 
 import rx.Observable;
 import rx.functions.Func1;
+import rx.functions.Func5;
 
 /**
  * Created by Sinyuk on 16.10.25.
@@ -106,4 +108,65 @@ public class GankRepository {
             }
         }
     }
+
+
+    Observable<List<GankData>> getAndroid(int count, int page) {
+        return gankService.getGank("Android", count, page)
+                .map(new GankResponseFunc<>())
+                .compose(new SchedulerTransformer<>());
+    }
+
+    Observable<List<GankData>> getiOS(int count, int page) {
+        return gankService.getGank("iOS", count, page)
+                .map(new GankResponseFunc<>())
+                .compose(new SchedulerTransformer<>());
+    }
+
+    Observable<List<GankData>> getVideo(int count, int page) {
+        return gankService.getGank("休息视频", count, page)
+                .map(new GankResponseFunc<>())
+                .compose(new SchedulerTransformer<>());
+    }
+
+    Observable<List<GankData>> getPlus(int count, int page) {
+        return gankService.getGank("拓展资源", count, page)
+                .map(new GankResponseFunc<>())
+                .compose(new SchedulerTransformer<>());
+    }
+
+    Observable<List<GankData>> getFuli(int count, int page) {
+        return gankService.getGank("福利", count, page)
+                .map(new GankResponseFunc<>())
+                .compose(new SchedulerTransformer<>());
+    }
+
+    Observable<List<GankData>> getFrontEnd(int count, int page) {
+        return gankService.getGank("前端", count, page)
+                .map(new GankResponseFunc<>())
+                .compose(new SchedulerTransformer<>());
+    }
+
+
+//    Observable<List<GankData>> getZip(
+//            int page, int android,
+//            int ios,
+//            int video,
+//            int plus,
+//            int frontEnd) {
+//        return Observable.zip(
+//                getAndroid(android, page),
+//                getiOS(ios, page),
+//                getVideo(video, page),
+//                getFrontEnd(frontEnd, page),
+//                getPlus(plus, page),
+//                new Func5<List<GankData>, List<GankData>, List<GankData>, List<GankData>, List<GankData>, List<GankData>>() {
+//                    @Override
+//                    public List<GankData> call(List<GankData> androids, List<GankData> ioss, List<GankData> vidoes, List<GankData> frontEnds, List<GankData> pluss) {
+//
+//                        return null;
+//                    }
+//                }
+//        );
+//    }
+
 }

@@ -1,6 +1,10 @@
 package com.sinyuk.yukdaily.entity.Gank;
 
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
+
 import com.google.gson.annotations.SerializedName;
+import com.sinyuk.yukdaily.BR;
 
 import java.util.List;
 
@@ -8,67 +12,57 @@ import java.util.List;
  * Created by Sinyuk on 16.10.20.
  */
 
-public class GankResult {
+public class GankResult extends BaseObservable {
 
     @SerializedName("Android")
-    private List<GankData> andriod;
-
+    private List<GankData> anzhuo;
     @SerializedName("iOS")
     private List<GankData> ios;
-    @SerializedName("休息视频")
-    private List<GankData> video;
     @SerializedName("前端")
     private List<GankData> frontEnd;
     @SerializedName("拓展资源")
     private List<GankData> plus;
-    @SerializedName("福利")
-    private List<GankData> fuli;
 
-    public List<GankData> getAndriod() {
-        return andriod;
+
+    @Bindable
+    public List<GankData> getAnzhuo() {
+        return anzhuo;
     }
 
-    public void setAndriod(List<GankData> andriod) {
-        this.andriod = andriod;
+    public void setAnzhuo(List<GankData> anzhuo) {
+        this.anzhuo = anzhuo;
+        notifyPropertyChanged(BR.anzhuo);
     }
 
+    @Bindable
     public List<GankData> getIos() {
         return ios;
     }
 
     public void setIos(List<GankData> ios) {
         this.ios = ios;
+        notifyPropertyChanged(BR.ios);
     }
 
-    public List<GankData> getVideo() {
-        return video;
-    }
-
-    public void setVideo(List<GankData> video) {
-        this.video = video;
-    }
-
+    @Bindable
     public List<GankData> getFrontEnd() {
         return frontEnd;
     }
 
     public void setFrontEnd(List<GankData> frontEnd) {
         this.frontEnd = frontEnd;
+        notifyPropertyChanged(BR.frontEnd);
     }
 
+    @Bindable
     public List<GankData> getPlus() {
         return plus;
     }
 
     public void setPlus(List<GankData> plus) {
         this.plus = plus;
+        notifyPropertyChanged(BR.plus);
     }
 
-    public List<GankData> getFuli() {
-        return fuli;
-    }
 
-    public void setFuli(List<GankData> fuli) {
-        this.fuli = fuli;
-    }
 }

@@ -1,6 +1,10 @@
 package com.sinyuk.yukdaily.entity.Gank;
 
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
+
 import com.google.gson.annotations.SerializedName;
+import com.sinyuk.yukdaily.BR;
 
 import java.util.List;
 
@@ -8,21 +12,7 @@ import java.util.List;
  * Created by Sinyuk on 16.10.25.
  */
 
-public class GankData {
-
-    /**
-     * _id : 57fd9964421aa95dd351b106
-     * createdAt : 2016-10-12T10:01:08.961Z
-     * desc : 一个漂亮的 Share Button UI 效果。
-     * images : ["http://img.gank.io/ee1fcfbd-20a5-4819-943c-80d55301dc4d"]
-     * publishedAt : 2016-10-12T11:40:02.146Z
-     * source : chrome
-     * type : Android
-     * url : https://github.com/kayan1990/ShareButton
-     * used : true
-     * who : 代码家
-     */
-
+public class GankData extends BaseObservable {
     @SerializedName("_id")
     private String id;
     @SerializedName("createdAt")
@@ -52,37 +42,65 @@ public class GankData {
 
     public void setCreatedAt(String createdAt) { this.createdAt = createdAt;}
 
+    @Bindable
     public String getTitle() { return title;}
 
-    public void setTitle(String title) { this.title = title;}
+    public void setTitle(String title) {
+        this.title = title;
+        notifyPropertyChanged(BR.title);
+    }
 
+    @Bindable
     public String getPublishedAt() { return publishedAt;}
 
-    public void setPublishedAt(String publishedAt) { this.publishedAt = publishedAt;}
+    public void setPublishedAt(String publishedAt) {
+        this.publishedAt = publishedAt;
+        notifyPropertyChanged(BR.publishedAt);
+    }
 
+    @Bindable
     public String getSource() { return source;}
 
-    public void setSource(String source) { this.source = source;}
+    public void setSource(String source) {
+        this.source = source;
+        notifyPropertyChanged(BR.source);
+    }
 
+    @Bindable
     public String getType() { return type;}
 
-    public void setType(String type) { this.type = type;}
+    public void setType(String type) {
+        this.type = type;
+        notifyPropertyChanged(BR.type);
+    }
 
+    @Bindable
     public String getUrl() { return url;}
 
-    public void setUrl(String url) { this.url = url;}
+    public void setUrl(String url) {
+        this.url = url;
+        notifyPropertyChanged(BR.url);
+    }
 
     public boolean isUsed() { return used;}
 
     public void setUsed(boolean used) { this.used = used;}
 
+    @Bindable
     public String getAuthor() { return author;}
 
-    public void setAuthor(String author) { this.author = author;}
+    public void setAuthor(String author) {
+        this.author = author;
+        notifyPropertyChanged(BR.author);
+    }
 
+    @Bindable
     public List<String> getImages() { return images;}
 
-    public void setImages(List<String> images) { this.images = images;}
+    public void setImages(List<String> images) {
+        this.images = images;
+        notifyPropertyChanged(BR.images);
+    }
 
     @Override
     public String toString() {

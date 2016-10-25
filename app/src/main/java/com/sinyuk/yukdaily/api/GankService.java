@@ -1,5 +1,6 @@
 package com.sinyuk.yukdaily.api;
 
+import com.sinyuk.yukdaily.entity.Gank.GankData;
 import com.sinyuk.yukdaily.entity.Gank.GankResponse;
 import com.sinyuk.yukdaily.entity.Gank.GankResult;
 
@@ -26,5 +27,10 @@ public interface GankService {
     @GET("day/history")
     Observable<GankResponse<List<String>>> getHistory();
 
+    @GET("data/{type}/{count}/{page}")
+    Observable<GankResponse<List<GankData>>> getGank(@Path("type") String type,
+                                                     @Path("count") int count,
+                                                     @Path("page") int page
+    );
 
 }
