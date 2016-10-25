@@ -13,10 +13,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.model.StreamEncoder;
+import com.bumptech.glide.load.model.stream.StreamStringLoader;
+import com.bumptech.glide.load.resource.file.FileToStreamDecoder;
 import com.sinyuk.yukdaily.R;
 import com.sinyuk.yukdaily.databinding.GankItemCellBinding;
 
+import java.io.InputStream;
 import java.util.List;
+
+import pl.droidsonroids.gif.GifDrawable;
 
 /**
  * Created by Sinyuk on 16.10.25.
@@ -35,7 +42,16 @@ public class GankItemLayout extends LinearLayout {
 
     public GankItemLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
+        gifManager = Glide
+                .with(this)
+                .using(new StreamStringLoader(getContext()), InputStream.class)
+                .from(String.class) // change this if you have a different model like a File and use StreamFileLoader above
+                .as(byte[].class)
+                .transcode(new GifDrawableByteTranscoder(), GifDrawable.class) // pass it on
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE) // cache original
+                .decoder(new StreamByteArrayResourceDecoder())  // load original
+                .sourceEncoder(new StreamEncoder())
+                .cacheDecoder(new FileToStreamDecoder<>(new StreamByteArrayResourceDecoder()));
     }
 
     @BindingAdapter("res")
