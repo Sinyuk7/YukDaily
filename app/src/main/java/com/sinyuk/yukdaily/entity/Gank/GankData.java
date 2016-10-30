@@ -33,6 +33,7 @@ public class GankData extends BaseObservable {
     private String author;
     @SerializedName("images")
     private List<String> images;
+    private boolean isClicked = false;
 
     public String getId() { return id;}
 
@@ -100,6 +101,14 @@ public class GankData extends BaseObservable {
     public void setImages(List<String> images) {
         this.images = images;
         notifyPropertyChanged(BR.images);
+    }
+
+    public boolean isClicked() {
+        return isClicked;
+    }
+
+    public void setClicked(boolean clicked) {
+        isClicked = clicked;
     }
 
     @Override

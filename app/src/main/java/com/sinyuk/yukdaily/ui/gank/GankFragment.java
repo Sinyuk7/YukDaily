@@ -3,6 +3,7 @@ package com.sinyuk.yukdaily.ui.gank;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.sinyuk.yukdaily.data.gank.GankRepository;
 import com.sinyuk.yukdaily.data.gank.GankRepositoryModule;
 import com.sinyuk.yukdaily.entity.Gank.GankData;
 import com.sinyuk.yukdaily.utils.recyclerview.ListItemMarginDecoration;
+import com.sinyuk.yukdaily.utils.recyclerview.SlideInUpAnimator;
 
 import java.util.List;
 
@@ -47,7 +49,7 @@ public class GankFragment extends ListFragment {
         @Override
         public void onNext(List<GankData> gankResult) {
             if (gankResult != null) {
-                ((GankAllAdapter) binding.listLayout.recyclerView.getAdapter()).setData(gankResult);
+                ((GankAdapter) binding.listLayout.recyclerView.getAdapter()).setData(gankResult);
             }
         }
     };
@@ -68,7 +70,7 @@ public class GankFragment extends ListFragment {
         @Override
         public void onNext(List<GankData> gankResult) {
             if (gankResult != null) {
-                ((GankAllAdapter) binding.listLayout.recyclerView.getAdapter()).appendData(gankResult);
+                ((GankAdapter) binding.listLayout.recyclerView.getAdapter()).appendData(gankResult);
             }
         }
     };
@@ -93,27 +95,15 @@ public class GankFragment extends ListFragment {
         final LinearLayoutManager manager = new LinearLayoutManager(getContext());
         manager.setAutoMeasureEnabled(true);
         binding.listLayout.recyclerView.setLayoutManager(manager);
+        binding.listLayout.recyclerView.setItemAnimator(new SlideInUpAnimator(new FastOutSlowInInterpolator()));
         binding.listLayout.recyclerView.setHasFixedSize(true);
-        binding.listLayout.recyclerView.addItemDecoration(new ListItemMarginDecoration(1, R.dimen.content_space_8, false, getContext()));
+        binding.listLayout.recyclerView.addItemDecoration(new ListItemMarginDecoration(R.dimen.content_space_8, false, getContext()));
         binding.listLayout.recyclerView.addOnScrollListener(getLoadMoreListener());
-
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onLoading(v);
-            }
-        });
     }
 
-    public void onLoading(View v) {
-        if (isRefreshing || isLoading) {
-            return;
-        }
-        startLoading();
-    }
 
     private void initListData() {
-        binding.listLayout.recyclerView.setAdapter(new GankAllAdapter(getContext()));
+        binding.listLayout.recyclerView.setAdapter(new GankAdapter(getContext()));
     }
 
     @Override

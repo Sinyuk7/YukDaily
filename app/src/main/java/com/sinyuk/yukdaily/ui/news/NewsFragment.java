@@ -6,11 +6,11 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewTreeObserver;
 
 import com.sinyuk.yukdaily.App;
 import com.sinyuk.yukdaily.R;
@@ -21,6 +21,7 @@ import com.sinyuk.yukdaily.databinding.NewsHeaderLayoutBinding;
 import com.sinyuk.yukdaily.entity.news.Stories;
 import com.sinyuk.yukdaily.utils.cardviewpager.ShadowTransformer;
 import com.sinyuk.yukdaily.utils.recyclerview.ListItemMarginDecoration;
+import com.sinyuk.yukdaily.utils.recyclerview.SlideInUpAnimator;
 import com.sinyuk.yukdaily.widgets.CircleIndicator;
 
 import javax.inject.Inject;
@@ -134,8 +135,9 @@ public class NewsFragment extends ListFragment {
         final LinearLayoutManager manager = new LinearLayoutManager(getContext());
         manager.setAutoMeasureEnabled(true);
         binding.listLayout.recyclerView.setLayoutManager(manager);
+        binding.listLayout.recyclerView.setItemAnimator(new SlideInUpAnimator(new FastOutSlowInInterpolator()));
         binding.listLayout.recyclerView.setHasFixedSize(true);
-        binding.listLayout.recyclerView.addItemDecoration(new ListItemMarginDecoration(1,R.dimen.content_space_8,false,getContext()));
+        binding.listLayout.recyclerView.addItemDecoration(new ListItemMarginDecoration( R.dimen.content_space_8, false, getContext()));
         binding.listLayout.recyclerView.addOnScrollListener(getLoadMoreListener());
     }
 
