@@ -51,6 +51,7 @@ public class GankFragment extends ListFragment {
     };
 
     private int fromToday = 1;
+
     private final Observer<GankResult> loadObserver = new Observer<GankResult>() {
         @Override
         public void onCompleted() {
@@ -101,13 +102,24 @@ public class GankFragment extends ListFragment {
                 final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 boolean isBottom =
                         layoutManager.findLastVisibleItemPosition() == recyclerView.getAdapter().getItemCount() - 1;
-                Log.d(TAG, "onScrolled: last" + layoutManager.findLastVisibleItemPosition());
-                Log.d(TAG, "onScrolled: count" + (recyclerView.getAdapter().getItemCount() - 1));
                 if (isBottom) {
                     startLoading();
                 }
             }
         });
+        binding.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onLoading(v);
+            }
+        });
+    }
+
+    public void onLoading(View v) {
+        if (isRefreshing || isLoading) {
+            return;
+        }
+        startLoading();
     }
 
     private void initListData() {
@@ -124,10 +136,11 @@ public class GankFragment extends ListFragment {
 
     @Override
     protected void fetchData() {
-        Log.d(TAG, "fetchData: ");
+        Log.d(TAG, "load more ganks: ");
+        Log.d(TAG, "fromToday: " + fromToday);
         addSubscription(gankRepository.get()
-                .getGankAt(fromToday, true)
-                .doOnTerminate(this::startLoading)
+                .getGankAt(fromToday, false)
+                .doOnTerminate(this::stopLoading)
                 .subscribe(loadObserver));
     }
 }

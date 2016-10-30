@@ -19,7 +19,6 @@ import java.util.Locale;
 
 import rx.Observable;
 import rx.functions.Func1;
-import rx.functions.Func5;
 
 /**
  * Created by Sinyuk on 16.10.25.
@@ -51,14 +50,11 @@ public class GankRepository {
         if (!history.isEmpty() && wantToRefresh) {
             final String latest = history.get(0);
 
-            Log.d(TAG, "getGankAt: latest stored " + latest);
-            Log.d(TAG, "getGankAt: date now " + formatter.format(new Date(System.currentTimeMillis())));
-
             if (latest.equals(formatter.format(new Date(System.currentTimeMillis())))) {
                 // 已经是最新的了
-                Log.d(TAG, "getGankAt: no need to refresh");
+                Log.d(TAG, "use old gank history");
             } else {
-                Log.d(TAG, "getGankAt: clear history");
+                Log.d(TAG, "refresh gank history");
                 history.clear();
             }
         }
@@ -70,6 +66,7 @@ public class GankRepository {
                         @Override
                         public Observable<GankResponse<GankResult>> call(List<String> dates) {
                             String dateStr = dates.get(index);
+                            Log.d(TAG, "call: " + dateStr);
                             try {
                                 calendar.setTime(formatter.parse(dateStr));
 //                                Log.d(TAG, "getGankAt: my Date " + dateStr);
@@ -86,10 +83,11 @@ public class GankRepository {
                             }
                         }
                     })
-                    .map(new GankResponseFunc<GankResult>())
+                    .map(new GankResponseFunc<>())
                     .compose(new SchedulerTransformer<>());
         } else {
             String dateStr = history.get(index);
+            Log.d(TAG, "call: " + dateStr);
             try {
                 calendar.setTime(formatter.parse(dateStr));
 //                Log.d(TAG, "getGankAt: my Date " + dateStr);

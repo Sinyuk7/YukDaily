@@ -103,9 +103,9 @@
                         app:layout_collapseMode="pin">
 
                         <ImageView
-                            android:onClick="onTogglePanel"
                             android:id="@+id/menu"
                             style="@style/toolbar_button"
+                            android:onClick="onTogglePanel"
                             android:src="@drawable/ic_menu"/>
 
                         <TextSwitcher
@@ -136,6 +136,7 @@
                     </android.support.v7.widget.Toolbar>
                 </android.support.design.widget.CollapsingToolbarLayout>
             </android.support.design.widget.AppBarLayout>
+
 
 
         </android.support.design.widget.CoordinatorLayout>
