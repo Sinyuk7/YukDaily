@@ -3,6 +3,7 @@ package com.sinyuk.yukdaily.ui.gank;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
@@ -10,7 +11,9 @@ import android.view.View;
 
 import com.sinyuk.yukdaily.App;
 import com.sinyuk.yukdaily.R;
+import com.sinyuk.yukdaily.base.LazyListFragment;
 import com.sinyuk.yukdaily.base.ListFragment;
+import com.sinyuk.yukdaily.customtab.CustomTabActivityHelper;
 import com.sinyuk.yukdaily.data.gank.GankRepository;
 import com.sinyuk.yukdaily.data.gank.GankRepositoryModule;
 import com.sinyuk.yukdaily.entity.Gank.GankData;
@@ -28,7 +31,8 @@ import rx.Observer;
  * Created by Sinyuk on 16.10.20.
  */
 
-public class GankFragment extends ListFragment {
+public class GankFragment extends LazyListFragment {
+
     private static final int PAGE_SIZE = 8;
     @Inject
     Lazy<GankRepository> gankRepository;
@@ -89,6 +93,7 @@ public class GankFragment extends ListFragment {
         initListView();
         initListData();
 
+
     }
 
     private void initListView() {
@@ -117,8 +122,6 @@ public class GankFragment extends ListFragment {
 
     @Override
     protected void fetchData() {
-        Log.d(TAG, "load more ganks: ");
-        Log.d(TAG, "pageIndex: " + pageIndex);
         addSubscription(gankRepository.get()
                 .getWhat("Android", PAGE_SIZE, pageIndex)
                 .doOnTerminate(this::stopLoading)

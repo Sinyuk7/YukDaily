@@ -1,16 +1,21 @@
 package com.sinyuk.yukdaily.ui.gank;
 
+import android.app.Activity;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
+import android.support.customtabs.CustomTabsIntent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.sinyuk.myutils.text.DateUtils;
 import com.sinyuk.yukdaily.R;
+import com.sinyuk.yukdaily.customtab.CustomTabActivityHelper;
+import com.sinyuk.yukdaily.customtab.WebviewActivityFallback;
 import com.sinyuk.yukdaily.databinding.GankItemBinding;
 import com.sinyuk.yukdaily.entity.Gank.GankData;
-import com.sinyuk.yukdaily.ui.browser.WebViewActivity;
 import com.sinyuk.yukdaily.utils.binding.BindingViewHolder;
 import com.sinyuk.yukdaily.utils.span.AndroidSpan;
 
@@ -29,11 +34,20 @@ public class GankAdapter extends RecyclerView.Adapter<GankAdapter.GankItemHolder
     public static final String TAG = "GankAdapter";
     private final SimpleDateFormat formatter;
     private final Context context;
+    private final CustomTabActivityHelper customTabActivityHelper;
+    private final CustomTabsIntent.Builder customTabsBuilder;
     private List<GankData> dataset = new ArrayList<>();
 
     public GankAdapter(Context context) {
         this.context = context;
         formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.CHINA);
+
+        customTabActivityHelper = new CustomTabActivityHelper();
+
+        customTabsBuilder = new CustomTabsIntent.Builder(customTabActivityHelper.getSession());
+        customTabsBuilder.setToolbarColor(ContextCompat.getColor(context, R.color.colorPrimary));
+        customTabsBuilder.setSecondaryToolbarColor(ContextCompat.getColor(context, R.color.colorAccent));
+        customTabsBuilder.addDefaultShareMenuItem();
     }
 
 //    @Override
@@ -71,7 +85,8 @@ public class GankAdapter extends RecyclerView.Adapter<GankAdapter.GankItemHolder
                                     context, R.style.gank_date).getSpanText());
 
             holder.itemView.setOnClickListener(v -> {
-                WebViewActivity.open(context, result.getUrl());
+                CustomTabsIntent customTabsIntent = customTabsBuilder.build();
+                CustomTabActivityHelper.openCustomTab((Activity) context, customTabsIntent, Uri.parse(result.getUrl()), new WebviewActivityFallback());
                 result.setClicked(true);
                 holder.getBinding().title.setActivated(true);
             });

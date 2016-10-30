@@ -25,50 +25,44 @@
             type="String"/>
     </data>
 
-    <android.support.v4.widget.NestedScrollView
+
+    <com.sinyuk.yukdaily.widgets.BetterViewAnimator
+        android:id="@+id/viewAnimator"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:overScrollMode="never">
+        android:layout_height="match_parent"
+        android:inAnimation="@android:anim/fade_in"
+        android:outAnimation="@android:anim/fade_out">
 
-        <com.sinyuk.yukdaily.widgets.BetterViewAnimator
-            android:id="@+id/viewAnimator"
+        <include
+            android:id="@+id/loadingLayout"
+            layout="@layout/layout_loading"
+            bind:loadingMessage="@{loadingMessage}"/>
+
+        <FrameLayout
+            android:id="@+id/listLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inAnimation="@android:anim/slide_in_left"
-            android:outAnimation="@android:anim/slide_out_right">
+            android:layout_height="match_parent">
 
-            <include
-                android:id="@+id/loadingLayout"
-                layout="@layout/layout_loading"
-                bind:loadingMessage="@{loadingMessage}"/>
-
-            <FrameLayout
-                android:id="@+id/listLayout"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:overScrollMode="never"
+                android:scrollbarStyle="outsideOverlay"/>
+        </FrameLayout>
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clipToPadding="false"
-                    android:overScrollMode="never"
-                    android:scrollbarStyle="outsideOverlay"/>
-            </FrameLayout>
+        <include
+            android:id="@+id/errorLayout"
+            layout="@layout/layout_error"
+            bind:errorImage="@{errorImage}"
+            bind:errorMessage="@{errorMessage}"/>
 
-            <include
-                android:id="@+id/errorLayout"
-                layout="@layout/layout_error"
-                bind:errorImage="@{errorImage}"
-                bind:errorMessage="@{errorMessage}"/>
-
-            <include
-                android:id="@+id/emptyLayout"
-                layout="@layout/layout_empty"
-                bind:emptyImage="@{emptyImage}"
-                bind:emptyMessage="@{emptyMessage}"/>
-        </com.sinyuk.yukdaily.widgets.BetterViewAnimator>
-    </android.support.v4.widget.NestedScrollView>
+        <include
+            android:id="@+id/emptyLayout"
+            layout="@layout/layout_empty"
+            bind:emptyImage="@{emptyImage}"
+            bind:emptyMessage="@{emptyMessage}"/>
+    </com.sinyuk.yukdaily.widgets.BetterViewAnimator>
 
 </layout>
