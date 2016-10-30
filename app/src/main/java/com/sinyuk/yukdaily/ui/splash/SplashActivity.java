@@ -18,6 +18,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.f2prateek.rx.preferences.Preference;
 import com.f2prateek.rx.preferences.RxSharedPreferences;
+import com.sinyuk.myutils.system.NetWorkUtils;
 import com.sinyuk.myutils.system.ScreenUtils;
 import com.sinyuk.yukdaily.App;
 import com.sinyuk.yukdaily.NewsListDemo;
@@ -77,11 +78,9 @@ public class SplashActivity extends BaseActivity {
         path = preferences.getString(Sinyuk.KEY_SPLASH_BACKDROP_PATH);
 
         if (!TextUtils.isEmpty(path.get())) {
-            Log.d(TAG, "onCreate: loadFromCache");
             loadFromCache();
         } else {
             downloadAndCache();
-            Log.d(TAG, "onCreate: downloadAndCache");
         }
 
         prepare();
@@ -90,12 +89,16 @@ public class SplashActivity extends BaseActivity {
 
     private void prepare() {
         // 预加载第一页的新闻
+        if (!NetWorkUtils.isNetworkConnection(this)) { return; }
+
         addSubscription(newsRepositoryLazy.get().getLatestNews()
+                .doOnError(Throwable::printStackTrace)
                 .subscribe(stories -> {
                     Log.d(TAG, "prepare stories");
                 }));
         // 预加载Gank的历史
         addSubscription(gankRepositoryLazy.get().getHistory()
+                .doOnError(Throwable::printStackTrace)
                 .subscribe(history -> {
                     Log.d(TAG, "prepare history");
                 }));

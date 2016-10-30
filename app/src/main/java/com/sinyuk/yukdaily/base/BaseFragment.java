@@ -5,6 +5,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
@@ -70,5 +73,12 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
+    @Subscribe()
+    public void onEvent() {}
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (EventBus.getDefault().isRegistered(this)) { EventBus.getDefault().unregister(this); }
+    }
 }

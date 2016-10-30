@@ -2,6 +2,7 @@ package com.sinyuk.yukdaily;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -13,8 +14,11 @@ import android.view.View;
 import com.sinyuk.myutils.MathUtils;
 import com.sinyuk.yukdaily.base.BaseActivity;
 import com.sinyuk.yukdaily.databinding.ActivityHomeBinding;
+import com.sinyuk.yukdaily.events.HomepageLoadingEvent;
 import com.sinyuk.yukdaily.ui.gank.GankFragment;
 import com.sinyuk.yukdaily.ui.news.NewsFragment;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by Sinyuk on 2016/10/13.
@@ -22,6 +26,11 @@ import com.sinyuk.yukdaily.ui.news.NewsFragment;
 
 public class NewsListDemo extends BaseActivity implements ViewPager.OnPageChangeListener, SlidingPaneLayout.PanelSlideListener {
     ActivityHomeBinding binding;
+    private Handler myHandler = new Handler();
+    private Runnable mLoadingRunnable = () -> {
+        EventBus.getDefault().post(new HomepageLoadingEvent());
+    };
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,6 +47,9 @@ public class NewsListDemo extends BaseActivity implements ViewPager.OnPageChange
         }
 
         setupViewPager();
+
+//          第三种写法:优化的DelayLoad
+        getWindow().getDecorView().post(() -> myHandler.postDelayed(mLoadingRunnable, 500));
 
     }
 

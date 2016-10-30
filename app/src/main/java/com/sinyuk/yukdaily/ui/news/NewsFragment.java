@@ -19,10 +19,15 @@ import com.sinyuk.yukdaily.data.news.NewsRepository;
 import com.sinyuk.yukdaily.data.news.NewsRepositoryModule;
 import com.sinyuk.yukdaily.databinding.NewsHeaderLayoutBinding;
 import com.sinyuk.yukdaily.entity.news.Stories;
+import com.sinyuk.yukdaily.events.HomepageLoadingEvent;
 import com.sinyuk.yukdaily.utils.cardviewpager.ShadowTransformer;
 import com.sinyuk.yukdaily.utils.recyclerview.ListItemMarginDecoration;
 import com.sinyuk.yukdaily.utils.recyclerview.SlideInUpAnimator;
 import com.sinyuk.yukdaily.widgets.CircleIndicator;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import javax.inject.Inject;
 
@@ -97,6 +102,7 @@ public class NewsFragment extends ListFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         App.get(context).getAppComponent().plus(new NewsRepositoryModule()).inject(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -117,7 +123,6 @@ public class NewsFragment extends ListFragment {
         initListView();
         initListData();
 
-
     }
 
     private void bindHeaderView() {
@@ -137,7 +142,7 @@ public class NewsFragment extends ListFragment {
         binding.listLayout.recyclerView.setLayoutManager(manager);
         binding.listLayout.recyclerView.setItemAnimator(new SlideInUpAnimator(new FastOutSlowInInterpolator()));
         binding.listLayout.recyclerView.setHasFixedSize(true);
-        binding.listLayout.recyclerView.addItemDecoration(new ListItemMarginDecoration( R.dimen.content_space_8, false, getContext()));
+        binding.listLayout.recyclerView.addItemDecoration(new ListItemMarginDecoration(R.dimen.content_space_8, false, getContext()));
         binding.listLayout.recyclerView.addOnScrollListener(getLoadMoreListener());
     }
 
@@ -147,5 +152,10 @@ public class NewsFragment extends ListFragment {
         bindHeaderView();
         newsAdapter.addHeaderBinding(headerBinding);
         binding.listLayout.recyclerView.setAdapter(newsAdapter);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onStartLoading(HomepageLoadingEvent event) {
+        refreshData();
     }
 }

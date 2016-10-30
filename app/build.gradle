@@ -51,6 +51,7 @@ dependencies {
     compile rootProject.ext.dependencies["recyclerView"]
     compile rootProject.ext.dependencies["palette"]
     compile rootProject.ext.dependencies["retrofit"]
+    compile rootProject.ext.dependencies["eventbus"]
     compile rootProject.ext.dependencies["converter-gson"]
     compile rootProject.ext.dependencies["adapter-rxjava"]
     compile rootProject.ext.dependencies["logging-interceptor"]
