@@ -8,8 +8,13 @@ import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.DrawableRequestBuilder;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.Target;
 import com.sinyuk.myutils.text.DateUtils;
 import com.sinyuk.yukdaily.R;
 import com.sinyuk.yukdaily.customtab.CustomTabActivityHelper;
@@ -34,20 +39,27 @@ public class GankAdapter extends RecyclerView.Adapter<GankAdapter.GankItemHolder
     public static final String TAG = "GankAdapter";
     private final SimpleDateFormat formatter;
     private final Context context;
-    private final CustomTabActivityHelper customTabActivityHelper;
     private final CustomTabsIntent.Builder customTabsBuilder;
+    private final DrawableRequestBuilder<String> requestManager;
     private List<GankData> dataset = new ArrayList<>();
 
     public GankAdapter(Context context) {
         this.context = context;
         formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.CHINA);
 
-        customTabActivityHelper = new CustomTabActivityHelper();
+        CustomTabActivityHelper customTabActivityHelper = new CustomTabActivityHelper();
 
         customTabsBuilder = new CustomTabsIntent.Builder(customTabActivityHelper.getSession());
         customTabsBuilder.setToolbarColor(ContextCompat.getColor(context, R.color.colorPrimary));
         customTabsBuilder.setSecondaryToolbarColor(ContextCompat.getColor(context, R.color.colorAccent));
         customTabsBuilder.addDefaultShareMenuItem();
+
+        requestManager = Glide.with(context).fromString().crossFade(300)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .placeholder(R.drawable.sample)
+                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                .centerCrop()
+                .error(R.drawable.sample);
     }
 
 //    @Override
@@ -75,6 +87,16 @@ public class GankAdapter extends RecyclerView.Adapter<GankAdapter.GankItemHolder
                 date.setTime(0);
             }
 
+            if (context.getString(R.string.item_fuli).equals(result.getType())) {
+                holder.getBinding().imageView.setVisibility(View.VISIBLE);
+                requestManager.load(result.getUrl()).into(holder.getBinding().imageView);
+                holder.getBinding().badge.setImageResource(R.drawable.ic_pic);
+
+            } else {
+                holder.getBinding().imageView.setVisibility(View.GONE);
+                requestManager.load("").into(holder.getBinding().imageView);
+                holder.getBinding().badge.setImageResource(R.drawable.ic_link);
+            }
 
             holder.getBinding().title.setActivated(result.isClicked());
 

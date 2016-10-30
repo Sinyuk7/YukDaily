@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        tools:background="@color/themeRed">
+        >
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="wrap_content"
@@ -57,6 +57,13 @@
                     android:checked="@{activity.gankType.equals(@string/item_plus)}"
                     android:drawableRight="@drawable/ic_plus"
                     android:text="@string/item_plus"/>
+
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/item_fuli"
+                    style="@style/drawer_radio_button"
+                    android:checked="@{activity.gankType.equals(@string/item_fuli)}"
+                    android:drawableRight="@drawable/ic_fuli"
+                    android:text="@string/item_fuli"/>
 
             </RadioGroup>
         </android.support.v4.widget.NestedScrollView>

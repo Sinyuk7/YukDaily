@@ -199,6 +199,9 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
             case R.id.item_plus:
                 EventBus.getDefault().post(new GankSwitchEvent(getString(R.string.item_plus)));
                 break;
+            case R.id.item_fuli:
+                EventBus.getDefault().post(new GankSwitchEvent(getString(R.string.item_fuli)));
+                break;
         }
 
         if (popupWindow != null) {

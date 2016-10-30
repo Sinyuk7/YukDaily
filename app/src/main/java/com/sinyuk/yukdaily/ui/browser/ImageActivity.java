@@ -10,7 +10,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.PagerAdapter;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -114,6 +113,7 @@ public class ImageActivity extends BaseActivity {
                 Glide.with(ImageActivity.this)
                         .load(srcList.get(position))
                         .dontAnimate()
+                        .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                         .listener(new RequestListener<String, GlideDrawable>() {
                             @Override
                             public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {

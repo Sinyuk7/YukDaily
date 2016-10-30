@@ -5,6 +5,7 @@
 
     <data>
 
+        <import type="android.view.View"/>
 
         <import type="android.text.TextUtils"/>
 
@@ -38,13 +39,23 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/content_space_8"
                 android:ellipsize="end"
-                android:textColor="@color/text_checkable"
                 android:lineSpacingExtra="2sp"
                 android:maxLines="3"
                 android:text="@{data.title}"
+                android:textColor="@color/text_checkable"
                 android:textSize="@dimen/material_text_subhead"
                 android:textStyle="bold"
-                tools:text="dsadkhsdfkahskdfhksadhfkjdashfkjhsdakfhksdhfkjsda"/>
+                tools:text="11-24"/>
+
+            <com.sinyuk.yukdaily.widgets.RatioImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/content_space_8"
+                app:imageHOverW="1"
+                android:scaleType="centerCrop"
+                tools:src="@drawable/sample"/>
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -60,11 +71,12 @@
                     tools:text="sinyuk/2012-11-23"/>
 
                 <ImageView
+                    android:id="@+id/badge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:scaleType="centerInside"
-                    android:src="@drawable/link"/>
+                    android:src="@drawable/ic_link"/>
             </FrameLayout>
 
         </LinearLayout>

@@ -39,18 +39,22 @@ public class GankFragment extends LazyListFragment {
     private static final int PAGE_SIZE = 8;
     @Inject
     Lazy<GankRepository> gankRepository;
+    private int pageIndex = 1;
     private Observer<List<GankData>> refreshObserver = new Observer<List<GankData>>() {
         @Override
         public void onCompleted() {
             if (binding.listLayout.recyclerView.getAdapter().getItemCount() <= 0) {
                 assertEmpty(getString(R.string.no_ganks));
             }
+
+            pageIndex++;
         }
 
         @Override
         public void onError(Throwable e) {
             assertError(e.getLocalizedMessage());
             e.printStackTrace();
+            pageIndex = 1;
         }
 
         @Override
@@ -60,9 +64,6 @@ public class GankFragment extends LazyListFragment {
             }
         }
     };
-
-    private int pageIndex = 1;
-
     private final Observer<List<GankData>> loadObserver = new Observer<List<GankData>>() {
         @Override
         public void onCompleted() {
@@ -123,8 +124,7 @@ public class GankFragment extends LazyListFragment {
     @Override
     protected void refreshData() {
         addSubscription(gankRepository.get()
-                .getWhat(mType, PAGE_SIZE, 0)
-                .doOnTerminate(() -> pageIndex = 1)
+                .getWhat(mType, PAGE_SIZE, 1)
                 .doOnTerminate(this::stopRefreshing)
                 .subscribe(refreshObserver));
     }
