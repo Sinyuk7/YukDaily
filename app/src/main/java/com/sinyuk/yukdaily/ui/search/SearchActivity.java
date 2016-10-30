@@ -3,14 +3,19 @@ package com.sinyuk.yukdaily.ui.search;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.Nullable;
+import android.support.customtabs.CustomTabsIntent;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.ViewTreeObserver;
 
 import com.sinyuk.yukdaily.R;
 import com.sinyuk.yukdaily.base.BaseActivity;
+import com.sinyuk.yukdaily.customtab.CustomTabActivityHelper;
+import com.sinyuk.yukdaily.customtab.WebviewActivityFallback;
 import com.sinyuk.yukdaily.databinding.ActivitySearchBinding;
 
 import java.util.ArrayList;
@@ -27,6 +32,9 @@ public class SearchActivity extends BaseActivity {
     private static final String KEY_TYPE = "TYPE";
     private ActivitySearchBinding binding;
     private int type;
+
+    private CustomTabActivityHelper customTabActivityHelper;
+    private CustomTabsIntent.Builder customTabsBuilder;
 
     public static void start(Context context, int type) {
         Intent starter = new Intent(context, SearchActivity.class);
@@ -48,12 +56,16 @@ public class SearchActivity extends BaseActivity {
                 binding.searchView.openSearch();
             }
         });
+
+        customTabActivityHelper = new CustomTabActivityHelper();
+
     }
 
     private void setupSearchView() {
         type = getIntent().getIntExtra(KEY_TYPE, 0);
 
         if (type == TYPE_ZHIHU) {
+
             binding.searchView.setHint(getString(R.string.search_hint_zhihu));
         } else if (type == TYPE_GANK) {
             binding.searchView.setHint(getString(R.string.search_hint_gank));
@@ -61,7 +73,18 @@ public class SearchActivity extends BaseActivity {
         binding.searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-//                SearchResultActivity.start(SearchActivity.this, query);
+                if (type == TYPE_ZHIHU) {
+                    if (customTabsBuilder == null) {
+                        initCustomTabsBuilder();
+                    }
+                    final String url = "http://cn.bing.com/search?q=http%3A%2F%2Fdaily.zhihu.com%2F%2B" + query + "&go=%E6%90%9C%E7%B4%A2&qs=bs&form=QBRE";
+                    CustomTabsIntent customTabsIntent = customTabsBuilder.build();
+                    CustomTabActivityHelper.openCustomTab(SearchActivity.this, customTabsIntent, Uri.parse(url), new WebviewActivityFallback());
+                } else if (type == TYPE_GANK) {
+
+                }
+                finish();
+                overridePendingTransition(0, 0);
                 return false;
             }
 
@@ -102,6 +125,13 @@ public class SearchActivity extends BaseActivity {
 
             }
         });
+    }
+
+    private void initCustomTabsBuilder() {
+        customTabsBuilder = new CustomTabsIntent.Builder(customTabActivityHelper.getSession());
+        customTabsBuilder.setToolbarColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        customTabsBuilder.setSecondaryToolbarColor(ContextCompat.getColor(this, R.color.colorAccent));
+        customTabsBuilder.addDefaultShareMenuItem();
     }
 
     @Override

@@ -1,11 +1,11 @@
 [
     {
-        "merged": "D:\\Workplace\\YukDaily\\searchview\\build\\intermediates\\res\\merged\\release\\drawable-mdpi-v4\\ic_action_voice_search.png",
-        "source": "D:\\Workplace\\YukDaily\\searchview\\build\\generated\\res\\pngs\\release\\drawable-mdpi\\ic_action_voice_search.png"
-    },
-    {
         "merged": "D:\\Workplace\\YukDaily\\searchview\\build\\intermediates\\res\\merged\\release\\drawable-mdpi-v4\\abc_btn_radio_to_on_mtrl_000.png",
         "source": "D:\\Workplace\\YukDaily\\searchview\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.2.1\\res\\drawable-mdpi-v4\\abc_btn_radio_to_on_mtrl_000.png"
+    },
+    {
+        "merged": "D:\\Workplace\\YukDaily\\searchview\\build\\intermediates\\res\\merged\\release\\drawable-mdpi-v4\\ic_action_voice_search.png",
+        "source": "D:\\Workplace\\YukDaily\\searchview\\build\\generated\\res\\pngs\\release\\drawable-mdpi\\ic_action_voice_search.png"
     },
     {
         "merged": "D:\\Workplace\\YukDaily\\searchview\\build\\intermediates\\res\\merged\\release\\drawable-mdpi-v4\\abc_scrubber_control_to_pressed_mtrl_005.png",

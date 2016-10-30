@@ -2,15 +2,14 @@ package com.sinyuk.yukdaily.ui.browser;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +18,11 @@ import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.Toast;
 
 import com.sinyuk.yukdaily.base.BaseActivity;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Created by Sinyuk on 16.10.21.
@@ -42,16 +41,6 @@ public class BaseWebActivity extends BaseActivity {
                     WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    protected void loadUrlFromIntent() {
-        if (getIntent() == null) {
-            return;
-        }
-        String url = getIntent().getStringExtra(KEY_URL);
-        if (mWebView != null) {
-            mWebView.loadUrl(url);
         }
     }
 
@@ -174,6 +163,33 @@ public class BaseWebActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleUrl(intent.getDataString());
+    }
+
+    protected void handleUrl(String url) {
+        if (Uri.parse(url).getAuthority().contains("zhihu.com")) {
+            // 如果打开的是知乎的链接 www.zhihu.com/zhuanlan.zhihu.com
+            // 判断有没有装知乎
+            Intent activityIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            final PackageManager pm = getPackageManager();
+            final List<ResolveInfo> resolvedActivityList = pm.queryIntentActivities(
+                    activityIntent, PackageManager.MATCH_DEFAULT_ONLY);
+            for (int i = 0; i < resolvedActivityList.size(); i++) {
+                if (resolvedActivityList.get(i).activityInfo.packageName.equals("com.zhihu.android")) {
+                    // 装了知乎
+                    startActivity(activityIntent);
+                    break;
+                }
+            }
+        } else {
+            if (mWebView != null) {
+                mWebView.loadUrl(url);
+            }
+        }
+    }
 
     public class MyWebChromeClient extends WebChromeClient {
         @Override

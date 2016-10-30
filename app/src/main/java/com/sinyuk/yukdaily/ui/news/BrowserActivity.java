@@ -309,7 +309,7 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
 
     }
 
-    private void handleUrl(String url) {
+    protected void handleUrl(String url) {
 //        Log.d(TAG, "handleUrl: getAuthority " + Uri.parse(url).getAuthority());
         if (Uri.parse(url).getAuthority().contains("zhihu.com")) {
             // 如果打开的是知乎的链接 www.zhihu.com/zhuanlan.zhihu.com
@@ -322,17 +322,17 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
                 if (resolvedActivityList.get(i).activityInfo.packageName.equals("com.zhihu.android")) {
                     // 装了知乎
                     startActivity(activityIntent);
-                    return;
+                    break;
                 }
             }
+        } else {
+            if (customTabsBuilder == null) {
+                initCustomtabs();
+            }
+            CustomTabsIntent customTabsIntent = customTabsBuilder.build();
+            CustomTabActivityHelper.openCustomTab(this, customTabsIntent, Uri.parse(url), new WebviewActivityFallback());
         }
 
-        if (customTabsBuilder == null) {
-            initCustomtabs();
-        }
-
-        CustomTabsIntent customTabsIntent = customTabsBuilder.build();
-        CustomTabActivityHelper.openCustomTab(this, customTabsIntent, Uri.parse(url), new WebviewActivityFallback());
     }
 
     private void initCustomtabs() {

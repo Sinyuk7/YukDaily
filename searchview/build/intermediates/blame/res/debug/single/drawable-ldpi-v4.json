@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "D:\\Workplace\\YukDaily\\searchview\\build\\intermediates\\res\\merged\\debug\\drawable-ldpi-v4\\ic_action_voice_search.png",
+        "source": "D:\\Workplace\\YukDaily\\searchview\\build\\generated\\res\\pngs\\debug\\drawable-ldpi\\ic_action_voice_search.png"
+    },
+    {
+        "merged": "D:\\Workplace\\YukDaily\\searchview\\build\\intermediates\\res\\merged\\debug\\drawable-ldpi-v4\\ic_search_white_24dp.png",
+        "source": "D:\\Workplace\\YukDaily\\searchview\\build\\generated\\res\\pngs\\debug\\drawable-ldpi\\ic_search_white_24dp.png"
+    },
+    {
+        "merged": "D:\\Workplace\\YukDaily\\searchview\\build\\intermediates\\res\\merged\\debug\\drawable-ldpi-v4\\ic_action_navigation_arrow_back.png",
+        "source": "D:\\Workplace\\YukDaily\\searchview\\build\\generated\\res\\pngs\\debug\\drawable-ldpi\\ic_action_navigation_arrow_back.png"
+    },
+    {
+        "merged": "D:\\Workplace\\YukDaily\\searchview\\build\\intermediates\\res\\merged\\debug\\drawable-ldpi-v4\\ic_action_navigation_close.png",
+        "source": "D:\\Workplace\\YukDaily\\searchview\\build\\generated\\res\\pngs\\debug\\drawable-ldpi\\ic_action_navigation_close.png"
+    }
+]

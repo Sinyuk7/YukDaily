@@ -6,11 +6,13 @@ import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.sinyuk.myutils.system.ToastUtils;
 import com.sinyuk.yukdaily.App;
 import com.sinyuk.yukdaily.R;
 import com.sinyuk.yukdaily.databinding.ActivityWebViewBinding;
@@ -26,7 +28,8 @@ import javax.inject.Inject;
 public class WebViewActivity extends BaseWebActivity {
     @Inject
     File mCacheFile;
-    private ActivityWebViewBinding binding;
+    @Inject
+    ToastUtils toastUtils;
 
     public static void open(Context context, String url) {
         Intent starter = new Intent(context, WebViewActivity.class);
@@ -39,11 +42,16 @@ public class WebViewActivity extends BaseWebActivity {
         super.onCreate(savedInstanceState);
         App.get(this).getAppComponent().inject(this);
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_web_view);
+        final ActivityWebViewBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_web_view);
 
         initWebViewSettings(binding.webView, mCacheFile);
 
-        loadUrlFromIntent();
+        if (!TextUtils.isEmpty(getIntent().getStringExtra(KEY_URL))) {
+            handleUrl(getIntent().getStringExtra(KEY_URL));
+        } else {
+            toastUtils.toastShort(getString(R.string.open_link_failed));
+            ActivityCompat.finishAfterTransition(this);
+        }
     }
 
     @Override
@@ -53,7 +61,7 @@ public class WebViewActivity extends BaseWebActivity {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
+                handleUrl(url);
                 return true;
             }
 
@@ -62,21 +70,12 @@ public class WebViewActivity extends BaseWebActivity {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                     return false;
                 }
-                view.loadUrl(request.getUrl().toString());
+                handleUrl(request.getUrl().toString());
                 return true;
 
             }
         });
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        String url = intent.getDataString();
-        if (!TextUtils.isDigitsOnly(url)) {
-            if (binding.webView != null) {
-                binding.webView.loadUrl(url);
-            }
-        }
-    }
+
 }
