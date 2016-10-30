@@ -9,6 +9,7 @@
 
         <import type="java.util.List"/>
 
+        <import type="android.view.View"/>
 
         <variable
             name="gankData"
@@ -22,7 +23,8 @@
         android:layout_marginBottom="@dimen/content_space_8"
         android:layout_marginLeft="@dimen/content_space_8"
         android:layout_marginRight="@dimen/content_space_8"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="@{gankData == null ? View.GONE:View.VISIBLE}">
 
 
         <android.support.v7.widget.CardView

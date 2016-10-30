@@ -144,6 +144,11 @@ public class GankRepository {
                 .compose(new SchedulerTransformer<>());
     }
 
+    public Observable<List<GankData>> getWhat(String type, int count, int page) {
+        return gankService.getGank(type, count, page)
+                .map(new GankResponseFunc<>())
+                .compose(new SchedulerTransformer<>());
+    }
 
 //    Observable<List<GankData>> getZip(
 //            int page, int android,

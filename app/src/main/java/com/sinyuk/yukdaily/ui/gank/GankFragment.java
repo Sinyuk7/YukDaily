@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
@@ -13,8 +12,10 @@ import com.sinyuk.yukdaily.R;
 import com.sinyuk.yukdaily.base.ListFragment;
 import com.sinyuk.yukdaily.data.gank.GankRepository;
 import com.sinyuk.yukdaily.data.gank.GankRepositoryModule;
-import com.sinyuk.yukdaily.entity.Gank.GankResult;
+import com.sinyuk.yukdaily.entity.Gank.GankData;
 import com.sinyuk.yukdaily.utils.recyclerview.ListItemMarginDecoration;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -26,9 +27,10 @@ import rx.Observer;
  */
 
 public class GankFragment extends ListFragment {
+    private static final int PAGE_SIZE = 8;
     @Inject
     Lazy<GankRepository> gankRepository;
-    private Observer<GankResult> refreshObserver = new Observer<GankResult>() {
+    private Observer<List<GankData>> refreshObserver = new Observer<List<GankData>>() {
         @Override
         public void onCompleted() {
             if (binding.listLayout.recyclerView.getAdapter().getItemCount() <= 0) {
@@ -43,19 +45,19 @@ public class GankFragment extends ListFragment {
         }
 
         @Override
-        public void onNext(GankResult gankResult) {
+        public void onNext(List<GankData> gankResult) {
             if (gankResult != null) {
                 ((GankAllAdapter) binding.listLayout.recyclerView.getAdapter()).setData(gankResult);
             }
         }
     };
 
-    private int fromToday = 1;
+    private int pageIndex = 1;
 
-    private final Observer<GankResult> loadObserver = new Observer<GankResult>() {
+    private final Observer<List<GankData>> loadObserver = new Observer<List<GankData>>() {
         @Override
         public void onCompleted() {
-            fromToday++;
+            pageIndex++;
         }
 
         @Override
@@ -64,7 +66,7 @@ public class GankFragment extends ListFragment {
         }
 
         @Override
-        public void onNext(GankResult gankResult) {
+        public void onNext(List<GankData> gankResult) {
             if (gankResult != null) {
                 ((GankAllAdapter) binding.listLayout.recyclerView.getAdapter()).appendData(gankResult);
             }
@@ -93,20 +95,8 @@ public class GankFragment extends ListFragment {
         binding.listLayout.recyclerView.setLayoutManager(manager);
         binding.listLayout.recyclerView.setHasFixedSize(true);
         binding.listLayout.recyclerView.addItemDecoration(new ListItemMarginDecoration(1, R.dimen.content_space_8, false, getContext()));
-        binding.listLayout.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (isRefreshing || isLoading) {
-                    return;
-                }
-                final LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                boolean isBottom =
-                        layoutManager.findLastVisibleItemPosition() == recyclerView.getAdapter().getItemCount() - 1;
-                if (isBottom) {
-                    startLoading();
-                }
-            }
-        });
+        binding.listLayout.recyclerView.addOnScrollListener(getLoadMoreListener());
+
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,13 +113,14 @@ public class GankFragment extends ListFragment {
     }
 
     private void initListData() {
-        binding.listLayout.recyclerView.setAdapter(new GankAllAdapter());
+        binding.listLayout.recyclerView.setAdapter(new GankAllAdapter(getContext()));
     }
 
     @Override
     protected void refreshData() {
-        addSubscription(gankRepository.get().getGankAt(0, true)
-                .doOnTerminate(() -> fromToday = 1)
+        addSubscription(gankRepository.get()
+                .getWhat("Android", PAGE_SIZE, 0)
+                .doOnTerminate(() -> pageIndex = 1)
                 .doOnTerminate(this::stopRefreshing)
                 .subscribe(refreshObserver));
     }
@@ -137,9 +128,9 @@ public class GankFragment extends ListFragment {
     @Override
     protected void fetchData() {
         Log.d(TAG, "load more ganks: ");
-        Log.d(TAG, "fromToday: " + fromToday);
+        Log.d(TAG, "pageIndex: " + pageIndex);
         addSubscription(gankRepository.get()
-                .getGankAt(fromToday, false)
+                .getWhat("Android", PAGE_SIZE, pageIndex)
                 .doOnTerminate(this::stopLoading)
                 .subscribe(loadObserver));
     }
