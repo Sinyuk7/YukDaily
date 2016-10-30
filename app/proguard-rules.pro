@@ -32,3 +32,7 @@
 -keep class com.example.javajsinteractiondemo$JsInteration {
     *;
 }
+
+#searchView
+-keep class br.com.mauker.MsvAuthority
+-keepclassmembers class br.com.mauker.** { *; }

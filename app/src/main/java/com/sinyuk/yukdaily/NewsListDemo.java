@@ -24,6 +24,7 @@ import com.sinyuk.yukdaily.events.GankSwitchEvent;
 import com.sinyuk.yukdaily.events.HomepageLoadingEvent;
 import com.sinyuk.yukdaily.ui.gank.GankFragment;
 import com.sinyuk.yukdaily.ui.news.NewsFragment;
+import com.sinyuk.yukdaily.ui.search.SearchActivity;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -168,7 +169,11 @@ public class NewsListDemo extends BaseActivity implements ViewPager.OnPageChange
 
 
     public void onClickSearch(View v) {
-
+        if (binding.viewPager.getCurrentItem() == 0) {
+            SearchActivity.start(this, SearchActivity.TYPE_ZHIHU);
+        } else if (binding.viewPager.getCurrentItem() == 1) {
+            SearchActivity.start(this, SearchActivity.TYPE_GANK);
+        }
     }
 
     public void onDrawerItemSelected(View v) {

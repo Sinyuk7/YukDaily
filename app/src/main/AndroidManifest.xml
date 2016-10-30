@@ -18,6 +18,14 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <provider
+            android:name="br.com.mauker.materialsearchview.db.HistoryProvider"
+            android:authorities="com.sinyuk.yukdaily.defaultsearchhistorydatabase"
+            android:exported="false"
+            android:protectionLevel="signature"
+            android:syncable="true"/>
+
         <activity
             android:name=".ui.splash.SplashActivity"
 
@@ -36,8 +44,14 @@
             android:theme="@style/AppTheme.Translucent"/>
         <activity android:name=".ui.browser.WebViewActivity"/>
 
-        <activity android:name=".ui.browser.ImageActivity"
-                  android:theme="@style/AppTheme.Image"/>
+        <activity
+            android:name=".ui.browser.ImageActivity"
+            android:theme="@style/AppTheme.Image"/>
+
+        <activity
+            android:name=".ui.search.SearchActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.Transparent"/>
     </application>
 
 </manifest>

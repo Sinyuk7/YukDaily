@@ -4,4 +4,17 @@
         <item>知乎日报</item>
         <item>Gank.io</item>
     </string-array>
+
+    <string-array name="gank_suggestion">
+        <!--all | Android | iOS | 休息视频 | 福利 | 拓展资源 | 前端 | 瞎推荐 | App-->
+        <item>all</item>
+        <item>Android</item>
+        <item>iOS</item>
+        <item>休息视频</item>
+        <item>福利</item>
+        <item>拓展资源</item>
+        <item>前端</item>
+        <item>瞎推荐</item>
+        <item>App</item>
+    </string-array>
 </resources>

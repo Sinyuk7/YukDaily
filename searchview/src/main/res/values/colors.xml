@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="search_layover_bg">#61080808</color>
-    <color name="search_field_bg">@color/white_ish</color>
+    <color name="search_field_bg">#ffffffff</color>
 
     <color name="white">#ffffffff</color>
     <color name="black">#ff000000</color>
