@@ -84,7 +84,7 @@
                             android:layout_marginTop="?attr/actionBarSize"
                             app:nts_active_color="@android:color/white"
                             app:nts_animation_duration="300"
-                            app:nts_color="@android:color/black"
+                            app:nts_color="@android:color/white"
                             app:nts_corners_radius="1dp"
                             app:nts_factor="2.5"
                             app:nts_gravity="bottom"

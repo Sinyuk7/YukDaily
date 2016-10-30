@@ -20,6 +20,7 @@ import android.widget.PopupWindow;
 import com.sinyuk.myutils.MathUtils;
 import com.sinyuk.yukdaily.base.BaseActivity;
 import com.sinyuk.yukdaily.databinding.ActivityHomeBinding;
+import com.sinyuk.yukdaily.events.GankSwitchEvent;
 import com.sinyuk.yukdaily.events.HomepageLoadingEvent;
 import com.sinyuk.yukdaily.ui.gank.GankFragment;
 import com.sinyuk.yukdaily.ui.news.NewsFragment;
@@ -172,7 +173,18 @@ public class NewsListDemo extends BaseActivity implements ViewPager.OnPageChange
 
     public void onDrawerItemSelected(View v) {
         switch (v.getId()) {
-
+            case R.id.item_anzhuo:
+                EventBus.getDefault().post(new GankSwitchEvent(getString(R.string.item_anzhuo)));
+                break;
+            case R.id.item_ios:
+                EventBus.getDefault().post(new GankSwitchEvent(getString(R.string.item_ios)));
+                break;
+            case R.id.item_frontend:
+                EventBus.getDefault().post(new GankSwitchEvent(getString(R.string.item_frontend)));
+                break;
+            case R.id.item_plus:
+                EventBus.getDefault().post(new GankSwitchEvent(getString(R.string.item_plus)));
+                break;
         }
         Log.d(TAG, "onDrawerItemSelected: " + v.getId());
         if (popupWindow != null) {

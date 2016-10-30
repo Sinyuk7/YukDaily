@@ -14,12 +14,13 @@ import com.sinyuk.myutils.system.NetWorkUtils;
 import com.sinyuk.yukdaily.R;
 import com.sinyuk.yukdaily.databinding.ListFragmentBinding;
 
+import org.greenrobot.eventbus.Subscribe;
+
 /**
  * Created by Sinyuk on 16.10.30.
  */
 
 public abstract class LazyListFragment extends BaseFragment {
-    private static final String STATE_SAVE_IS_HIDDEN = "STATE_SAVE_IS_HIDDEN";
     protected int PRELOAD_THRESHOLD = 3;
     protected ListFragmentBinding binding;
     protected boolean isRefreshing = true;
@@ -159,5 +160,9 @@ public abstract class LazyListFragment extends BaseFragment {
 
     protected abstract void fetchData();
 
+    @Subscribe()
+    public void onLazyListEvent(){
+      
+    }
 
 }

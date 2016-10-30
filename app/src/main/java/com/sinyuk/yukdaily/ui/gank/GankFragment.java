@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.sinyuk.yukdaily.App;
@@ -13,8 +14,13 @@ import com.sinyuk.yukdaily.base.LazyListFragment;
 import com.sinyuk.yukdaily.data.gank.GankRepository;
 import com.sinyuk.yukdaily.data.gank.GankRepositoryModule;
 import com.sinyuk.yukdaily.entity.Gank.GankData;
+import com.sinyuk.yukdaily.events.GankSwitchEvent;
 import com.sinyuk.yukdaily.utils.recyclerview.ListItemMarginDecoration;
 import com.sinyuk.yukdaily.utils.recyclerview.SlideInUpAnimator;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -74,12 +80,13 @@ public class GankFragment extends LazyListFragment {
             }
         }
     };
-
+    private String mType = "Android";
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         App.get(context).getAppComponent().plus(new GankRepositoryModule()).inject(this);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -89,7 +96,6 @@ public class GankFragment extends LazyListFragment {
         binding.listLayout.swipeRefreshLayout.setEnabled(false);
         initListView();
         initListData();
-
 
     }
 
@@ -111,7 +117,7 @@ public class GankFragment extends LazyListFragment {
     @Override
     protected void refreshData() {
         addSubscription(gankRepository.get()
-                .getWhat("Android", PAGE_SIZE, 0)
+                .getWhat(mType, PAGE_SIZE, 0)
                 .doOnTerminate(() -> pageIndex = 1)
                 .doOnTerminate(this::stopRefreshing)
                 .subscribe(refreshObserver));
@@ -120,8 +126,17 @@ public class GankFragment extends LazyListFragment {
     @Override
     protected void fetchData() {
         addSubscription(gankRepository.get()
-                .getWhat("Android", PAGE_SIZE, pageIndex)
+                .getWhat(mType, PAGE_SIZE, pageIndex)
                 .doOnTerminate(this::stopLoading)
                 .subscribe(loadObserver));
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSwitch(GankSwitchEvent event) {
+        if (!TextUtils.isEmpty(event.getType()) && !mType.equals(event.getType())) {
+            mType = event.getType();
+            refreshData();
+        }
+    }
+
 }
