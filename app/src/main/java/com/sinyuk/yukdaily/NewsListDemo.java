@@ -6,10 +6,16 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.PopupWindow;
 
 import com.sinyuk.myutils.MathUtils;
 import com.sinyuk.yukdaily.base.BaseActivity;
@@ -30,6 +36,9 @@ public class NewsListDemo extends BaseActivity implements ViewPager.OnPageChange
     private Runnable mLoadingRunnable = () -> {
         EventBus.getDefault().post(new HomepageLoadingEvent());
     };
+    private PopupWindow popupWindow;
+    private View gankDrawer;
+    private View newsDrawer;
 
 
     @Override
@@ -51,6 +60,43 @@ public class NewsListDemo extends BaseActivity implements ViewPager.OnPageChange
 //          第三种写法:优化的DelayLoad
         getWindow().getDecorView().post(() -> myHandler.postDelayed(mLoadingRunnable, 500));
 
+    }
+
+    private void initPopupMenu() {
+        popupWindow = new PopupWindow(this);
+        popupWindow.setWidth(FrameLayout.LayoutParams.WRAP_CONTENT);
+        popupWindow.setHeight(FrameLayout.LayoutParams.WRAP_CONTENT);
+
+        popupWindow.setFocusable(true);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.shadow_filled));
+        popupWindow.setAnimationStyle(android.R.style.Animation_Dialog);
+    }
+
+    private void initGankDrawer() {
+        gankDrawer = LayoutInflater.from(this).inflate(R.layout.layout_drawer_gank, null);
+        gankDrawer.setFocusable(true);
+        gankDrawer.setFocusableInTouchMode(true);
+        gankDrawer.setOnKeyListener((v1, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                popupWindow.dismiss();
+                return true;
+            }
+            return false;
+        });
+    }
+
+    private void initNewsDrawer() {
+        newsDrawer = LayoutInflater.from(this).inflate(R.layout.layout_drawer_news, null);
+        newsDrawer.setFocusable(true);
+        newsDrawer.setFocusableInTouchMode(true);
+        newsDrawer.setOnKeyListener((v1, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                popupWindow.dismiss();
+                return true;
+            }
+            return false;
+        });
     }
 
     private void initToolbar() {
@@ -86,13 +132,52 @@ public class NewsListDemo extends BaseActivity implements ViewPager.OnPageChange
         binding.navigationTabStrip.setViewPager(binding.viewPager);
     }
 
+
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         Log.d(TAG, "onPageScrolled: position " + position);
         Log.d(TAG, "onPageScrolled: positionOffset " + positionOffset);
         Log.d(TAG, "onPageScrolled: positionOffsetPixels " + positionOffsetPixels);
+    }
+
+    public void onToggleDrawer(View v) {
+
+        if (popupWindow == null) {
+            initPopupMenu();
+        } else if (popupWindow.isShowing()) {
+            popupWindow.dismiss();
+            return;
+        }
+
+        if (binding.viewPager.getCurrentItem() == 1) {
+            if (gankDrawer == null) {
+                initGankDrawer();
+            }
+            popupWindow.setContentView(gankDrawer);
+        } else if (binding.viewPager.getCurrentItem() == 0) {
+            if (newsDrawer == null) {
+                initNewsDrawer();
+            }
+            popupWindow.setContentView(newsDrawer);
+        } else {
+            return;
+        }
+        popupWindow.showAtLocation(v, Gravity.TOP | Gravity.END, 0, 0);
+    }
 
 
+    public void onClickSearch(View v) {
+
+    }
+
+    public void onDrawerItemSelected(View v) {
+        switch (v.getId()) {
+
+        }
+        Log.d(TAG, "onDrawerItemSelected: " + v.getId());
+        if (popupWindow != null) {
+            popupWindow.dismiss();
+        }
     }
 
     @Override
@@ -128,7 +213,6 @@ public class NewsListDemo extends BaseActivity implements ViewPager.OnPageChange
 
     @Override
     public void onPanelSlide(View panel, float slideOffset) {
-        Log.d(TAG, "onPanelSlide: " + slideOffset);
         binding.menu.setAlpha(MathUtils.constrain(0, 1, (1 - slideOffset)));
     }
 
@@ -148,5 +232,14 @@ public class NewsListDemo extends BaseActivity implements ViewPager.OnPageChange
     @Override
     public void onPanelClosed(View panel) {
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (binding.slidingPaneLayout != null && binding.slidingPaneLayout.isOpen()) {
+            binding.slidingPaneLayout.closePane();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

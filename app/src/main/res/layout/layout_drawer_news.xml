@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:id="@+id/drawerGank"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="end"
+    >
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:overScrollMode="never">
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.AppCompatRadioButton
+                android:id="@+id/all_btn"
+                style="@style/drawer_radio_button"
+                android:text="string/category_all"
+                tools:checked="true"/>
+
+            <android.support.v7.widget.AppCompatRadioButton
+                android:id="@+id/recommended_btn"
+                style="@style/drawer_radio_button"
+                android:text="string/category_recommended"/>
+
+            <android.support.v7.widget.AppCompatRadioButton
+                android:id="@+id/free_btn"
+                style="@style/drawer_radio_button"
+                android:text="string/category_free"/>
+
+
+            <android.support.v7.widget.AppCompatRadioButton
+                android:id="@+id/clothes__btn"
+                style="@style/drawer_radio_button"
+                android:text="string/category_clothes"/>
+
+            <android.support.v7.widget.AppCompatRadioButton
+                style="@style/drawer_radio_button"
+                android:text="string/category_all"/>
+
+            <android.support.v7.widget.AppCompatRadioButton
+                style="@style/drawer_radio_button"
+                android:text="string/category_recommended"/>
+
+            <android.support.v7.widget.AppCompatRadioButton
+                style="@style/drawer_radio_button"
+                android:text="string/category_free"/>
+
+
+            <android.support.v7.widget.AppCompatRadioButton
+                style="@style/drawer_radio_button"
+                android:text="string/category_clothes"/>
+
+        </RadioGroup>
+    </android.support.v4.widget.NestedScrollView>
+</FrameLayout>
