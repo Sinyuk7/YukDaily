@@ -20,7 +20,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/content_space_12"
         android:paddingLeft="@dimen/content_space_16"

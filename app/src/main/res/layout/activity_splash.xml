@@ -20,13 +20,12 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/content_space_16"
-                android:src="@drawable/ic_favor"/>
+                android:layout_marginRight="@dimen/content_space_16"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="不说"
+                android:text="没想好名字"
                 android:textColor="#fff"
                 android:textSize="24sp"
                 android:textStyle="bold"/>

@@ -25,44 +25,49 @@
             type="String"/>
     </data>
 
-
-    <com.sinyuk.yukdaily.widgets.BetterViewAnimator
-        android:id="@+id/viewAnimator"
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:inAnimation="@android:anim/fade_in"
-        android:outAnimation="@android:anim/fade_out">
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:overScrollMode="never">
 
-        <include
-            android:id="@+id/loadingLayout"
-            layout="@layout/layout_loading"
-            bind:loadingMessage="@{loadingMessage}"/>
-
-        <FrameLayout
-            android:id="@+id/listLayout"
+        <com.sinyuk.yukdaily.widgets.BetterViewAnimator
+            android:id="@+id/viewAnimator"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:inAnimation="@android:anim/fade_in"
+            android:outAnimation="@android:anim/fade_out">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerView"
+            <include
+                android:id="@+id/loadingLayout"
+                layout="@layout/layout_loading"
+                bind:loadingMessage="@{loadingMessage}"/>
+
+            <FrameLayout
+                android:id="@+id/listLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:overScrollMode="never"
-                android:scrollbarStyle="outsideOverlay"/>
-        </FrameLayout>
+                android:layout_height="wrap_content">
 
-        <include
-            android:id="@+id/errorLayout"
-            layout="@layout/layout_error"
-            bind:errorImage="@{errorImage}"
-            bind:errorMessage="@{errorMessage}"/>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:overScrollMode="never"
+                    android:scrollbarStyle="outsideOverlay"/>
+            </FrameLayout>
 
-        <include
-            android:id="@+id/emptyLayout"
-            layout="@layout/layout_empty"
-            bind:emptyImage="@{emptyImage}"
-            bind:emptyMessage="@{emptyMessage}"/>
-    </com.sinyuk.yukdaily.widgets.BetterViewAnimator>
+            <include
+                android:id="@+id/errorLayout"
+                layout="@layout/layout_error"
+                bind:errorImage="@{errorImage}"
+                bind:errorMessage="@{errorMessage}"/>
 
+            <include
+                android:id="@+id/emptyLayout"
+                layout="@layout/layout_empty"
+                bind:emptyImage="@{emptyImage}"
+                bind:emptyMessage="@{emptyMessage}"/>
+        </com.sinyuk.yukdaily.widgets.BetterViewAnimator>
+    </android.support.v4.widget.NestedScrollView>
 </layout>

@@ -3,17 +3,13 @@ package com.sinyuk.yukdaily.ui.gank;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.View;
 
 import com.sinyuk.yukdaily.App;
 import com.sinyuk.yukdaily.R;
 import com.sinyuk.yukdaily.base.LazyListFragment;
-import com.sinyuk.yukdaily.base.ListFragment;
-import com.sinyuk.yukdaily.customtab.CustomTabActivityHelper;
 import com.sinyuk.yukdaily.data.gank.GankRepository;
 import com.sinyuk.yukdaily.data.gank.GankRepositoryModule;
 import com.sinyuk.yukdaily.entity.Gank.GankData;
@@ -90,6 +86,7 @@ public class GankFragment extends LazyListFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initListLayout();
+        binding.listLayout.swipeRefreshLayout.setEnabled(false);
         initListView();
         initListData();
 

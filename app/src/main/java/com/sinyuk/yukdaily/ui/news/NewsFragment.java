@@ -120,6 +120,7 @@ public class NewsFragment extends ListFragment {
         super.onViewCreated(view, savedInstanceState);
 
         initListLayout();
+        binding.listLayout.swipeRefreshLayout.setEnabled(false);
         initListView();
         initListData();
 
