@@ -6,39 +6,45 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="end"
-    android:background="@android:color/white">
+    tools:background="@color/themeRed">
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="end"
         android:overScrollMode="never"
-        android:paddingTop="@dimen/content_space_4">
+        android:paddingBottom="@dimen/content_space_16"
+        android:paddingTop="@dimen/content_space_16">
 
         <RadioGroup
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <android.support.v7.widget.AppCompatRadioButton
-                android:id="@+id/all_btn"
+                android:id="@+id/item_anzhuo"
                 style="@style/drawer_radio_button"
-                android:text="string/category_all"
+                android:drawableRight="@drawable/ic_android"
+                android:text="@string/item_anzhuo"
                 tools:checked="true"/>
 
             <android.support.v7.widget.AppCompatRadioButton
-                android:id="@+id/recommended_btn"
+                android:id="@+id/item_ios"
                 style="@style/drawer_radio_button"
-                android:text="string/category_recommended"/>
+                android:drawableRight="@drawable/ic_ios"
+                android:text="@string/item_ios"/>
 
             <android.support.v7.widget.AppCompatRadioButton
-                android:id="@+id/free_btn"
+                android:id="@+id/item_frontend"
                 style="@style/drawer_radio_button"
-                android:text="string/category_free"/>
+                android:drawableRight="@drawable/ic_frontend"
+                android:text="@string/item_frontend"/>
 
 
             <android.support.v7.widget.AppCompatRadioButton
-                android:id="@+id/clothes__btn"
+                android:id="@+id/item_plus"
                 style="@style/drawer_radio_button"
-                android:text="string/category_clothes"/>
+                android:drawableRight="@drawable/ic_plus"
+                android:text="@string/item_plus"/>
 
         </RadioGroup>
     </android.support.v4.widget.NestedScrollView>

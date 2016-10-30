@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="drawer_radio_button">
         <item name="android:layout_marginLeft">@dimen/content_space_8</item>
         <item name="android:layout_marginRight">@dimen/content_space_16</item>
@@ -8,6 +9,7 @@
         <item name="android:paddingLeft">@dimen/content_space_8</item>
         <item name="android:paddingStart">@dimen/content_space_8</item>
         <item name="android:layout_height">40dp</item>
+        <item name="android:drawablePadding">72dp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:textSize">@dimen/material_text_menu</item>
         <item name="android:textColor">@color/text_secondary_dark</item>

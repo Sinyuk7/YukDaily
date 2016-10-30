@@ -21,4 +21,8 @@
     <string name="trimExpandedText">折叠</string>
     <string name="no_comment">评论区的水太深了</string>
     <string name="no_ganks">干货呢?</string>
+    <string name="item_anzhuo">Android</string>
+    <string name="item_ios">iOS</string>
+    <string name="item_plus">拓展阅读</string>
+    <string name="item_frontend">前端</string>
 </resources>

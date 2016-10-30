@@ -5,13 +5,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="end"
-    >
+    android:layout_gravity="end">
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:overScrollMode="never">
+        android:overScrollMode="never"
+        android:paddingBottom="@dimen/content_space_16"
+        android:paddingTop="@dimen/content_space_16">
 
         <RadioGroup
             android:layout_width="wrap_content"
