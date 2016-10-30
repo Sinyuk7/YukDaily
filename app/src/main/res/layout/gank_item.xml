@@ -48,14 +48,13 @@
                 tools:text="11-24"/>
 
             <com.sinyuk.yukdaily.widgets.RatioImageView
+                app:imageHOverW="1"
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="@dimen/content_space_8"
                 android:scaleType="centerCrop"
-                android:transitionName="@string/transition_photo"
-                app:imageHOverW="1"
                 tools:src="@drawable/sample"/>
 
             <FrameLayout

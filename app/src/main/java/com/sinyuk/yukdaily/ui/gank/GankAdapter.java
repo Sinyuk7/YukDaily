@@ -56,10 +56,9 @@ public class GankAdapter extends RecyclerView.Adapter<GankAdapter.GankItemHolder
         customTabsBuilder.addDefaultShareMenuItem();
 
         requestManager = Glide.with(context).fromString().crossFade(300)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .placeholder(R.drawable.sample)
                 .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                .centerCrop()
                 .error(R.drawable.sample);
     }
 
@@ -92,13 +91,24 @@ public class GankAdapter extends RecyclerView.Adapter<GankAdapter.GankItemHolder
                 holder.getBinding().imageView.setVisibility(View.VISIBLE);
                 requestManager.load(result.getUrl()).into(holder.getBinding().imageView);
                 holder.getBinding().badge.setImageResource(R.drawable.ic_pic);
-                holder.getBinding().imageView.setOnClickListener(v -> ImageActivity.start(v.getContext(), result.getUrl()));
+                holder.getBinding().imageView.setOnClickListener(v -> {
+                    ImageActivity.start(v.getContext(), result.getUrl());
+                    result.setClicked(true);
+                    holder.getBinding().title.setActivated(true);
+                });
+                holder.itemView.setOnClickListener(null);
 
             } else {
                 holder.getBinding().imageView.setVisibility(View.GONE);
                 requestManager.load("").into(holder.getBinding().imageView);
                 holder.getBinding().badge.setImageResource(R.drawable.ic_link);
                 holder.getBinding().imageView.setOnClickListener(null);
+                holder.itemView.setOnClickListener(v -> {
+                    CustomTabsIntent customTabsIntent = customTabsBuilder.build();
+                    CustomTabActivityHelper.openCustomTab((Activity) context, customTabsIntent, Uri.parse(result.getUrl()), new WebviewActivityFallback());
+                    result.setClicked(true);
+                    holder.getBinding().title.setActivated(true);
+                });
             }
 
             holder.getBinding().title.setActivated(result.isClicked());
@@ -108,13 +118,6 @@ public class GankAdapter extends RecyclerView.Adapter<GankAdapter.GankItemHolder
                             .drawTextAppearanceSpan(result.getAuthor() + "/", context, R.style.gank_author)
                             .drawTextAppearanceSpan(DateUtils.getTimeAgo(context, date),
                                     context, R.style.gank_date).getSpanText());
-
-            holder.itemView.setOnClickListener(v -> {
-                CustomTabsIntent customTabsIntent = customTabsBuilder.build();
-                CustomTabActivityHelper.openCustomTab((Activity) context, customTabsIntent, Uri.parse(result.getUrl()), new WebviewActivityFallback());
-                result.setClicked(true);
-                holder.getBinding().title.setActivated(true);
-            });
 
             holder.getBinding().executePendingBindings();
 

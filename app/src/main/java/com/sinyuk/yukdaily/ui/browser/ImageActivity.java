@@ -9,8 +9,12 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -90,6 +94,43 @@ public class ImageActivity extends BaseActivity {
 
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+
+        // set context menu title
+//        menu.setHeaderTitle(getString(R.string.photo_operation));
+        // add context menu item
+        menu.add(0, 1, Menu.NONE, getString(R.string.action_save));
+        menu.add(0, 2, Menu.NONE, getString(R.string.action_repost));
+        menu.add(0, 3, Menu.NONE, getString(R.string.action_qrcode));
+        menu.add(0, 4, Menu.NONE, getString(R.string.action_report));
+
+    }
+
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        // 得到当前被选中的item信息
+        AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()) {
+            case 1:
+                // do something
+                break;
+            case 2:
+                // do something
+                break;
+            case 3:
+                // do something
+                break;
+            case 4:
+                // do something
+                break;
+            default:
+                return super.onContextItemSelected(item);
+        }
+        return true;
+    }
+
     private class PhotoAdapter extends PagerAdapter {
         @Override
         public int getCount() {
@@ -107,7 +148,20 @@ public class ImageActivity extends BaseActivity {
                 }
             });
 
+            registerForContextMenu(photoView);
+
+            photoView.setOnLongClickListener(v -> {
+                ImageActivity.this.openContextMenu(v);
+                return false;
+            });
+
+            photoView.setOnSingleFlingListener((e1, e2, velocityX, velocityY) -> {
+                ScreenUtils.hideSystemyBar(ImageActivity.this);
+                return false;
+            });
+
             ViewCompat.setTransitionName(photoView, getString(R.string.transition_photo));
+
 
             if (srcList.get(position) != null) {
                 Glide.with(ImageActivity.this)

@@ -29,4 +29,9 @@
     <string name="search_hint_gank">搜索你感兴趣的干货…</string>
     <string name="search_hint_zhihu">搜索你感兴趣的新闻…</string>
     <string name="open_link_failed">打开链接失败</string>
+    <string name="photo_operation">图片操作</string>
+    <string name="action_save">保存</string>
+    <string name="action_report">举报</string>
+    <string name="action_qrcode">识别图中的二维码</string>
+    <string name="action_repost">转发</string>
 </resources>
