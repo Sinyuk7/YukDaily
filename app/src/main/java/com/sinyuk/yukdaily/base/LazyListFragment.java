@@ -50,12 +50,13 @@ public abstract class LazyListFragment extends BaseFragment {
 
     public boolean prepareFetchData(boolean forceUpdate) {
         if (isVisibleToUser && isViewInitiated && (!isDataInitiated || forceUpdate)) {
-            refreshData();
+            lazyDo();
             isDataInitiated = true;
             return true;
         }
         return false;
     }
+
 
     @Nullable
     @Override
@@ -155,6 +156,7 @@ public abstract class LazyListFragment extends BaseFragment {
         isLoading = false;
     }
 
+    protected abstract void lazyDo();
 
     protected abstract void refreshData();
 

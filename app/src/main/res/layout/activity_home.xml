@@ -12,11 +12,11 @@
         android:id="@+id/slidingPaneLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.sinyuk.yukdaily.NewsListDemo">
+        tools:context="com.sinyuk.yukdaily.ui.home.HomeActivity">
         <!--menu-->
         <fragment
             android:id="@+id/slidingMenuFragment"
-            class="com.sinyuk.yukdaily.ui.menu.SlidingMenuFragment"
+            class="com.sinyuk.yukdaily.ui.home.SlidingMenuFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:layout="@layout/sliding_menu_fragment"/>
@@ -84,7 +84,7 @@
                             android:layout_marginTop="?attr/actionBarSize"
                             app:nts_active_color="@android:color/white"
                             app:nts_animation_duration="300"
-                            app:nts_color="@android:color/white"
+                            app:nts_color="#fff"
                             app:nts_corners_radius="1dp"
                             app:nts_factor="2.5"
                             app:nts_gravity="bottom"

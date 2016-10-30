@@ -21,7 +21,7 @@ import com.f2prateek.rx.preferences.RxSharedPreferences;
 import com.sinyuk.myutils.system.NetWorkUtils;
 import com.sinyuk.myutils.system.ScreenUtils;
 import com.sinyuk.yukdaily.App;
-import com.sinyuk.yukdaily.NewsListDemo;
+import com.sinyuk.yukdaily.ui.home.HomeActivity;
 import com.sinyuk.yukdaily.R;
 import com.sinyuk.yukdaily.Sinyuk;
 import com.sinyuk.yukdaily.api.NewsApi;
@@ -59,7 +59,7 @@ public class SplashActivity extends BaseActivity {
     private View footer;
 
     private void startMainActivity() {
-        Intent starter = new Intent(SplashActivity.this, NewsListDemo.class);
+        Intent starter = new Intent(SplashActivity.this, HomeActivity.class);
         starter.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(starter);
         ActivityCompat.finishAfterTransition(this);

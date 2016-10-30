@@ -1,4 +1,4 @@
-package com.sinyuk.yukdaily.ui.menu;
+package com.sinyuk.yukdaily.ui.home;
 
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;

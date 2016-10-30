@@ -15,6 +15,7 @@ import com.sinyuk.yukdaily.data.gank.GankRepository;
 import com.sinyuk.yukdaily.data.gank.GankRepositoryModule;
 import com.sinyuk.yukdaily.entity.Gank.GankData;
 import com.sinyuk.yukdaily.events.GankSwitchEvent;
+import com.sinyuk.yukdaily.events.ToolbarTitleChangeEvent;
 import com.sinyuk.yukdaily.utils.recyclerview.ListItemMarginDecoration;
 import com.sinyuk.yukdaily.utils.recyclerview.SlideInUpAnimator;
 
@@ -80,7 +81,7 @@ public class GankFragment extends LazyListFragment {
             }
         }
     };
-    private String mType = "Android";
+    private String mType;
 
     @Override
     public void onAttach(Context context) {
@@ -115,6 +116,11 @@ public class GankFragment extends LazyListFragment {
     }
 
     @Override
+    protected void lazyDo() {
+        EventBus.getDefault().post(new GankSwitchEvent("Android"));
+    }
+
+    @Override
     protected void refreshData() {
         addSubscription(gankRepository.get()
                 .getWhat(mType, PAGE_SIZE, 0)
@@ -132,10 +138,11 @@ public class GankFragment extends LazyListFragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSwitch(GankSwitchEvent event) {
-        if (!TextUtils.isEmpty(event.getType()) && !mType.equals(event.getType())) {
+    public void onGankSwitch(GankSwitchEvent event) {
+        if (!TextUtils.isEmpty(event.getType()) && !event.getType().equals(mType)) {
             mType = event.getType();
             refreshData();
+            EventBus.getDefault().post(new ToolbarTitleChangeEvent(event.getType()));
         }
     }
 

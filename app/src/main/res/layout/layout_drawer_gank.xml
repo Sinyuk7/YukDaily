@@ -1,51 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    android:id="@+id/drawerGank"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="end"
-    tools:background="@color/themeRed">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.v4.widget.NestedScrollView
+    <data>
+
+        <variable
+            name="activity"
+            type="com.sinyuk.yukdaily.ui.home.HomeActivity"/>
+
+    </data>
+
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:overScrollMode="never"
-        android:paddingBottom="@dimen/content_space_16"
-        android:paddingTop="@dimen/content_space_16">
+        tools:background="@color/themeRed">
 
-        <RadioGroup
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:overScrollMode="never"
+            android:paddingBottom="@dimen/content_space_16"
+            android:paddingTop="@dimen/content_space_16">
 
-            <android.support.v7.widget.AppCompatRadioButton
-                android:id="@+id/item_anzhuo"
-                style="@style/drawer_radio_button"
-                android:drawableRight="@drawable/ic_android"
-                android:text="@string/item_anzhuo"
-                tools:checked="true"/>
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <android.support.v7.widget.AppCompatRadioButton
-                android:id="@+id/item_ios"
-                style="@style/drawer_radio_button"
-                android:drawableRight="@drawable/ic_ios"
-                android:text="@string/item_ios"/>
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/item_anzhuo"
+                    style="@style/drawer_radio_button"
+                    android:checked="@{activity.gankType.equals(@string/item_anzhuo)}"
+                    android:drawableRight="@drawable/ic_android"
+                    android:text="@string/item_anzhuo"
+                    tools:checked="true"/>
 
-            <android.support.v7.widget.AppCompatRadioButton
-                android:id="@+id/item_frontend"
-                style="@style/drawer_radio_button"
-                android:drawableRight="@drawable/ic_frontend"
-                android:text="@string/item_frontend"/>
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/item_ios"
+                    style="@style/drawer_radio_button"
+                    android:checked="@{activity.gankType.equals(@string/item_ios)}"
+                    android:drawableRight="@drawable/ic_ios"
+                    android:text="@string/item_ios"/>
+
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/item_frontend"
+                    style="@style/drawer_radio_button"
+                    android:checked="@{activity.gankType.equals(@string/item_frontend)}"
+                    android:drawableRight="@drawable/ic_frontend"
+                    android:text="@string/item_frontend"/>
 
 
-            <android.support.v7.widget.AppCompatRadioButton
-                android:id="@+id/item_plus"
-                style="@style/drawer_radio_button"
-                android:drawableRight="@drawable/ic_plus"
-                android:text="@string/item_plus"/>
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/item_plus"
+                    style="@style/drawer_radio_button"
+                    android:checked="@{activity.gankType.equals(@string/item_plus)}"
+                    android:drawableRight="@drawable/ic_plus"
+                    android:text="@string/item_plus"/>
 
-        </RadioGroup>
-    </android.support.v4.widget.NestedScrollView>
-</FrameLayout>
+            </RadioGroup>
+        </android.support.v4.widget.NestedScrollView>
+    </FrameLayout>
+</layout>

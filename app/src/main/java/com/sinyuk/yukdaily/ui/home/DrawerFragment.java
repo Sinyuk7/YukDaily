@@ -1,4 +1,4 @@
-package com.sinyuk.yukdaily.ui.menu;
+package com.sinyuk.yukdaily.ui.home;
 
 /**
  * Created by Sinyuk on 16.10.30.

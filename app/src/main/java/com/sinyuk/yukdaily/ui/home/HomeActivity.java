@@ -1,6 +1,7 @@
-package com.sinyuk.yukdaily;
+package com.sinyuk.yukdaily.ui.home;
 
 import android.databinding.DataBindingUtil;
+import android.databinding.ObservableField;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -9,6 +10,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SlidingPaneLayout;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -18,34 +20,42 @@ import android.widget.FrameLayout;
 import android.widget.PopupWindow;
 
 import com.sinyuk.myutils.MathUtils;
+import com.sinyuk.yukdaily.R;
 import com.sinyuk.yukdaily.base.BaseActivity;
 import com.sinyuk.yukdaily.databinding.ActivityHomeBinding;
+import com.sinyuk.yukdaily.databinding.LayoutDrawerGankBinding;
 import com.sinyuk.yukdaily.events.GankSwitchEvent;
 import com.sinyuk.yukdaily.events.HomepageLoadingEvent;
+import com.sinyuk.yukdaily.events.ToolbarTitleChangeEvent;
 import com.sinyuk.yukdaily.ui.gank.GankFragment;
 import com.sinyuk.yukdaily.ui.news.NewsFragment;
 import com.sinyuk.yukdaily.ui.search.SearchActivity;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Created by Sinyuk on 2016/10/13.
  */
 
-public class NewsListDemo extends BaseActivity implements ViewPager.OnPageChangeListener, SlidingPaneLayout.PanelSlideListener {
+public class HomeActivity extends BaseActivity implements ViewPager.OnPageChangeListener, SlidingPaneLayout.PanelSlideListener {
+    public final ObservableField<String> gankType = new ObservableField<>();
+    public final ObservableField<String> newsType = new ObservableField<>();
     ActivityHomeBinding binding;
     private Handler myHandler = new Handler();
     private Runnable mLoadingRunnable = () -> {
         EventBus.getDefault().post(new HomepageLoadingEvent());
     };
     private PopupWindow popupWindow;
-    private View gankDrawer;
     private View newsDrawer;
-
+    private LayoutDrawerGankBinding drawerGankBinding;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home);
 
         binding.slidingPaneLayout.setPanelSlideListener(this);
@@ -54,7 +64,7 @@ public class NewsListDemo extends BaseActivity implements ViewPager.OnPageChange
         initToolbar();
 
         if (savedInstanceState == null) {
-            switchToolbarTitle(0);
+            EventBus.getDefault().post(new ToolbarTitleChangeEvent(getString(R.string.zhihudaily_slogan)));
         }
 
         setupViewPager();
@@ -76,10 +86,12 @@ public class NewsListDemo extends BaseActivity implements ViewPager.OnPageChange
     }
 
     private void initGankDrawer() {
-        gankDrawer = LayoutInflater.from(this).inflate(R.layout.layout_drawer_gank, null);
-        gankDrawer.setFocusable(true);
-        gankDrawer.setFocusableInTouchMode(true);
-        gankDrawer.setOnKeyListener((v1, keyCode, event) -> {
+        drawerGankBinding = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.layout_drawer_gank, null, false);
+        drawerGankBinding.setActivity(this);
+
+        drawerGankBinding.getRoot().setFocusable(true);
+        drawerGankBinding.getRoot().setFocusableInTouchMode(true);
+        drawerGankBinding.getRoot().setOnKeyListener((v1, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
                 popupWindow.dismiss();
                 return true;
@@ -137,9 +149,6 @@ public class NewsListDemo extends BaseActivity implements ViewPager.OnPageChange
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        Log.d(TAG, "onPageScrolled: position " + position);
-        Log.d(TAG, "onPageScrolled: positionOffset " + positionOffset);
-        Log.d(TAG, "onPageScrolled: positionOffsetPixels " + positionOffsetPixels);
     }
 
     public void onToggleDrawer(View v) {
@@ -152,10 +161,10 @@ public class NewsListDemo extends BaseActivity implements ViewPager.OnPageChange
         }
 
         if (binding.viewPager.getCurrentItem() == 1) {
-            if (gankDrawer == null) {
+            if (drawerGankBinding == null) {
                 initGankDrawer();
             }
-            popupWindow.setContentView(gankDrawer);
+            popupWindow.setContentView(drawerGankBinding.getRoot());
         } else if (binding.viewPager.getCurrentItem() == 0) {
             if (newsDrawer == null) {
                 initNewsDrawer();
@@ -191,7 +200,7 @@ public class NewsListDemo extends BaseActivity implements ViewPager.OnPageChange
                 EventBus.getDefault().post(new GankSwitchEvent(getString(R.string.item_plus)));
                 break;
         }
-        Log.d(TAG, "onDrawerItemSelected: " + v.getId());
+
         if (popupWindow != null) {
             popupWindow.dismiss();
         }
@@ -214,19 +223,24 @@ public class NewsListDemo extends BaseActivity implements ViewPager.OnPageChange
     @Override
     public void onPageScrollStateChanged(int state) {
         if (state == ViewPager.SCROLL_STATE_IDLE) {
-            switchToolbarTitle(binding.viewPager.getCurrentItem());
+            if (binding.viewPager.getCurrentItem() == 0) {
+                if (TextUtils.isEmpty(newsType.get())) {
+                    EventBus.getDefault().post(new ToolbarTitleChangeEvent(getString(R.string.zhihudaily_slogan)));
+                } else {
+                    EventBus.getDefault().post(new ToolbarTitleChangeEvent(newsType.get()));
+                }
+
+            } else if (binding.viewPager.getCurrentItem() == 1) {
+                if (TextUtils.isEmpty(gankType.get())) {
+                    EventBus.getDefault().post(new ToolbarTitleChangeEvent(getString(R.string.gank_slogan)));
+                } else {
+                    EventBus.getDefault().post(new ToolbarTitleChangeEvent(gankType.get()));
+                }
+            }
+
         }
     }
 
-    private void switchToolbarTitle(int index) {
-        switch (index) {
-            case 0:
-                binding.textSwitcher.setCurrentText(getString(R.string.zhihudaily_slogan));
-                return;
-            case 1:
-                binding.textSwitcher.setCurrentText(getString(R.string.gank_slogan));
-        }
-    }
 
     @Override
     public void onPanelSlide(View panel, float slideOffset) {
@@ -257,6 +271,21 @@ public class NewsListDemo extends BaseActivity implements ViewPager.OnPageChange
             binding.slidingPaneLayout.closePane();
         } else {
             super.onBackPressed();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onToolbarTitleChange(ToolbarTitleChangeEvent event) {
+        if (!TextUtils.isEmpty(event.getTitle())) {
+            binding.textSwitcher.setCurrentText(event.getTitle());
+        }
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onGankSwitch(GankSwitchEvent event) {
+        if (!TextUtils.isEmpty(event.getType()) && !event.getType().equals(gankType.get())) {
+            gankType.set(event.getType());
         }
     }
 }
