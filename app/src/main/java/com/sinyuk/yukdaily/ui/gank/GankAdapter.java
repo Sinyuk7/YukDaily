@@ -21,6 +21,7 @@ import com.sinyuk.yukdaily.customtab.CustomTabActivityHelper;
 import com.sinyuk.yukdaily.customtab.WebviewActivityFallback;
 import com.sinyuk.yukdaily.databinding.GankItemBinding;
 import com.sinyuk.yukdaily.entity.Gank.GankData;
+import com.sinyuk.yukdaily.ui.browser.ImageActivity;
 import com.sinyuk.yukdaily.utils.binding.BindingViewHolder;
 import com.sinyuk.yukdaily.utils.span.AndroidSpan;
 
@@ -91,11 +92,13 @@ public class GankAdapter extends RecyclerView.Adapter<GankAdapter.GankItemHolder
                 holder.getBinding().imageView.setVisibility(View.VISIBLE);
                 requestManager.load(result.getUrl()).into(holder.getBinding().imageView);
                 holder.getBinding().badge.setImageResource(R.drawable.ic_pic);
+                holder.getBinding().imageView.setOnClickListener(v -> ImageActivity.start(v.getContext(), result.getUrl()));
 
             } else {
                 holder.getBinding().imageView.setVisibility(View.GONE);
                 requestManager.load("").into(holder.getBinding().imageView);
                 holder.getBinding().badge.setImageResource(R.drawable.ic_link);
+                holder.getBinding().imageView.setOnClickListener(null);
             }
 
             holder.getBinding().title.setActivated(result.isClicked());

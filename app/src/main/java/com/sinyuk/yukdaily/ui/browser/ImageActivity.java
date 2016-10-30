@@ -1,14 +1,13 @@
 package com.sinyuk.yukdaily.ui.browser;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,17 +69,16 @@ public class ImageActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ScreenUtils.hideSystemyBar(this);
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_image);
 
         int currentItem = 0;
-
         if (!TextUtils.isEmpty(getIntent().getStringExtra(KEY_URL))) {
             srcList.add(getIntent().getStringExtra(KEY_URL));
         } else {
             srcList = getIntent().getStringArrayListExtra(KEY_SRC);
             currentItem = getIntent().getIntExtra(KEY_CURRENT_ITEM, 0);
         }
+
 
         PhotoAdapter adapter = new PhotoAdapter();
         binding.viewPager.setAdapter(adapter);
@@ -105,9 +103,11 @@ public class ImageActivity extends BaseActivity {
             photoView.setLayoutParams(layoutParams);
             photoView.setOnViewTapListener((view, x, y) -> {
                 if (((PhotoView) view).getScale() == 1) {
-                    ActivityCompat.finishAfterTransition((Activity) view.getContext());
+                    onBackPressed();
                 }
             });
+
+            ViewCompat.setTransitionName(photoView, getString(R.string.transition_photo));
 
             if (srcList.get(position) != null) {
                 Glide.with(ImageActivity.this)
@@ -118,6 +118,7 @@ public class ImageActivity extends BaseActivity {
                             @Override
                             public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
                                 handleError(e.getLocalizedMessage());
+
                                 return false;
                             }
 
