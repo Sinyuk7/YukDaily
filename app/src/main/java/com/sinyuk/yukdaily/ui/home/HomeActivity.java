@@ -49,7 +49,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.Lazy;
-import rx.Observer;
+import rx.functions.Action1;
 
 /**
  * Created by Sinyuk on 2016/10/13.
@@ -136,18 +136,9 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
             return false;
         });
 
-        addSubscription(newsRepository.getOtherThemes().subscribe(new Observer<List<Theme>>() {
+        addSubscription(newsRepository.getOtherThemes().subscribe(new Action1<List<Theme>>() {
             @Override
-            public void onCompleted() {
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onNext(List<Theme> themes) {
+            public void call(List<Theme> themes) {
                 themeList.clear();
                 themeList.addAll(themes);
                 newsDrawerBinding.radioGroup.bind(HomeActivity.this, themes);
@@ -238,11 +229,18 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
 
         Log.d(TAG, "onThemeItemSelected: " + v.getText() + " ...at " + integer);
 
+        newsType.set("");
+
         if (integer == -1) {
-            EventBus.getDefault().post(new NewsSwitchEvent(getString(R.string.item_news_index)));
+            final String type = getString(R.string.item_news_index);
+            EventBus.getDefault().post(new NewsSwitchEvent(type,integer));
+            EventBus.getDefault().post(new ToolbarTitleChangeEvent(getString(R.string.zhihudaily_slogan)));
         } else if (!themeList.isEmpty()) {
             if (integer >= 0 && integer < themeList.size()) {
-                EventBus.getDefault().post(new NewsSwitchEvent(themeList.get(integer).getName()));
+                final String type = themeList.get(integer).getName();
+                EventBus.getDefault().post(new NewsSwitchEvent(type,integer));
+                newsType.set(type);
+                EventBus.getDefault().post(new ToolbarTitleChangeEvent(type));
             }
         }
 

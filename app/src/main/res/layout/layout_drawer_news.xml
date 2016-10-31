@@ -29,22 +29,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!--<TextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:paddingBottom="@dimen/content_space_8"-->
-                    <!--android:paddingLeft="@dimen/content_space_16"-->
-                    <!--android:paddingRight="@dimen/content_space_16"-->
-                    <!--android:text="@string/item_news_title"-->
-                    <!--android:textColor="@color/text_primary_dark"-->
-                    <!--android:textSize="@dimen/material_text_subhead"/>-->
-
-                <!--<View-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="@dimen/divider_height"-->
-                    <!--android:layout_marginBottom="@dimen/content_space_8"-->
-                    <!--android:background="@color/divider_color"/>-->
-
                 <com.sinyuk.yukdaily.widgets.NewsDrawer
                     android:id="@+id/radioGroup"
                     android:layout_width="wrap_content"

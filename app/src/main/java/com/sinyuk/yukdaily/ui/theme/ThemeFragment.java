@@ -38,7 +38,7 @@ public class ThemeFragment extends ListFragment {
 
     }
 
-    public void setTheme(String theme) {
+    public void setTheme(String theme, int index) {
         this.theme = theme;
 //        toastUtilsLazy.get().toastShort(theme);
         Log.d(TAG, "setTheme: " + theme);

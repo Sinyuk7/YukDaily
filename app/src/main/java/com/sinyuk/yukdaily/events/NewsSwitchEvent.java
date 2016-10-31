@@ -6,11 +6,20 @@ package com.sinyuk.yukdaily.events;
 
 public class NewsSwitchEvent {
     private final String type;
-    public NewsSwitchEvent(String type){
+    private final int index;
+
+    public int getIndex() {
+        return index;
+    }
+
+    public NewsSwitchEvent(String type, int index){
         this.type = type;
+        this.index = index;
     }
 
     public String getType() {
         return type;
     }
+
+
 }

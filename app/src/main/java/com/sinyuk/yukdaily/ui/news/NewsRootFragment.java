@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,10 +74,9 @@ public class NewsRootFragment extends BaseFragment {
         Log.d(TAG, "onNewsSwitch: " + event.getType());
         if (getString(R.string.item_news_index).equals(event.getType())) {
             showHome();
-
         } else {
             showTheme();
-            themeFragment.setTheme(event.getType());
+            themeFragment.setTheme(event.getType(), event.getIndex());
         }
     }
 
@@ -84,17 +84,22 @@ public class NewsRootFragment extends BaseFragment {
         if (!themeAdded()) {
             manager.beginTransaction().add(R.id.root, themeFragment, ThemeFragment.TAG).commit();
         } else {
-            manager.beginTransaction().show(manager.findFragmentByTag(ThemeFragment.TAG)).commit();
+            manager.beginTransaction().show(manager.findFragmentByTag(ThemeFragment.TAG))
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
         }
-        manager.beginTransaction().hide(manager.findFragmentByTag(NewsFragment.TAG)).commit();
+        manager.beginTransaction().hide(manager.findFragmentByTag(NewsFragment.TAG))
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE).commit();
     }
 
     private void showHome() {
         if (!homeAdded()) {
             manager.beginTransaction().add(R.id.root, newsFragment, NewsFragment.TAG).commit();
         } else {
-            manager.beginTransaction().show(manager.findFragmentByTag(NewsFragment.TAG)).commit();
+            manager.beginTransaction().show(manager.findFragmentByTag(NewsFragment.TAG))
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
         }
-        manager.beginTransaction().hide(manager.findFragmentByTag(ThemeFragment.TAG)).commit();
+        manager.beginTransaction().hide(manager.findFragmentByTag(ThemeFragment.TAG))
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE).commit();
+
     }
 }
