@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
 import com.sinyuk.yukdaily.App;
 import com.sinyuk.yukdaily.R;
 import com.sinyuk.yukdaily.base.LazyListFragment;
@@ -17,6 +18,7 @@ import com.sinyuk.yukdaily.entity.Gank.GankData;
 import com.sinyuk.yukdaily.events.GankSwitchEvent;
 import com.sinyuk.yukdaily.events.ToolbarTitleChangeEvent;
 import com.sinyuk.yukdaily.utils.recyclerview.ListItemMarginDecoration;
+import com.sinyuk.yukdaily.utils.recyclerview.RecyclerViewPreloader;
 import com.sinyuk.yukdaily.utils.recyclerview.SlideInUpAnimator;
 
 import org.greenrobot.eventbus.EventBus;
@@ -40,6 +42,24 @@ public class GankFragment extends LazyListFragment {
     @Inject
     Lazy<GankRepository> gankRepository;
     private int pageIndex = 1;
+    private final Observer<List<GankData>> loadObserver = new Observer<List<GankData>>() {
+        @Override
+        public void onCompleted() {
+            pageIndex++;
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            assertError(e.getLocalizedMessage());
+        }
+
+        @Override
+        public void onNext(List<GankData> gankResult) {
+            if (gankResult != null) {
+                ((GankAdapter) binding.listLayout.recyclerView.getAdapter()).appendData(gankResult);
+            }
+        }
+    };
     private Observer<List<GankData>> refreshObserver = new Observer<List<GankData>>() {
         @Override
         public void onCompleted() {
@@ -61,24 +81,6 @@ public class GankFragment extends LazyListFragment {
         public void onNext(List<GankData> gankResult) {
             if (gankResult != null) {
                 ((GankAdapter) binding.listLayout.recyclerView.getAdapter()).setData(gankResult);
-            }
-        }
-    };
-    private final Observer<List<GankData>> loadObserver = new Observer<List<GankData>>() {
-        @Override
-        public void onCompleted() {
-            pageIndex++;
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            assertError(e.getLocalizedMessage());
-        }
-
-        @Override
-        public void onNext(List<GankData> gankResult) {
-            if (gankResult != null) {
-                ((GankAdapter) binding.listLayout.recyclerView.getAdapter()).appendData(gankResult);
             }
         }
     };
@@ -113,7 +115,9 @@ public class GankFragment extends LazyListFragment {
 
 
     private void initListData() {
-        binding.listLayout.recyclerView.setAdapter(new GankAdapter(getContext()));
+        GankAdapter adapter = new GankAdapter(getContext(), Glide.with(this));
+        binding.listLayout.recyclerView.setAdapter(adapter);
+        binding.listLayout.recyclerView.addOnScrollListener(new RecyclerViewPreloader<>(adapter, adapter, 3));
     }
 
     @Override
@@ -145,7 +149,6 @@ public class GankFragment extends LazyListFragment {
             EventBus.getDefault().post(new ToolbarTitleChangeEvent(event.getType()));
         }
     }
-
 
 
 }

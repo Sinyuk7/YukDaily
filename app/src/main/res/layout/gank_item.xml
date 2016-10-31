@@ -47,14 +47,14 @@
                 android:textStyle="bold"
                 tools:text="11-24"/>
 
-            <com.sinyuk.yukdaily.widgets.RatioImageView
-                app:imageHOverW="1"
+            <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="256dp"
                 android:layout_gravity="center"
                 android:layout_marginBottom="@dimen/content_space_8"
-                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
                 tools:src="@drawable/sample"/>
 
             <FrameLayout
