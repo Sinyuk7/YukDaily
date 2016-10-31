@@ -5,6 +5,7 @@ import com.sinyuk.yukdaily.ui.news.BrowserActivity;
 import com.sinyuk.yukdaily.ui.news.NewsCommentFragment;
 import com.sinyuk.yukdaily.ui.news.NewsFragment;
 import com.sinyuk.yukdaily.ui.splash.SplashActivity;
+import com.sinyuk.yukdaily.ui.theme.ThemeFragment;
 
 import javax.inject.Singleton;
 
@@ -27,4 +28,6 @@ public interface NewsRepositoryComponent {
     void inject(NewsCommentFragment target);
 
     void inject(HomeActivity target);
+
+    void inject(ThemeFragment target);
 }

@@ -21,6 +21,7 @@ import android.widget.FrameLayout;
 import android.widget.PopupWindow;
 
 import com.sinyuk.myutils.MathUtils;
+import com.sinyuk.myutils.system.ToastUtils;
 import com.sinyuk.yukdaily.App;
 import com.sinyuk.yukdaily.R;
 import com.sinyuk.yukdaily.base.BaseActivity;
@@ -32,19 +33,22 @@ import com.sinyuk.yukdaily.databinding.LayoutDrawerNewsBinding;
 import com.sinyuk.yukdaily.entity.news.Theme;
 import com.sinyuk.yukdaily.events.GankSwitchEvent;
 import com.sinyuk.yukdaily.events.HomepageLoadingEvent;
+import com.sinyuk.yukdaily.events.NewsSwitchEvent;
 import com.sinyuk.yukdaily.events.ToolbarTitleChangeEvent;
 import com.sinyuk.yukdaily.ui.gank.GankFragment;
-import com.sinyuk.yukdaily.ui.news.NewsFragment;
+import com.sinyuk.yukdaily.ui.news.NewsRootFragment;
 import com.sinyuk.yukdaily.ui.search.SearchActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import dagger.Lazy;
 import rx.Observer;
 
 /**
@@ -56,6 +60,8 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
     public final ObservableField<String> newsType = new ObservableField<>();
     ActivityHomeBinding binding;
     @Inject
+    Lazy<ToastUtils> toastUtilsLazy;
+    @Inject
     NewsRepository newsRepository;
     private Handler myHandler = new Handler();
     private Runnable mLoadingRunnable = () -> {
@@ -64,6 +70,7 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
     private PopupWindow popupWindow;
     private LayoutDrawerGankBinding drawerGankBinding;
     private LayoutDrawerNewsBinding newsDrawerBinding;
+    private List<Theme> themeList = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -132,20 +139,21 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
         addSubscription(newsRepository.getOtherThemes().subscribe(new Observer<List<Theme>>() {
             @Override
             public void onCompleted() {
-
             }
 
             @Override
             public void onError(Throwable e) {
-                Log.d(TAG, "getOtherThemes: ");
                 e.printStackTrace();
             }
 
             @Override
             public void onNext(List<Theme> themes) {
+                themeList.clear();
+                themeList.addAll(themes);
                 newsDrawerBinding.radioGroup.bind(HomeActivity.this, themes);
             }
         }));
+
     }
 
     private void initToolbar() {
@@ -153,7 +161,7 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
     }
 
     private void setupViewPager() {
-        NewsFragment newsFragment = new NewsFragment();
+        NewsRootFragment rootFragment = new NewsRootFragment();
         GankFragment gankFragment = new GankFragment();
 
         binding.viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
@@ -161,7 +169,7 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
             public Fragment getItem(int position) {
                 switch (position) {
                     case 0:
-                        return newsFragment;
+                        return rootFragment;
                     case 1:
                         return gankFragment;
                 }
@@ -220,7 +228,30 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
         }
     }
 
-    public void onDrawerItemSelected(View v) {
+    /**
+     * 选择主题
+     *
+     * @param v
+     * @param integer
+     */
+    public void onThemeItemSelected(AppCompatRadioButton v, int integer) {
+
+        Log.d(TAG, "onThemeItemSelected: " + v.getText() + " ...at " + integer);
+
+        if (integer == -1) {
+            EventBus.getDefault().post(new NewsSwitchEvent(getString(R.string.item_news_index)));
+        } else if (!themeList.isEmpty()) {
+            if (integer >= 0 && integer < themeList.size()) {
+                EventBus.getDefault().post(new NewsSwitchEvent(themeList.get(integer).getName()));
+            }
+        }
+
+        if (popupWindow != null) {
+            popupWindow.dismiss();
+        }
+    }
+
+    public void onGankItemSelected(View v) {
         switch (v.getId()) {
             case R.id.item_anzhuo:
                 EventBus.getDefault().post(new GankSwitchEvent(getString(R.string.item_anzhuo)));
@@ -238,7 +269,7 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
                 EventBus.getDefault().post(new GankSwitchEvent(getString(R.string.item_fuli)));
                 break;
         }
-        Log.d(TAG, "onDrawerItemSelected: " + ((AppCompatRadioButton) v).getText());
+        Log.d(TAG, "onGankItemSelected: " + ((AppCompatRadioButton) v).getText());
 
         if (popupWindow != null) {
             popupWindow.dismiss();
@@ -247,16 +278,6 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
 
     @Override
     public void onPageSelected(int position) {
-        Log.d(TAG, "onPageSelected: " + position);
-//        switch (position) {
-//            case 0:
-//                binding.backdrop1.setVisibility(View.VISIBLE);
-//                binding.backdrop2.setVisibility(View.GONE);
-//                return;
-//            case 1:
-//                binding.backdrop2.setVisibility(View.VISIBLE);
-//                binding.backdrop1.setVisibility(View.GONE);
-//        }
     }
 
     @Override

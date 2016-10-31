@@ -7,6 +7,7 @@ import android.support.v7.widget.AppCompatRadioButton;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
@@ -41,26 +42,29 @@ public class NewsDrawer extends RadioGroup {
         textcolor = ContextCompat.getColor(context, R.color.text_secondary_dark);
     }
 
-    public void bind(HomeActivity activity, List<Theme> themes) {
+    public void bind(HomeActivity activity,List<Theme> themes) {
         for (int i = 0; i < themes.size(); i++) {
             if (i == 0) {
                 AppCompatRadioButton button = new AppCompatRadioButton(getContext());
-                decorate(button, activity);
+                decorate(activity,button);
                 button.setText(getContext().getString(R.string.item_news_index));
+                button.setOnClickListener(v -> activity.onThemeItemSelected(button, -1));
                 addView(button, lps);
             }
             AppCompatRadioButton button = new AppCompatRadioButton(getContext());
-            decorate(button, activity);
+            decorate(activity,button);
             button.setText(themes.get(i).getName());
+            int finalI = i;
+            button.setOnClickListener(v -> activity.onThemeItemSelected(button, finalI));
             addView(button, lps);
         }
     }
 
-    private void decorate(AppCompatRadioButton button, HomeActivity activity) {
+    private void decorate(HomeActivity activity,AppCompatRadioButton button) {
         button.setTextColor(textcolor);
         button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
         button.setPadding(dp16 / 2, 0, dp16, 0);
         button.setGravity(GravityCompat.START | Gravity.CENTER_VERTICAL);
-        button.setOnClickListener(activity::onDrawerItemSelected);
+
     }
 }

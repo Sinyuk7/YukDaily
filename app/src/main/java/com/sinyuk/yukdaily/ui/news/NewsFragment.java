@@ -38,6 +38,7 @@ import rx.Observer;
  */
 
 public class NewsFragment extends ListFragment {
+    public static final String TAG = "NewsFragment";
     @Inject
     NewsRepository newsRepository;
     private NewsHeaderLayoutBinding headerBinding;
