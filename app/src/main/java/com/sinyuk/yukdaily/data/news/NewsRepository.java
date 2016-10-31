@@ -9,9 +9,12 @@ import com.sinyuk.yukdaily.entity.news.NewsComment;
 import com.sinyuk.yukdaily.entity.news.NewsCommentResponse;
 import com.sinyuk.yukdaily.entity.news.NewsExtras;
 import com.sinyuk.yukdaily.entity.news.Stories;
+import com.sinyuk.yukdaily.entity.news.Theme;
+import com.sinyuk.yukdaily.entity.news.ThemeResponse;
 import com.sinyuk.yukdaily.utils.rx.SchedulerTransformer;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -33,6 +36,8 @@ public class NewsRepository {
     private Calendar calendar;
     private boolean hasPreloaded = false;
     private Stories preloadStories = null;
+    private List<Theme> others = new ArrayList<>();
+    private List<Theme> subscribed = new ArrayList<>();
 
     public NewsRepository(Context context, NewsService newsService) {
         this.context = context;
@@ -127,5 +132,60 @@ public class NewsRepository {
                     throwable.printStackTrace();
                 })
                 .compose(new SchedulerTransformer<>());
+    }
+
+    public Observable<List<Theme>> getOtherThemes() {
+        if (!others.isEmpty()) {
+            return Observable.just(others);
+        }
+
+        Log.d(TAG, "getThemes: from web");
+        return getThemes()
+                .flatMap(new Func1<ThemeResponse, Observable<List<Theme>>>() {
+                    @Override
+                    public Observable<List<Theme>> call(ThemeResponse themeResponse) {
+                        return Observable.just(themeResponse.getThemes());
+                    }
+                })
+                .doOnError(throwable -> others.clear())
+                .compose(new SchedulerTransformer<>());
+    }
+
+    public Observable<List<Theme>> getSubscribed() {
+        if (!subscribed.isEmpty()) { return Observable.just(subscribed); }
+        Log.d(TAG, "getThemes: from web");
+        return getThemes()
+                .flatMap(new Func1<ThemeResponse, Observable<List<Theme>>>() {
+                    @Override
+                    public Observable<List<Theme>> call(ThemeResponse themeResponse) {
+                        return Observable.just(themeResponse.getSubscribed());
+                    }
+                })
+                .doOnError(throwable -> subscribed.clear())
+                .compose(new SchedulerTransformer<>());
+    }
+
+    public Observable<ThemeResponse> getThemes() {
+        return newsService.getThemes()
+                .doOnNext(this::saveThemes)
+                .doOnError(throwable -> clearThemeCache())
+                .compose(new SchedulerTransformer<>());
+    }
+
+    private void clearThemeCache() {
+        subscribed.clear();
+        others.clear();
+    }
+
+    private void saveThemes(ThemeResponse themeResponse) {
+        if (themeResponse.getSubscribed() != null) {
+            subscribed.clear();
+            subscribed.addAll(themeResponse.getSubscribed());
+        }
+
+        if (themeResponse.getThemes() != null) {
+            others.clear();
+            others.addAll(themeResponse.getThemes());
+        }
     }
 }

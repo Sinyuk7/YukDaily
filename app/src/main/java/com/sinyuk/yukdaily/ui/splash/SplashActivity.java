@@ -21,13 +21,13 @@ import com.f2prateek.rx.preferences.RxSharedPreferences;
 import com.sinyuk.myutils.system.NetWorkUtils;
 import com.sinyuk.myutils.system.ScreenUtils;
 import com.sinyuk.yukdaily.App;
-import com.sinyuk.yukdaily.ui.home.HomeActivity;
 import com.sinyuk.yukdaily.R;
 import com.sinyuk.yukdaily.Sinyuk;
 import com.sinyuk.yukdaily.api.NewsApi;
 import com.sinyuk.yukdaily.base.BaseActivity;
 import com.sinyuk.yukdaily.data.gank.GankRepository;
 import com.sinyuk.yukdaily.data.news.NewsRepository;
+import com.sinyuk.yukdaily.ui.home.HomeActivity;
 import com.sinyuk.yukdaily.utils.rx.SchedulerTransformer;
 
 import java.io.File;
@@ -101,6 +101,12 @@ public class SplashActivity extends BaseActivity {
                 .doOnError(Throwable::printStackTrace)
                 .subscribe(history -> {
                     Log.d(TAG, "prepare history");
+                }));
+
+        addSubscription(newsRepositoryLazy.get().getThemes()
+                .doOnError(Throwable::printStackTrace)
+                .subscribe(response -> {
+                    Log.d(TAG, "prepare themes");
                 }));
     }
 
