@@ -34,4 +34,5 @@
     <string name="action_report">举报</string>
     <string name="action_qrcode">识别图中的二维码</string>
     <string name="action_repost">转发</string>
+    <string name="item_news_index">首页</string>
 </resources>

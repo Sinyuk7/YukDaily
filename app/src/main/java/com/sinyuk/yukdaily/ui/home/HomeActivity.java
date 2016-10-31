@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SlidingPaneLayout;
+import android.support.v7.widget.AppCompatRadioButton;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -20,10 +21,15 @@ import android.widget.FrameLayout;
 import android.widget.PopupWindow;
 
 import com.sinyuk.myutils.MathUtils;
+import com.sinyuk.yukdaily.App;
 import com.sinyuk.yukdaily.R;
 import com.sinyuk.yukdaily.base.BaseActivity;
+import com.sinyuk.yukdaily.data.news.NewsRepository;
+import com.sinyuk.yukdaily.data.news.NewsRepositoryModule;
 import com.sinyuk.yukdaily.databinding.ActivityHomeBinding;
 import com.sinyuk.yukdaily.databinding.LayoutDrawerGankBinding;
+import com.sinyuk.yukdaily.databinding.LayoutDrawerNewsBinding;
+import com.sinyuk.yukdaily.entity.news.Theme;
 import com.sinyuk.yukdaily.events.GankSwitchEvent;
 import com.sinyuk.yukdaily.events.HomepageLoadingEvent;
 import com.sinyuk.yukdaily.events.ToolbarTitleChangeEvent;
@@ -35,6 +41,12 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.List;
+
+import javax.inject.Inject;
+
+import rx.Observer;
+
 /**
  * Created by Sinyuk on 2016/10/13.
  */
@@ -43,17 +55,20 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
     public final ObservableField<String> gankType = new ObservableField<>();
     public final ObservableField<String> newsType = new ObservableField<>();
     ActivityHomeBinding binding;
+    @Inject
+    NewsRepository newsRepository;
     private Handler myHandler = new Handler();
     private Runnable mLoadingRunnable = () -> {
         EventBus.getDefault().post(new HomepageLoadingEvent());
     };
     private PopupWindow popupWindow;
-    private View newsDrawer;
     private LayoutDrawerGankBinding drawerGankBinding;
+    private LayoutDrawerNewsBinding newsDrawerBinding;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        App.get(this).getAppComponent().plus(new NewsRepositoryModule()).inject(this);
         EventBus.getDefault().register(this);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home);
@@ -98,19 +113,39 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
             }
             return false;
         });
+
     }
 
     private void initNewsDrawer() {
-        newsDrawer = LayoutInflater.from(this).inflate(R.layout.layout_drawer_news, null);
-        newsDrawer.setFocusable(true);
-        newsDrawer.setFocusableInTouchMode(true);
-        newsDrawer.setOnKeyListener((v1, keyCode, event) -> {
+        newsDrawerBinding = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.layout_drawer_news, null, false);
+        newsDrawerBinding.setActivity(this);
+        newsDrawerBinding.getRoot().setFocusable(true);
+        newsDrawerBinding.getRoot().setFocusableInTouchMode(true);
+        newsDrawerBinding.getRoot().setOnKeyListener((v1, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
                 popupWindow.dismiss();
                 return true;
             }
             return false;
         });
+
+        addSubscription(newsRepository.getOtherThemes().subscribe(new Observer<List<Theme>>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "getOtherThemes: ");
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onNext(List<Theme> themes) {
+                newsDrawerBinding.radioGroup.bind(HomeActivity.this, themes);
+            }
+        }));
     }
 
     private void initToolbar() {
@@ -166,10 +201,10 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
             }
             popupWindow.setContentView(drawerGankBinding.getRoot());
         } else if (binding.viewPager.getCurrentItem() == 0) {
-            if (newsDrawer == null) {
+            if (newsDrawerBinding == null) {
                 initNewsDrawer();
             }
-            popupWindow.setContentView(newsDrawer);
+            popupWindow.setContentView(newsDrawerBinding.getRoot());
         } else {
             return;
         }
@@ -203,6 +238,7 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
                 EventBus.getDefault().post(new GankSwitchEvent(getString(R.string.item_fuli)));
                 break;
         }
+        Log.d(TAG, "onDrawerItemSelected: " + ((AppCompatRadioButton) v).getText());
 
         if (popupWindow != null) {
             popupWindow.dismiss();
