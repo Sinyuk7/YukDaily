@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.sinyuk.yukdaily.BR;
 import com.sinyuk.yukdaily.R;
-import com.sinyuk.yukdaily.databinding.NewsHeaderLayoutBinding;
 import com.sinyuk.yukdaily.databinding.NewsItemBinding;
 import com.sinyuk.yukdaily.entity.news.Story;
 import com.sinyuk.yukdaily.utils.binding.BindingViewHolder;
@@ -49,8 +48,14 @@ public class NewsAdapter extends RecyclerView.Adapter<BindingViewHolder> {
     }
 
     public void addHeaderBinding(ViewDataBinding binding) {
-        headerBinding = binding;
-        notifyItemInserted(0);
+        if (headerBinding == null){
+            headerBinding = binding;
+            notifyItemInserted(0);
+        }else {
+            headerBinding = binding;
+            notifyItemChanged(0);
+        }
+
     }
 
 
@@ -83,9 +88,14 @@ public class NewsAdapter extends RecyclerView.Adapter<BindingViewHolder> {
     }
 
     public void setData(List<Story> data) {
-        stories.clear();
-        stories.addAll(data);
-        notifyDataSetChanged();
+        if (stories.isEmpty()) {
+            stories.addAll(data);
+            notifyItemRangeInserted(itemPositionInRV(0), data.size());
+        } else {
+            stories.clear();
+            stories.addAll(data);
+            notifyItemRangeChanged(itemPositionInRV(0), data.size());
+        }
     }
 
     public void appendData(List<Story> data) {

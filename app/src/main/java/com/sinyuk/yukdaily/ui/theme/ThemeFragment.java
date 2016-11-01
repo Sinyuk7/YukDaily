@@ -18,9 +18,14 @@ import com.sinyuk.yukdaily.data.news.NewsRepository;
 import com.sinyuk.yukdaily.data.news.NewsRepositoryModule;
 import com.sinyuk.yukdaily.databinding.ThemeHeaderLayoutBinding;
 import com.sinyuk.yukdaily.entity.news.ThemeData;
+import com.sinyuk.yukdaily.events.NewsSwitchEvent;
 import com.sinyuk.yukdaily.ui.news.NewsAdapter;
 import com.sinyuk.yukdaily.utils.recyclerview.ListItemMarginDecoration;
 import com.sinyuk.yukdaily.utils.recyclerview.SlideInUpAnimator;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import javax.inject.Inject;
 
@@ -63,7 +68,7 @@ public class ThemeFragment extends ListFragment {
                 ((EditorAdapter) headerBinding.recyclerView.getAdapter()).setData(themeData.getEditors());
             }
 
-            ((NewsAdapter) binding.listLayout.recyclerView.getAdapter()).appendData(themeData.getStories());
+            ((NewsAdapter) binding.listLayout.recyclerView.getAdapter()).setData(themeData.getStories());
         }
     };
 
@@ -72,6 +77,12 @@ public class ThemeFragment extends ListFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         App.get(context).getAppComponent().plus(new NewsRepositoryModule()).inject(this);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -124,15 +135,14 @@ public class ThemeFragment extends ListFragment {
 
     }
 
-    public void setTheme(int index) {
-        if (newsRepository == null) {
-            App.get(getContext()).getAppComponent().plus(new NewsRepositoryModule()).inject(this);
-        }
-
-        if (this.index != index) {
-            this.index = index;
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNewsSwitch(NewsSwitchEvent event) {
+        if (Integer.MIN_VALUE == (event.getIndex())) {
+            // no-op
+        } else if (index != event.getIndex()) {
+            index = event.getIndex();
             refreshData();
         }
-        Log.d(TAG, "setTheme: " + index);
     }
+
 }

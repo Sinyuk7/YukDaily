@@ -39,6 +39,7 @@ public class NewsRootFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         manager = getChildFragmentManager();
         newsFragment = new NewsFragment();
+        themeFragment = new ThemeFragment();
     }
 
     @Nullable
@@ -51,28 +52,26 @@ public class NewsRootFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (!homeAdded()) {
+        if (!isHomeAdded()) {
             manager.beginTransaction().add(R.id.root, newsFragment, NewsFragment.TAG).commit();
         }
     }
 
-    private boolean themeAdded() {
-        return manager.findFragmentByTag(ThemeFragment.TAG) != null;
+    private boolean isThemeAdded() {
+        return manager.findFragmentByTag(ThemeFragment.TAG) != null && manager.findFragmentByTag(ThemeFragment.TAG).isAdded();
     }
 
-    private boolean homeAdded() {
-        return manager.findFragmentByTag(NewsFragment.TAG) != null;
+    private boolean isHomeAdded() {
+        return manager.findFragmentByTag(NewsFragment.TAG) != null && manager.findFragmentByTag(NewsFragment.TAG).isAdded();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewsSwitch(NewsSwitchEvent event) {
         Log.d(TAG, "onNewsSwitch: " + event.getIndex());
-        if (Integer.MIN_VALUE== (event.getIndex())) {
+        if (Integer.MIN_VALUE == (event.getIndex())) {
             showHome();
         } else {
-
             showTheme();
-            themeFragment.setTheme(event.getIndex());
         }
     }
 
@@ -81,7 +80,7 @@ public class NewsRootFragment extends BaseFragment {
             themeFragment = new ThemeFragment();
         }
 
-        if (!themeAdded()) {
+        if (!isThemeAdded()) {
             manager.beginTransaction().add(R.id.root, themeFragment, ThemeFragment.TAG)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
         } else {
@@ -89,7 +88,7 @@ public class NewsRootFragment extends BaseFragment {
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
         }
 
-        if (homeAdded()) {
+        if (isHomeAdded()) {
             manager.beginTransaction().hide(manager.findFragmentByTag(NewsFragment.TAG))
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE).commit();
         }
@@ -100,7 +99,7 @@ public class NewsRootFragment extends BaseFragment {
             newsFragment = new NewsFragment();
         }
 
-        if (!homeAdded()) {
+        if (!isHomeAdded()) {
             manager.beginTransaction().add(R.id.root, newsFragment, NewsFragment.TAG)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
         } else {
@@ -108,7 +107,7 @@ public class NewsRootFragment extends BaseFragment {
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
         }
 
-        if (themeAdded()) {
+        if (isThemeAdded()) {
             manager.beginTransaction().hide(manager.findFragmentByTag(ThemeFragment.TAG))
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE).commit();
         }
