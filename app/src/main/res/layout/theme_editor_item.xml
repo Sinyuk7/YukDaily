@@ -21,7 +21,6 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_marginBottom="@dimen/content_space_8"
             android:layout_marginTop="@dimen/content_space_8"
             android:onClick="@{(view) -> adapter.onItemClick(view,editor)}"
             app:avatar="@{editor.avatar}"

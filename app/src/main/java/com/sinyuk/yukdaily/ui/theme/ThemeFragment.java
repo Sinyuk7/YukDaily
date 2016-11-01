@@ -6,10 +6,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
 import com.sinyuk.myutils.system.ToastUtils;
 import com.sinyuk.yukdaily.App;
 import com.sinyuk.yukdaily.R;
@@ -60,10 +61,7 @@ public class ThemeFragment extends ListFragment {
 
         @Override
         public void onNext(ThemeData themeData) {
-            Log.d(TAG, "onNext: ");
-            if (headerBinding.recyclerView.getAdapter() == null) {
-                Log.d(TAG, "onNext: null");
-            }
+            loadHeaderImage(themeData);
             if (headerBinding != null && headerBinding.recyclerView.getAdapter() != null) {
                 ((EditorAdapter) headerBinding.recyclerView.getAdapter()).setData(themeData.getEditors());
             }
@@ -71,6 +69,24 @@ public class ThemeFragment extends ListFragment {
             ((NewsAdapter) binding.listLayout.recyclerView.getAdapter()).setData(themeData.getStories());
         }
     };
+
+    private void loadHeaderImage(final ThemeData data) {
+        if (headerBinding == null) { return; }
+
+        final String backdropUrl = data.getBackdropUrl();
+
+        if (!TextUtils.isEmpty(backdropUrl)) {
+            Glide.with(this).load(backdropUrl)
+                    .crossFade(400)
+                    .into(headerBinding.imageView);
+        } else {
+            headerBinding.placeHolder.setVisibility(View.GONE);
+        }
+
+        if (!TextUtils.isEmpty(data.getDescription())) {
+            headerBinding.title.setText(data.getDescription());
+        }
+    }
 
 
     @Override

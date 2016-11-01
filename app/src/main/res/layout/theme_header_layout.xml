@@ -8,18 +8,23 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.sinyuk.yukdaily.widgets.RatioLinearLayout
+        <FrameLayout
+            android:id="@+id/placeHolder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layoutHOverW="0.618">
+            android:orientation="vertical">
 
-            <ImageView
+
+            <com.sinyuk.yukdaily.widgets.RatioImageView
+                android:id="@+id/imageView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/sample"/>
+                android:scaleType="centerCrop"
+                app:imageHOverW="0.618"
+                tools:src="@drawable/sample"/>
 
             <TextView
+                android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
@@ -33,7 +38,7 @@
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/material_text_subhead"
                 tools:text="过去穿过了现在绕过了未来缝在心海中带着你我旅行变成老头"/>
-        </com.sinyuk.yukdaily.widgets.RatioLinearLayout>
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,7 +49,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/theme_editors"/>
+                android:paddingLeft="@dimen/content_space_16"
+                android:text="@string/theme_editors"
+                android:textColor="@color/text_primary_dark"
+                android:textSize="@dimen/material_text_subhead"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView"

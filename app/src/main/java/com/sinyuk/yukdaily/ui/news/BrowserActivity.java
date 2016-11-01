@@ -14,6 +14,7 @@ import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -120,6 +121,15 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
         @Override
         public void onNext(News news) {
 
+            if (TextUtils.isEmpty(news.getImage())) {
+                binding.headLine.setBackgroundColor(ContextCompat.getColor(BrowserActivity.this, R.color.colorPrimary));
+                binding.imageSource.setVisibility(View.GONE);
+                binding.title.setVisibility(View.GONE);
+                binding.placeHolder.setVisibility(View.GONE);
+                binding.parallaxScrimageView.setVisibility(View.GONE);
+            }
+
+
             binding.viewStub.setOnInflateListener((stub, inflated) -> {
                 StubNewsSectionBinding stubBinding = DataBindingUtil.bind(inflated);
                 stubBinding.setSection(news.getSection());
@@ -133,6 +143,7 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
 
 
             binding.setNews(news);
+
 
             String html = AssetsUtils.loadText(BrowserActivity.this, "html/template.html");
             if (html != null) {
@@ -289,6 +300,10 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
     }
 
     private void loadHeaderImage() {
+        if (binding.getNews() == null || TextUtils.isEmpty(binding.getNews().getImage())) {
+            return;
+        }
+
         Glide.with(this)
                 .load(binding.getNews().getImage())
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
