@@ -66,12 +66,12 @@ public abstract class LoadingListFragment extends BaseSlideFragment {
     }
 
     @CallSuper
-    protected void onClickEmpty() {
+    protected void onClickEmpty(View view) {
         ActivityCompat.finishAfterTransition(getActivity());
     }
 
     @CallSuper
-    protected void onClickError() {
+    protected void onClickError(View view) {
         ActivityCompat.finishAfterTransition(getActivity());
     }
 

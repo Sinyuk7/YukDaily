@@ -39,7 +39,6 @@ public class NewsRootFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         manager = getChildFragmentManager();
         newsFragment = new NewsFragment();
-        themeFragment = new ThemeFragment();
     }
 
     @Nullable
@@ -52,13 +51,9 @@ public class NewsRootFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (!themeAdded()) {
-            manager.beginTransaction().add(R.id.root, themeFragment, ThemeFragment.TAG).commit();
-        }
         if (!homeAdded()) {
             manager.beginTransaction().add(R.id.root, newsFragment, NewsFragment.TAG).commit();
         }
-
     }
 
     private boolean themeAdded() {
@@ -71,35 +66,51 @@ public class NewsRootFragment extends BaseFragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewsSwitch(NewsSwitchEvent event) {
-        Log.d(TAG, "onNewsSwitch: " + event.getType());
-        if (getString(R.string.item_news_index).equals(event.getType())) {
+        Log.d(TAG, "onNewsSwitch: " + event.getIndex());
+        if (Integer.MIN_VALUE== (event.getIndex())) {
             showHome();
         } else {
+
             showTheme();
-            themeFragment.setTheme(event.getType(), event.getIndex());
+            themeFragment.setTheme(event.getIndex());
         }
     }
 
     private void showTheme() {
+        if (themeFragment == null) {
+            themeFragment = new ThemeFragment();
+        }
+
         if (!themeAdded()) {
-            manager.beginTransaction().add(R.id.root, themeFragment, ThemeFragment.TAG).commit();
+            manager.beginTransaction().add(R.id.root, themeFragment, ThemeFragment.TAG)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
         } else {
             manager.beginTransaction().show(manager.findFragmentByTag(ThemeFragment.TAG))
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
         }
-        manager.beginTransaction().hide(manager.findFragmentByTag(NewsFragment.TAG))
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE).commit();
+
+        if (homeAdded()) {
+            manager.beginTransaction().hide(manager.findFragmentByTag(NewsFragment.TAG))
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE).commit();
+        }
     }
 
     private void showHome() {
+        if (newsFragment == null) {
+            newsFragment = new NewsFragment();
+        }
+
         if (!homeAdded()) {
-            manager.beginTransaction().add(R.id.root, newsFragment, NewsFragment.TAG).commit();
+            manager.beginTransaction().add(R.id.root, newsFragment, NewsFragment.TAG)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
         } else {
             manager.beginTransaction().show(manager.findFragmentByTag(NewsFragment.TAG))
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
         }
-        manager.beginTransaction().hide(manager.findFragmentByTag(ThemeFragment.TAG))
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE).commit();
 
+        if (themeAdded()) {
+            manager.beginTransaction().hide(manager.findFragmentByTag(ThemeFragment.TAG))
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE).commit();
+        }
     }
 }

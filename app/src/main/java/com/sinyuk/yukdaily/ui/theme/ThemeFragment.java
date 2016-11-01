@@ -1,16 +1,31 @@
 package com.sinyuk.yukdaily.ui.theme;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 
 import com.sinyuk.myutils.system.ToastUtils;
 import com.sinyuk.yukdaily.App;
+import com.sinyuk.yukdaily.R;
 import com.sinyuk.yukdaily.base.ListFragment;
+import com.sinyuk.yukdaily.data.news.NewsRepository;
 import com.sinyuk.yukdaily.data.news.NewsRepositoryModule;
+import com.sinyuk.yukdaily.databinding.ThemeHeaderLayoutBinding;
+import com.sinyuk.yukdaily.entity.news.ThemeData;
+import com.sinyuk.yukdaily.ui.news.NewsAdapter;
+import com.sinyuk.yukdaily.utils.recyclerview.ListItemMarginDecoration;
+import com.sinyuk.yukdaily.utils.recyclerview.SlideInUpAnimator;
 
 import javax.inject.Inject;
 
 import dagger.Lazy;
+import rx.Observer;
 
 /**
  * Created by Sinyuk on 16.10.31.
@@ -20,7 +35,38 @@ public class ThemeFragment extends ListFragment {
     public static final String TAG = "ThemeFragment";
     @Inject
     Lazy<ToastUtils> toastUtilsLazy;
-    private String theme;
+    @Inject
+    NewsRepository newsRepository;
+    private ThemeHeaderLayoutBinding headerBinding;
+    private int index;
+    private Observer<ThemeData> refreshObserver = new Observer<ThemeData>() {
+        @Override
+        public void onCompleted() {
+            if (binding.listLayout.recyclerView.getAdapter().getItemCount() <= 0) {
+                assertEmpty(getString(R.string.no_news));
+            }
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            e.printStackTrace();
+            assertEmpty(getString(R.string.network_error));
+        }
+
+        @Override
+        public void onNext(ThemeData themeData) {
+            Log.d(TAG, "onNext: ");
+            if (headerBinding.recyclerView.getAdapter() == null) {
+                Log.d(TAG, "onNext: null");
+            }
+            if (headerBinding != null && headerBinding.recyclerView.getAdapter() != null) {
+                ((EditorAdapter) headerBinding.recyclerView.getAdapter()).setData(themeData.getEditors());
+            }
+
+            ((NewsAdapter) binding.listLayout.recyclerView.getAdapter()).appendData(themeData.getStories());
+        }
+    };
+
 
     @Override
     public void onAttach(Context context) {
@@ -29,8 +75,48 @@ public class ThemeFragment extends ListFragment {
     }
 
     @Override
-    protected void refreshData() {
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initListLayout();
+        binding.listLayout.swipeRefreshLayout.setEnabled(false);
+        initListView();
+        initListData();
+    }
 
+    private void initListView() {
+        final LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        manager.setAutoMeasureEnabled(true);
+        binding.listLayout.recyclerView.setLayoutManager(manager);
+        binding.listLayout.recyclerView.setItemAnimator(new SlideInUpAnimator(new FastOutSlowInInterpolator()));
+        binding.listLayout.recyclerView.setHasFixedSize(true);
+        binding.listLayout.recyclerView.addItemDecoration(new ListItemMarginDecoration(R.dimen.content_space_8, false, getContext()));
+        binding.listLayout.recyclerView.addOnScrollListener(getLoadMoreListener());
+    }
+
+    private void initListData() {
+        final NewsAdapter newsAdapter = new NewsAdapter();
+        newsAdapter.setHasStableIds(true);
+        bindHeaderView();
+        newsAdapter.addHeaderBinding(headerBinding);
+        binding.listLayout.recyclerView.setAdapter(newsAdapter);
+    }
+
+    private void bindHeaderView() {
+        headerBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(getContext()), R.layout.theme_header_layout, binding.listLayout.recyclerView, false);
+
+        final LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        headerBinding.recyclerView.setLayoutManager(manager);
+        headerBinding.recyclerView.setHasFixedSize(true);
+        headerBinding.recyclerView.addItemDecoration(new AvatarListDecoration(R.dimen.content_space_8, false, getContext()));
+        headerBinding.recyclerView.setAdapter(new EditorAdapter());
+    }
+
+    @Override
+    protected void refreshData() {
+        addSubscription(newsRepository.getThemeData(index)
+                .doOnTerminate(this::stopRefreshing)
+                .subscribe(refreshObserver));
     }
 
     @Override
@@ -38,9 +124,15 @@ public class ThemeFragment extends ListFragment {
 
     }
 
-    public void setTheme(String theme, int index) {
-        this.theme = theme;
-//        toastUtilsLazy.get().toastShort(theme);
-        Log.d(TAG, "setTheme: " + theme);
+    public void setTheme(int index) {
+        if (newsRepository == null) {
+            App.get(getContext()).getAppComponent().plus(new NewsRepositoryModule()).inject(this);
+        }
+
+        if (this.index != index) {
+            this.index = index;
+            refreshData();
+        }
+        Log.d(TAG, "setTheme: " + index);
     }
 }

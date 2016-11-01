@@ -57,12 +57,15 @@ public class NewsFragment extends ListFragment {
 
         @Override
         public void onError(Throwable e) {
-            assertEmpty(e.getLocalizedMessage());
+            assertEmpty(getString(R.string.network_error));
         }
 
         @Override
         public void onNext(Stories stories) {
-            headerBinding.getAdapter().setData(stories.getTopStories());
+            if (headerBinding != null) {
+                headerBinding.getAdapter().setData(stories.getTopStories());
+            }
+
             ((NewsAdapter) binding.listLayout.recyclerView.getAdapter()).setData(stories.getStories());
         }
     };
@@ -108,7 +111,8 @@ public class NewsFragment extends ListFragment {
 
     @Override
     protected void refreshData() {
-        addSubscription(newsRepository.getLatestNews().doOnTerminate(() -> fromToday = 1).doOnTerminate(this::stopRefreshing).subscribe(refreshObserver));
+        addSubscription(newsRepository.getLatestNews().doOnTerminate(() -> fromToday = 1)
+                .doOnTerminate(this::stopRefreshing).subscribe(refreshObserver));
     }
 
     @Override

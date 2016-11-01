@@ -36,4 +36,6 @@
     <string name="action_repost">转发</string>
     <string name="item_news_index">首页</string>
     <string name="item_news_title">读读日报</string>
+    <string name="theme_editors">主编:</string>
+    <string name="network_error">服务器大姨妈了</string>
 </resources>

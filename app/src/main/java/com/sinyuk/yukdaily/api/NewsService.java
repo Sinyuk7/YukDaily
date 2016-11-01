@@ -5,6 +5,7 @@ import com.sinyuk.yukdaily.entity.news.NewsCommentResponse;
 import com.sinyuk.yukdaily.entity.news.NewsExtras;
 import com.sinyuk.yukdaily.entity.news.StartImage;
 import com.sinyuk.yukdaily.entity.news.Stories;
+import com.sinyuk.yukdaily.entity.news.ThemeData;
 import com.sinyuk.yukdaily.entity.news.ThemeResponse;
 
 import retrofit2.http.GET;
@@ -40,5 +41,6 @@ public interface NewsService {
     @GET("themes")
     Observable<ThemeResponse> getThemes();
 
-
+    @GET("theme/{index}")
+    Observable<ThemeData> getThemeData(@Path("index") int index);
 }

@@ -3,44 +3,55 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-        <import type="com.sinyuk.myutils.system.ScreenUtils"/>
-
-        <variable
-            name="theme"
-            type="com.sinyuk.yukdaily.entity.news.Theme"/>
-
-        <variable
-            name="context"
-            type="android.content.Context"/>
-
-
-    </data>
-
-    <com.sinyuk.yukdaily.widgets.RatioLinearLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layoutHOverW="0.4">
+        android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-        <TextView
+        <com.sinyuk.yukdaily.widgets.RatioLinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:padding="@dimen/content_space_16"
-            android:shadowColor="@color/text_shadow"
-            android:shadowDx="3"
-            android:shadowDy="3"
-            android:shadowRadius="6"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/material_text_subhead"
-            tools:text="过去穿过了现在绕过了未来缝在心海中带着你我旅行变成老头"/>
-    </com.sinyuk.yukdaily.widgets.RatioLinearLayout>
+            android:orientation="vertical"
+            app:layoutHOverW="0.618">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/sample"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:padding="@dimen/content_space_16"
+                android:shadowColor="@color/text_shadow"
+                android:shadowDx="3"
+                android:shadowDy="3"
+                android:shadowRadius="6"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/material_text_subhead"
+                tools:text="过去穿过了现在绕过了未来缝在心海中带着你我旅行变成老头"/>
+        </com.sinyuk.yukdaily.widgets.RatioLinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/theme_editors"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:overScrollMode="never"/>
+        </LinearLayout>
+    </LinearLayout>
 </layout>

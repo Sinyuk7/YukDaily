@@ -74,12 +74,12 @@ public abstract class ListFragment extends BaseFragment {
     }
 
     @CallSuper
-    protected void onClickEmpty() {
+    protected void onClickEmpty(View view) {
         startRefreshing();
     }
 
     @CallSuper
-    protected void onClickError() {
+    protected void onClickError(View view) {
         startRefreshing();
     }
 

@@ -1,4 +1,4 @@
-package com.sinyuk.yukdaily.ui.news;
+package com.sinyuk.yukdaily.ui.theme;
 
 import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
@@ -14,18 +14,20 @@ import com.sinyuk.yukdaily.BR;
 import com.sinyuk.yukdaily.R;
 import com.sinyuk.yukdaily.databinding.NewsHeaderLayoutBinding;
 import com.sinyuk.yukdaily.databinding.NewsItemBinding;
+import com.sinyuk.yukdaily.databinding.ThemeHeaderLayoutBinding;
 import com.sinyuk.yukdaily.entity.news.Story;
+import com.sinyuk.yukdaily.ui.news.BrowserActivity;
 import com.sinyuk.yukdaily.utils.binding.BindingViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Sinyuk on 16.1.4.
- * 有header和footer的recycleView
+ * Created by Sinyuk on 16.11.1.
  */
-public class NewsAdapter extends RecyclerView.Adapter<BindingViewHolder> {
-    public static final String TAG = "NewsAdapter";
+
+public class ThemeAdapter extends RecyclerView.Adapter<BindingViewHolder> {
+    public static final String TAG = "ThemeAdapter";
     private static final int HEADER_VIEW_TYPE = Integer.MAX_VALUE;
     private static final int HEADER_VIEW_ID = Integer.MAX_VALUE;
     private List<Story> stories = new ArrayList<>();
@@ -48,7 +50,7 @@ public class NewsAdapter extends RecyclerView.Adapter<BindingViewHolder> {
         return hasHeader() && position == 0;
     }
 
-    public void addHeaderBinding(ViewDataBinding binding) {
+    void addHeaderBinding(ViewDataBinding binding) {
         headerBinding = binding;
         notifyItemInserted(0);
     }
@@ -131,6 +133,3 @@ public class NewsAdapter extends RecyclerView.Adapter<BindingViewHolder> {
         return getDataItemCount() + (hasHeader() ? 1 : 0);
     }
 }
-
-
-

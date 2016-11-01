@@ -231,16 +231,18 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
 
         newsType.set("");
 
-        if (integer == -1) {
-            final String type = getString(R.string.item_news_index);
-            EventBus.getDefault().post(new NewsSwitchEvent(type,integer));
+        if (integer == Integer.MIN_VALUE) {
+            EventBus.getDefault().post(new NewsSwitchEvent(integer));
             EventBus.getDefault().post(new ToolbarTitleChangeEvent(getString(R.string.zhihudaily_slogan)));
         } else if (!themeList.isEmpty()) {
-            if (integer >= 0 && integer < themeList.size()) {
-                final String type = themeList.get(integer).getName();
-                EventBus.getDefault().post(new NewsSwitchEvent(type,integer));
-                newsType.set(type);
-                EventBus.getDefault().post(new ToolbarTitleChangeEvent(type));
+
+            EventBus.getDefault().post(new NewsSwitchEvent(integer));
+            for (int i = 0; i < themeList.size(); i++) {
+                if (themeList.get(i).getId() == integer) {
+                    newsType.set(themeList.get(i).getName());
+                    EventBus.getDefault().post(new ToolbarTitleChangeEvent(themeList.get(i).getName()));
+                    break;
+                }
             }
         }
 

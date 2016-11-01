@@ -10,6 +10,7 @@ import com.sinyuk.yukdaily.entity.news.NewsCommentResponse;
 import com.sinyuk.yukdaily.entity.news.NewsExtras;
 import com.sinyuk.yukdaily.entity.news.Stories;
 import com.sinyuk.yukdaily.entity.news.Theme;
+import com.sinyuk.yukdaily.entity.news.ThemeData;
 import com.sinyuk.yukdaily.entity.news.ThemeResponse;
 import com.sinyuk.yukdaily.utils.rx.SchedulerTransformer;
 
@@ -187,5 +188,10 @@ public class NewsRepository {
             others.clear();
             others.addAll(themeResponse.getThemes());
         }
+    }
+
+    public Observable<ThemeData> getThemeData(int index) {
+        return newsService.getThemeData(index)
+                .compose(new SchedulerTransformer<>());
     }
 }

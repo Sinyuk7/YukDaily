@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="adapter"
+            type="com.sinyuk.yukdaily.ui.theme.EditorAdapter"/>
+
+        <variable
+            name="editor"
+            type="com.sinyuk.yukdaily.entity.news.ThemeData.Editor"/>
+    </data>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginBottom="@dimen/content_space_8"
+            android:layout_marginTop="@dimen/content_space_8"
+            android:onClick="@{(view) -> adapter.onItemClick(view,editor)}"
+            app:avatar="@{editor.avatar}"
+            app:name="@{editor.name}"
+            tools:src="@drawable/sample"/>
+    </FrameLayout>
+
+</layout>

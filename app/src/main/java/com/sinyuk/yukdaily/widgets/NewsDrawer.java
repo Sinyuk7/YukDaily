@@ -48,14 +48,14 @@ public class NewsDrawer extends RadioGroup {
                 AppCompatRadioButton button = new AppCompatRadioButton(getContext());
                 decorate(activity,button);
                 button.setText(getContext().getString(R.string.item_news_index));
-                button.setOnClickListener(v -> activity.onThemeItemSelected(button, -1));
+                button.setOnClickListener(v -> activity.onThemeItemSelected(button, Integer.MIN_VALUE));
                 addView(button, lps);
             }
             AppCompatRadioButton button = new AppCompatRadioButton(getContext());
             decorate(activity,button);
             button.setText(themes.get(i).getName());
             int finalI = i;
-            button.setOnClickListener(v -> activity.onThemeItemSelected(button, finalI));
+            button.setOnClickListener(v -> activity.onThemeItemSelected(button, themes.get(finalI).getId()));
             addView(button, lps);
         }
     }
