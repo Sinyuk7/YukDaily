@@ -5,6 +5,7 @@
 
     <data>
 
+        <import type="android.view.View"/>
 
         <import type="java.util.List"/>
 
@@ -40,6 +41,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
                 android:scaleType="centerCrop"
+                android:visibility="@{story.imageList == null ? View.GONE:View.VISIBLE}"
                 app:imageUrl="@{story.imageList}"
                 app:imageWOverH="1.25"
                 tools:src="@drawable/sample"/>

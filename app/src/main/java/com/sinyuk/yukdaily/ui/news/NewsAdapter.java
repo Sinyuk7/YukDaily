@@ -32,10 +32,13 @@ public class NewsAdapter extends RecyclerView.Adapter<BindingViewHolder> {
 
     @BindingAdapter("imageUrl")
     public static void loadThumbnail(ImageView imageView, List<String> images) {
-        if (images == null || images.get(0) == null) { return; }
+        if (images == null || images.get(0) == null) {
+            return;
+        }
+
         Glide.with(imageView.getContext())
                 .load(images.get(0))
-                .crossFade(500)
+                .crossFade(300)
                 .into(imageView);
     }
 
@@ -48,10 +51,10 @@ public class NewsAdapter extends RecyclerView.Adapter<BindingViewHolder> {
     }
 
     public void addHeaderBinding(ViewDataBinding binding) {
-        if (headerBinding == null){
+        if (headerBinding == null) {
             headerBinding = binding;
             notifyItemInserted(0);
-        }else {
+        } else {
             headerBinding = binding;
             notifyItemChanged(0);
         }
