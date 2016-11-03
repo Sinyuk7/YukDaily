@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View"/>
+
         <variable
             name="news"
             type="com.sinyuk.yukdaily.entity.news.News"/>
@@ -25,12 +27,14 @@
             android:layout_height="wrap_content"
             android:minHeight="?actionBarSize"
             android:scaleType="centerCrop"
+            android:visibility="@{news.image == null ? View.GONE : View.VISIBLE}"
             app:imageHOverW="0.618"
             app:maxScrimAlpha="1"
             app:parallaxFactor="-0.5"
             app:scrimAlpha="0"
             app:scrimColor="@color/colorPrimary"
-            tools:src="@drawable/backdrop1"/>
+            tools:src="@drawable/backdrop1"
+            tools:visibility="gone"/>
 
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/scrollView"
@@ -42,29 +46,28 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingTop="@{news.image == null ? @dimen/toolbarSize :@dimen/zero}">
 
                 <FrameLayout
                     android:id="@+id/headLine"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="?actionBarSize">
+                    android:minHeight="?actionBarSize"
+                    android:visibility="@{parallaxScrimageView.visibility}">
 
                     <com.sinyuk.yukdaily.widgets.PlaceHolder
-                        android:id="@+id/placeHolder"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:holderHOverW="0.618"/>
 
 
                     <TextView
-                        android:id="@+id/title"
                         style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end|bottom"
                         android:layout_marginBottom="@dimen/content_space_8"
-                        android:layout_marginTop="?actionBarSize"
                         android:gravity="center_horizontal"
                         android:maxLines="3"
                         android:paddingBottom="@dimen/material_text_caption2"
@@ -78,7 +81,6 @@
                         tools:text="titleafkjdashfkjhaksjdfhkasdfdsfsdfdsf"/>
 
                     <TextView
-                        android:id="@+id/imageSource"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end|bottom"
@@ -125,13 +127,19 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:freezesText="true"
                 android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
                 android:maxLines="1"
                 android:paddingLeft="@dimen/content_space_16"
                 android:paddingRight="@dimen/content_space_16"
+                android:scrollHorizontally="true"
                 android:text="@{news.title}"
                 android:textColor="@android:color/white"
-                android:visibility="invisible"
+                android:visibility="@{news.image == null ? View.VISIBLE : View.INVISIBLE}"
                 tools:text="dsakdhkjhfksahd"/>
 
             <ImageView

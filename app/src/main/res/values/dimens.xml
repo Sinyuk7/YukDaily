@@ -98,4 +98,8 @@
     <dimen name="toolbar_height">56dp</dimen>
     <dimen name="news_comment_item_keyline_1">60dp</dimen>
 
+
+    <dimen name="toolbarSize">56dp</dimen>
+    <dimen name="zero">0dp</dimen>
+
 </resources>

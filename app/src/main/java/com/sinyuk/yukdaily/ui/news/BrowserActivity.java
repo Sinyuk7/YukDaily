@@ -15,7 +15,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebResourceRequest;
@@ -91,18 +90,19 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
     private NestedScrollView.OnScrollChangeListener listener = new NestedScrollView.OnScrollChangeListener() {
         @Override
         public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-            binding.parallaxScrimageView.setScrim(scrollY);
+            if (binding.parallaxScrimageView.getVisibility() == View.VISIBLE) {
+                binding.parallaxScrimageView.setScrim(scrollY);
+                float scrimAlpha = binding.parallaxScrimageView.getScrimAlpha();
+                if (scrimAlpha == 1f) {
+                    binding.toolbar.setBackgroundColor(ContextCompat.getColor(BrowserActivity.this, R.color.colorPrimary));
+                    binding.toolbarTitle.setVisibility(View.VISIBLE);
+                } else {
+                    binding.toolbar.setBackground(null);
+                    binding.toolbarTitle.setVisibility(View.INVISIBLE);
+                }
 
-            float scrimAlpha = binding.parallaxScrimageView.getScrimAlpha();
-            if (scrimAlpha == 1f) {
-                binding.toolbar.setBackgroundColor(ContextCompat.getColor(BrowserActivity.this, R.color.colorPrimary));
-                binding.toolbarTitle.setVisibility(View.VISIBLE);
-            } else {
-                binding.toolbar.setBackground(null);
-                binding.toolbarTitle.setVisibility(View.INVISIBLE);
+                binding.headLine.setAlpha((1 - scrimAlpha) * (1 - scrimAlpha) * (1 - scrimAlpha));
             }
-
-            binding.headLine.setAlpha((1 - scrimAlpha) * (1 - scrimAlpha) * (1 - scrimAlpha));
         }
     };
     private ContextMenuDialogFragment mMenuDialogFragment;
@@ -123,11 +123,7 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
         public void onNext(News news) {
 
             if (TextUtils.isEmpty(news.getImage())) {
-                binding.headLine.setBackgroundColor(ContextCompat.getColor(BrowserActivity.this, R.color.colorPrimary));
-                binding.imageSource.setVisibility(View.GONE);
-                binding.title.setVisibility(View.GONE);
-                binding.placeHolder.setVisibility(View.GONE);
-                binding.parallaxScrimageView.setVisibility(View.GONE);
+                binding.toolbar.setBackgroundColor(ContextCompat.getColor(BrowserActivity.this, R.color.colorPrimary));
             }
 
 
@@ -184,6 +180,9 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_browser);
 
+        // 走马灯
+        binding.toolbarTitle.setSelected(true);
+
         setupGesture();
 
         initWebViewSettings(binding.webView, mCacheFile);
@@ -204,8 +203,6 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
             public void onDragDismissed() {
                 // if we drag dismiss downward then the default reversal of the enter
                 // transition would slide content upward which looks weird. So reverse it.
-                if (binding.elasticDragDismissFrameLayout.getTranslationY() > 0) {
-                }
                 ActivityCompat.finishAfterTransition(BrowserActivity.this);
             }
         });
@@ -440,6 +437,7 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
                 break;
             case 2:
                 // thumbup
+                toastUtils.toastShort(getString(R.string.hint_thumbup));
                 break;
             case 3:
                 // share
@@ -473,17 +471,13 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
                     if (order.contains(path)) {
                         final int index = order.indexOf(path);
                         ImageActivity.start(ref.get(), index, order);
-                        Log.d(TAG, "openImage: " + order.toString());
 
                     } else {
                         ImageActivity.start(ref.get(), path);
-                        Log.d(TAG, "openImage: " + path);
 
                     }
                 } else {
                     ImageActivity.start(ref.get(), path);
-                    Log.d(TAG, "openImage: " + path);
-
                 }
             }
         }
@@ -527,32 +521,8 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
                             pathArray[finalI] = path;
                             String javascript = "img_replace_by_url('" + src + "','" + path + "');";
 
-                            Log.d(TAG, "insert js: " + javascript);
-
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                                 binding.webView.evaluateJavascript(javascript, s -> {
-                                    Log.d(TAG, "evaluateJavascript: " + s);
-//                                    JsonReader reader = new JsonReader(new StringReader(s));
-//                                    // Must set lenient to parse single values
-//                                    reader.setLenient(true);
-//                                    try {
-//                                        if (reader.peek() != JsonToken.NULL) {
-//                                            if (reader.peek() == JsonToken.STRING) {
-//                                                String msg = reader.nextString();
-//                                                if (msg != null) {
-//
-//                                                }
-//                                            }
-//                                        }
-//                                    } catch (IOException e) {
-//                                        Log.e(TAG, e.getLocalizedMessage());
-//                                    } finally {
-//                                        try {
-//                                            reader.close();
-//                                        } catch (IOException e) {
-//                                            // NOOP
-//                                        }
-//                                    }
                                 });
                             } else {
                                 binding.webView.loadUrl("javascript:" + javascript);

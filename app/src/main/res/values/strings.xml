@@ -41,4 +41,5 @@
     <string name="action_share_failed">找不到相应的app</string>
     <string name="hint_share_news">将它分享到</string>
     <string name="format_share_news">我在知乎日报上看到了:%1$s (链接: %2$s</string>
+    <string name="hint_thumbup">谢谢支持</string>
 </resources>
