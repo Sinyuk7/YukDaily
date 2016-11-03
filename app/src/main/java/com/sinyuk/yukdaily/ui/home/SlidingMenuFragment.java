@@ -13,10 +13,7 @@ import com.f2prateek.rx.preferences.RxSharedPreferences;
 import com.sinyuk.yukdaily.App;
 import com.sinyuk.yukdaily.BR;
 import com.sinyuk.yukdaily.R;
-import com.sinyuk.yukdaily.Sinyuk;
 import com.sinyuk.yukdaily.base.BaseFragment;
-import com.sinyuk.yukdaily.theme.DarkThemeComponent;
-import com.sinyuk.yukdaily.theme.LightThemeComponent;
 
 import javax.inject.Inject;
 
@@ -44,16 +41,6 @@ public class SlidingMenuFragment extends BaseFragment {
     }
 
     public void onClickSettings(View v) {
-        if (preferences.getBoolean(Sinyuk.KEY_IS_LIGHT_THEME).isSet()) {
-            if (preferences.getBoolean(Sinyuk.KEY_IS_LIGHT_THEME).get()) {
-                DataBindingUtil.setDefaultComponent(new LightThemeComponent());
-                preferences.getBoolean(Sinyuk.KEY_IS_LIGHT_THEME).set(true);
-            }
-        } else {
-            DataBindingUtil.setDefaultComponent(new DarkThemeComponent());
-            preferences.getBoolean(Sinyuk.KEY_IS_LIGHT_THEME).set(false);
-        }
 
-        getActivity().recreate();
     }
 }

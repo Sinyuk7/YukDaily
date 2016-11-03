@@ -1,7 +1,5 @@
 package com.sinyuk.yukdaily.ui.news;
 
-import android.databinding.BindingAdapter;
-import android.databinding.DataBindingComponent;
 import android.databinding.DataBindingUtil;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.CardView;
@@ -9,15 +7,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sinyuk.yukdaily.BR;
 import com.sinyuk.yukdaily.R;
 import com.sinyuk.yukdaily.databinding.NewsHeaderItemBinding;
 import com.sinyuk.yukdaily.entity.news.Story;
-import com.sinyuk.yukdaily.theme.DarkThemeComponent;
 import com.sinyuk.yukdaily.utils.cardviewpager.CardAdapter;
 
 import java.util.ArrayList;

@@ -1,7 +1,6 @@
 package com.sinyuk.yukdaily.ui.splash;
 
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -28,8 +27,6 @@ import com.sinyuk.yukdaily.api.NewsApi;
 import com.sinyuk.yukdaily.base.BaseActivity;
 import com.sinyuk.yukdaily.data.gank.GankRepository;
 import com.sinyuk.yukdaily.data.news.NewsRepository;
-import com.sinyuk.yukdaily.theme.DarkThemeComponent;
-import com.sinyuk.yukdaily.theme.LightThemeComponent;
 import com.sinyuk.yukdaily.ui.home.HomeActivity;
 import com.sinyuk.yukdaily.utils.rx.SchedulerTransformer;
 
@@ -59,7 +56,6 @@ public class SplashActivity extends BaseActivity {
     Lazy<GankRepository> gankRepositoryLazy;
 
 
-
     private Preference<String> path;
     private View footer;
 
@@ -74,11 +70,16 @@ public class SplashActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        App.get(this).getAppComponent().plus().inject(this);
+
+
         ScreenUtils.hideSystemyBar(this);
+
         setContentView(R.layout.activity_splash);
+
+
         footer = findViewById(R.id.footer);
 
-        App.get(this).getAppComponent().plus().inject(this);
 
         path = preferences.getString(Sinyuk.KEY_SPLASH_BACKDROP_PATH);
 
@@ -93,16 +94,6 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void prepare() {
-
-        if (preferences.getBoolean(Sinyuk.KEY_IS_LIGHT_THEME).isSet()) {
-            if (preferences.getBoolean(Sinyuk.KEY_IS_LIGHT_THEME).get()) {
-                DataBindingUtil.setDefaultComponent(new LightThemeComponent());
-                preferences.getBoolean(Sinyuk.KEY_IS_LIGHT_THEME).set(true);
-            }
-        } else {
-            DataBindingUtil.setDefaultComponent(new DarkThemeComponent());
-            preferences.getBoolean(Sinyuk.KEY_IS_LIGHT_THEME).set(false);
-        }
 
         // 预加载第一页的新闻
         if (!NetWorkUtils.isNetworkConnection(this)) { return; }
