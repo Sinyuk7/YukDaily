@@ -94,6 +94,27 @@ public class BaseWebActivity extends BaseActivity {
 
         webSetting.setGeolocationEnabled(false);
 
+        webView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (v instanceof WebView) {
+                    WebView.HitTestResult result = ((WebView) v).getHitTestResult();
+                    if (result != null) {
+                        int type = result.getType();
+                        //判断点击类型如果是图片
+                        if (type == WebView.HitTestResult.IMAGE_TYPE || type == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
+                            onImageLongClick(v, result.getExtra());
+                        }
+                    }
+                }
+                return false;
+            }
+        });
+
+    }
+
+    protected void onImageLongClick(View v, String extra) {
+
     }
 
     protected void setWebViewTitle(String title) {

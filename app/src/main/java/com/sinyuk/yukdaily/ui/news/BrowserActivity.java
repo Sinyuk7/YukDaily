@@ -107,6 +107,7 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
     };
     private ContextMenuDialogFragment mMenuDialogFragment;
     private List<String> imageLinks = new ArrayList<>();
+    private String mNewsTitle = "";
     private Observer<News> observer = new Observer<News>() {
         @Override
         public void onCompleted() {
@@ -157,6 +158,7 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
             }
 
             mShareUrl = news.getShareUrl();
+            mNewsTitle = news.getTitle();
         }
     };
 
@@ -415,6 +417,13 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
         }
     }
 
+
+    @Override
+    protected void onImageLongClick(View v, String extra) {
+        super.onImageLongClick(v, extra);
+        if (!TextUtils.isEmpty(extra)) { toastUtils.toastShort(extra); }
+    }
+
     @Override
     public void onMenuItemClick(View clickedView, int position) {
         switch (position) {
@@ -434,6 +443,16 @@ public class BrowserActivity extends BaseWebActivity implements OnMenuItemClickL
                 break;
             case 3:
                 // share
+                Intent shareIntent = new Intent("android.intent.action.SEND");
+                if (!TextUtils.isEmpty(mShareUrl)) {
+                    shareIntent.setType("text/plain");
+                    shareIntent.putExtra("android.intent.extra.TEXT", String.format(getString(R.string.format_share_news), mNewsTitle, mShareUrl));
+                    shareIntent.setFlags(268435456);
+                    startActivity(Intent.createChooser(shareIntent, getString(R.string.hint_share_news)));
+                } else {
+                    toastUtils.toastShort(R.string.action_share_failed);
+                }
+
                 break;
         }
     }
