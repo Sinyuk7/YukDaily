@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.PopupWindow;
 
+import com.f2prateek.rx.preferences.RxSharedPreferences;
 import com.sinyuk.myutils.MathUtils;
 import com.sinyuk.myutils.system.ToastUtils;
 import com.sinyuk.yukdaily.App;
@@ -49,7 +50,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.Lazy;
-import rx.functions.Action1;
 
 /**
  * Created by Sinyuk on 2016/10/13.
@@ -63,6 +63,8 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
     Lazy<ToastUtils> toastUtilsLazy;
     @Inject
     NewsRepository newsRepository;
+    @Inject
+    RxSharedPreferences preferences;
     private Handler myHandler = new Handler();
     private Runnable mLoadingRunnable = () -> {
         EventBus.getDefault().post(new HomepageLoadingEvent());
@@ -78,7 +80,9 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
         App.get(this).getAppComponent().plus(new NewsRepositoryModule()).inject(this);
         EventBus.getDefault().register(this);
 
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home);
+
 
         binding.slidingPaneLayout.setPanelSlideListener(this);
 
@@ -136,14 +140,12 @@ public class HomeActivity extends BaseActivity implements ViewPager.OnPageChange
             return false;
         });
 
-        addSubscription(newsRepository.getOtherThemes().subscribe(new Action1<List<Theme>>() {
-            @Override
-            public void call(List<Theme> themes) {
-                themeList.clear();
-                themeList.addAll(themes);
-                newsDrawerBinding.radioGroup.bind(HomeActivity.this, themes);
-            }
-        }));
+        addSubscription(newsRepository.getOtherThemes()
+                .subscribe(themes -> {
+                    themeList.clear();
+                    themeList.addAll(themes);
+                    newsDrawerBinding.radioGroup.bind(HomeActivity.this, themes);
+                }));
 
     }
 

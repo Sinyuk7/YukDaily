@@ -6,6 +6,7 @@ import com.sinyuk.yukdaily.data.gank.GankRepositoryModule;
 import com.sinyuk.yukdaily.data.news.NewsRepositoryComponent;
 import com.sinyuk.yukdaily.data.news.NewsRepositoryModule;
 import com.sinyuk.yukdaily.ui.browser.WebViewActivity;
+import com.sinyuk.yukdaily.ui.home.SlidingMenuFragment;
 import com.sinyuk.yukdaily.ui.splash.SplashComponent;
 
 import javax.inject.Singleton;
@@ -26,4 +27,6 @@ public interface AppComponent {
     GankRepositoryComponent plus(GankRepositoryModule module);
 
     void inject(WebViewActivity target);
+
+    void inject(SlidingMenuFragment target);
 }

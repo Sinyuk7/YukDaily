@@ -1,6 +1,7 @@
 package com.sinyuk.yukdaily.ui.news;
 
 import android.databinding.BindingAdapter;
+import android.databinding.DataBindingComponent;
 import android.databinding.DataBindingUtil;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.CardView;
@@ -16,6 +17,7 @@ import com.sinyuk.yukdaily.BR;
 import com.sinyuk.yukdaily.R;
 import com.sinyuk.yukdaily.databinding.NewsHeaderItemBinding;
 import com.sinyuk.yukdaily.entity.news.Story;
+import com.sinyuk.yukdaily.theme.DarkThemeComponent;
 import com.sinyuk.yukdaily.utils.cardviewpager.CardAdapter;
 
 import java.util.ArrayList;
@@ -28,15 +30,6 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
     private float mBaseElevation;
     private List<Story> topStories = new ArrayList<>();
 
-
-    @BindingAdapter("imageUrl")
-    public static void loadImage(ImageView imageView, String url) {
-        Glide.with(imageView.getContext())
-                .load(url)
-                .crossFade(300)
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                .into(imageView);
-    }
 
     public float getBaseElevation() {
         return mBaseElevation;

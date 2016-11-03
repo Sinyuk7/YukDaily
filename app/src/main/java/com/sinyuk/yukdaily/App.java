@@ -33,6 +33,7 @@ public class App extends Application {
         appComponent = DaggerAppComponent.builder()
                 .apiModule(new ApiModule())
                 .appModule(new AppModule(this)).build();
+
     }
 
     public AppComponent getAppComponent() {

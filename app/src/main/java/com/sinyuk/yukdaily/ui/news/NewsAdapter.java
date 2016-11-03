@@ -30,17 +30,7 @@ public class NewsAdapter extends RecyclerView.Adapter<BindingViewHolder> {
     private List<Story> stories = new ArrayList<>();
     private ViewDataBinding headerBinding = null;
 
-    @BindingAdapter("imageUrl")
-    public static void loadThumbnail(ImageView imageView, List<String> images) {
-        if (images == null || images.get(0) == null) {
-            return;
-        }
 
-        Glide.with(imageView.getContext())
-                .load(images.get(0))
-                .crossFade(300)
-                .into(imageView);
-    }
 
     private boolean hasHeader() {
         return headerBinding != null && headerBinding.getRoot() != null;

@@ -35,11 +35,6 @@ public class NewsCommentAdapter extends RecyclerView.Adapter<BindingViewHolder> 
         setHasStableIds(true);
     }
 
-    @BindingAdapter("date")
-    public static void setDate(TextView textView, long time) {
-        time = time * 1000;
-        textView.setText(DateUtils.getTimeAgo(textView.getContext(), new Date(time)));
-    }
 
     @Override
     public BindingViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

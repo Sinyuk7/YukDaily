@@ -129,7 +129,7 @@
                                     android:layout_height="wrap_content"
                                     android:ellipsize="marquee"
                                     android:maxLines="1"
-                                    android:textColor="@android:color/white"/>
+                                    android:textColor="@{@color/text_primary_light}"/>
 
                                 <TextView
                                     style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
@@ -137,7 +137,7 @@
                                     android:layout_height="wrap_content"
                                     android:ellipsize="marquee"
                                     android:maxLines="1"
-                                    android:textColor="@android:color/white"/>
+                                    android:textColor="@{@color/text_primary_light}"/>
                             </TextSwitcher>
 
                             <ImageView

@@ -89,19 +89,6 @@ public class NewsFragment extends ListFragment {
     };
 
 
-    @BindingAdapter({"adapter", "indicator"})
-    public static void setAdapter(ViewPager vp, CardPagerAdapter adapter, CircleIndicator indicator) {
-        Log.d(TAG, "setAdapter: ");
-        vp.setOffscreenPageLimit(3);
-        vp.setAdapter(adapter);
-        indicator.setViewPager(vp);
-        adapter.registerDataSetObserver(indicator.getDataSetObserver());
-
-        final ShadowTransformer transformer = new ShadowTransformer(vp, adapter);
-        vp.setPageTransformer(false, transformer);
-        transformer.enableScaling(true);
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

@@ -2,6 +2,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+
+        <variable
+            name="presenter"
+            type="com.sinyuk.yukdaily.ui.home.SlidingMenuFragment"/>
+    </data>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -51,6 +58,7 @@
                     android:text="消息"/>
 
                 <TextView
+                    android:onClick="@{presenter.onClickSettings}"
                     style="@style/menu_item_text"
                     android:drawableLeft="@drawable/ic_settings"
                     android:text="设置"/>
