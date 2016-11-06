@@ -32,6 +32,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import javax.inject.Inject;
 
 import rx.Observer;
+import rx.functions.Action0;
 
 /**
  * Created by Sinyuk on 2016/10/12.
@@ -98,7 +99,8 @@ public class NewsFragment extends ListFragment {
 
     @Override
     protected void refreshData() {
-        addSubscription(newsRepository.getLatestNews().doOnTerminate(() -> fromToday = 1)
+        addSubscription(newsRepository.getLatestNews()
+                .doOnTerminate(() -> fromToday = 1)
                 .doOnTerminate(this::stopRefreshing).subscribe(refreshObserver));
     }
 

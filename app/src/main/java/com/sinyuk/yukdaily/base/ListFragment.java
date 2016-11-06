@@ -95,7 +95,7 @@ public abstract class ListFragment extends BaseFragment {
     }
 
     @CallSuper
-    protected void startRefreshing() {
+    public void startRefreshing() {
         binding.viewAnimator.setDisplayedChildId(R.id.listLayout);
         if (binding.listLayout.swipeRefreshLayout != null) {
             binding.listLayout.swipeRefreshLayout.setRefreshing(true);
@@ -103,7 +103,7 @@ public abstract class ListFragment extends BaseFragment {
     }
 
     @CallSuper
-    protected void stopRefreshing() {
+    public void stopRefreshing() {
         if (binding.listLayout.swipeRefreshLayout != null) {
             isRefreshing = false;
             binding.listLayout.swipeRefreshLayout.postDelayed(() -> {
@@ -115,13 +115,13 @@ public abstract class ListFragment extends BaseFragment {
     }
 
     @CallSuper
-    protected void startLoading() {
+    public void startLoading() {
         isLoading = true;
         fetchData();
     }
 
     @CallSuper
-    protected void stopLoading() {
+    public void stopLoading() {
         isLoading = false;
     }
 

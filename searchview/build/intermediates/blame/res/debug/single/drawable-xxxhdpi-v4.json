@@ -4,12 +4,12 @@
         "source": "D:\\Workplace\\YukDaily\\searchview\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.2.1\\res\\drawable-xxxhdpi-v4\\abc_scrubber_control_to_pressed_mtrl_000.png"
     },
     {
-        "merged": "D:\\Workplace\\YukDaily\\searchview\\build\\intermediates\\res\\merged\\debug\\drawable-xxxhdpi-v4\\abc_ic_star_black_16dp.png",
-        "source": "D:\\Workplace\\YukDaily\\searchview\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.2.1\\res\\drawable-xxxhdpi-v4\\abc_ic_star_black_16dp.png"
-    },
-    {
         "merged": "D:\\Workplace\\YukDaily\\searchview\\build\\intermediates\\res\\merged\\debug\\drawable-xxxhdpi-v4\\ic_search_white_24dp.png",
         "source": "D:\\Workplace\\YukDaily\\searchview\\build\\generated\\res\\pngs\\debug\\drawable-xxxhdpi\\ic_search_white_24dp.png"
+    },
+    {
+        "merged": "D:\\Workplace\\YukDaily\\searchview\\build\\intermediates\\res\\merged\\debug\\drawable-xxxhdpi-v4\\abc_ic_star_black_16dp.png",
+        "source": "D:\\Workplace\\YukDaily\\searchview\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.2.1\\res\\drawable-xxxhdpi-v4\\abc_ic_star_black_16dp.png"
     },
     {
         "merged": "D:\\Workplace\\YukDaily\\searchview\\build\\intermediates\\res\\merged\\debug\\drawable-xxxhdpi-v4\\ic_history_white_24dp.png",

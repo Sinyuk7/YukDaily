@@ -77,9 +77,7 @@ public class SplashActivity extends BaseActivity {
 
         setContentView(R.layout.activity_splash);
 
-
         footer = findViewById(R.id.footer);
-
 
         path = preferences.getString(Sinyuk.KEY_SPLASH_BACKDROP_PATH);
 
